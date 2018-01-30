@@ -1,0 +1,101 @@
+body{
+	background-image: url("/css/images/dust_scratches.png");
+	font-family: 'Roboto', sans-serif;
+	font-size:17px;
+	color:black;	
+}
+
+#container 
+{
+	width:1000px;
+  	margin: 0 auto; 
+}
+
+#logged{
+	width:1000px;
+	background-image:url("/css/images/goldBg.jpg");
+}
+
+#title{
+	font-family: 'Spectral SC', sans-serif;
+	font-size:32px;
+	color:black;
+	float:left;
+}
+
+#meet{
+	padding-top:70px;
+	padding-left:100px;
+	float:left;
+}
+
+#inputRegister{
+	width:282px;
+	height:35px;
+	border-radius:3px;
+}
+
+hr {
+    border: 0;
+    border-bottom: 1px solid #DCDCDC;
+    clear: both;
+    display: block;
+    height: 0;
+    width: 100%;
+}
+
+#mainRegister{
+	padding-top:30px;
+	padding-left:120px;
+	float:left;
+}
+
+.submit{
+	background-color:#fdd05f;
+	height:35px;
+	font-family: 'Roboto', sans-serif;
+	border-radius: 5px;
+	font-weight:bold;
+}
+
+h3{
+	font-weight:normal;
+	font-size:20px;
+	color:black;
+}
+
+#descs{
+	width:700px;
+	float:left;
+}
+
+.smallDesc{
+	color:#545454;
+	padding-left:20px;
+	font-size:15px;
+	width:280px;
+	padding-right:30px;
+	float:left;
+}
+
+#add{
+	float:left;
+}
+
+#browse{
+	padding-top:20px;
+	float:left;
+}
+
+.minBrowse{
+	padding-left:6px;	
+	padding-right:6px;	
+}
+
+#meet{
+	margin-right:20px;
+}
+
+#quoteTd{
+	text-align:top;
+}

@@ -1,0 +1,103 @@
+body{
+	background-image: url("/books-website/resources/css/images/dust_scratches.png");
+	font-family: 'Roboto', sans-serif;
+	font-size:17px;
+	color:black;	
+}
+
+#container 
+{
+	width:1100px;
+     margin:0 auto;
+}
+
+#firstTd{
+	vertical-align:top;
+	padding-left:20px;
+}
+
+hr {
+    border: 0;
+    border-bottom: 1px solid #DCDCDC;
+    clear: both;
+    display: block;
+    height: 0;
+    width: 100%;
+}
+
+h2{
+	display:inline;
+}
+
+.blackRefNon{
+	text-decoration:none;
+	color:black;
+}
+
+.blackRef{
+	color:black;
+}
+
+#image{
+	float:left;
+	width:200px;
+}
+
+#detailsTable{
+	float:left;
+}
+
+#firstTableDiv{
+	float:left;
+	padding-left:20px;
+	width:500px;
+}
+
+table.detailsTable td{
+overflow: hidden;
+max-width: 400px;
+word-wrap: break-word;
+padding-bottom:10px;
+}
+
+.picTable{
+	width:200px;
+}
+
+#topDesc{
+	display:inline;
+}
+
+.underFirstTable{
+	padding-top:15px;
+	width:670px;
+}
+
+#leftSide{
+	width:770px;
+	float:left;
+}
+
+#rightSide{
+	padding-top:10px;
+	width:330px;
+	float:left;
+}
+
+table.currentlyReadingBooks td{
+	vertical-align:top;
+}
+
+#friendsInvites{
+	min-height:249px;
+	width:250px;
+}
+
+#friendsList{
+	width:250px;
+}
+
+#deleteForm{
+	display:inline;
+	margin-left:10px;
+}

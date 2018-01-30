@@ -1,0 +1,53 @@
+body{
+	background-image: url("/css/images/upfeathers.png");
+	font-family: 'Roboto', sans-serif;
+	font-size:17px;
+	color:black;	
+}
+
+#container 
+{
+	width:1000px;
+     margin:0 auto;
+}
+
+#joinInputBox{
+	width: 300px;
+	height: 40px;
+	border-radius:3px;
+}
+
+.inputBox{
+	width: 200px;
+	height: 23px;
+}
+
+.inputBoxWider{
+	width: 400px;
+	height: 23px;
+}
+
+.detailsName{
+	font-size:12px;
+}
+
+.detailsSmall{
+	font-size:10px;
+}
+
+.bottomTd{
+	padding-bottom:20px;
+}
+
+.aboutArea{
+	width:400px;
+	height:200px;
+}
+
+#submit{
+	background-color:#fdd05f;
+	height:35px;
+	font-family: 'Roboto', sans-serif;
+	border-radius: 5px;
+	font-weight:bold;
+}

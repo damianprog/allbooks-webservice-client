@@ -1,0 +1,136 @@
+body{
+	background-image: url("/css/images/upfeathers.png");
+	font-family: 'Roboto', sans-serif;
+	font-size:17px;
+	color:black;	
+}
+
+#container 
+{
+	width:1000px;
+     margin:0 auto;
+}
+
+.blackRef{
+	color:black;
+}
+
+#mainTable{
+	float:left;
+}
+
+#desc{
+	 vertical-align: text-top;
+	 width:455px;
+	 padding-left:10px;
+	 text-align:left;
+}
+
+#h3{
+	margin-top: -5px;
+	margin-bottom: -2px;
+}
+
+#h4{
+	display:inline;
+}
+
+#img{
+	vertical-align:top;
+}
+
+#img2{
+	vertical-align:top;
+	padding-top:30px;
+}
+
+#rating{
+	font-size:15px;
+}
+
+button{
+	width:74px;
+	height:32px;
+}
+
+#details{
+	font-size:12px;
+}
+
+#credit{
+	font-size:15px;
+}
+
+#aboutAuthor{
+	font-size:14px;
+	vertical-align:top;
+	width:200px;
+	padding-left:20px;
+}
+
+#quotesFromBook{
+	width:200px;
+	margin-top:20px;
+}
+
+#communityReviews{
+	margin-top:20px;
+	width:660px;
+}
+
+#reviewBox{
+	width:600px;
+	height:150px;
+}
+
+#reviewTitle{
+	margin-bottom:20px;
+	width:300px;
+}
+
+#allReviews{
+	margin-top:20px;
+}
+
+#allReviewsTable{
+	float:left;
+}
+
+
+#likeForm{
+	display:inline;
+}
+
+#spaceUnder{
+	padding-bottom:20px;
+}
+
+#reviewTitleTable{
+	padding-top:10px;
+	padding-bottom:10px;
+	width:600px;
+}
+
+#pInstead{
+	padding-bottom:10px;
+}
+
+#ratingDetails{
+	padding-bottom:10px;
+	color:#00635d;
+}
+
+#imgRateReview{
+	float:left;
+}
+
+#reviewDesc{
+	float:left;
+	width:500px;
+	padding-left:20px;
+}
+
+#reviewLikes{
+	text-align:right;
+	width:500px;
+}
