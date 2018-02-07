@@ -187,21 +187,21 @@ public class ReaderController {
 		return "saved";
 	}
 
-	@PostMapping("/login")
-	public String login(@RequestParam("login") String login, @RequestParam("password") String passowrd, Model theModel,
-			HttpSession session) {
-
-		Reader loggedReader = readerService.getReader(login, passowrd);
-
-		if (loggedReader == null) {
-			theModel.addAttribute("loggingError", true);
-			return "saved";
-		} else {
-			session.setAttribute("loggedReader", loggedReader);
-			session.setAttribute("logged", true);
-			return "main";
-		}
-	}
+//	@PostMapping("/login")
+//	public String login(@RequestParam("login") String login, @RequestParam("password") String passowrd, Model theModel,
+//			HttpSession session) {
+//
+//		Reader loggedReader = readerService.getReader(login, passowrd);
+//
+//		if (loggedReader == null) {
+//			theModel.addAttribute("loggingError", true);
+//			return "saved";
+//		} else {
+//			session.setAttribute("loggedReader", loggedReader);
+//			session.setAttribute("logged", true);
+//			return "main";
+//		}
+//	}
 
 	@GetMapping("/logout")
 	public String logout(HttpSession session, Model theModel) {
