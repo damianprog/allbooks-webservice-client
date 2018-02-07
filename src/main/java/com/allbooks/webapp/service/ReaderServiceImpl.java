@@ -35,7 +35,7 @@ public class ReaderServiceImpl implements ReaderService {
 		ReaderRole readerRole = new ReaderRole();
 		
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("readerLogin", theReader.getLogin());
+		params.put("readerLogin", theReader.getUsername());
 		
 		theReader.setPassword(bCryptPasswordEncoder.encode(theReader.getPassword()));
 
@@ -52,29 +52,26 @@ public class ReaderServiceImpl implements ReaderService {
 			return false;
 	}
 
-	public Role getRoleByName(String roleName) {
-
+	@Override
+	public Reader getReaderByUsername(String login) {
+		
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("role", roleName);
-
-		Role role = restTemplate.getForObject("http://localhost:9000/roles/names/{role}", Role.class, params);
-
-		return role;
-	}
-
-	private boolean checkReaderLogin(Reader theReader) {
-
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("readerLogin", theReader.getLogin());
-
+		params.put("readerLogin", login);
+		
 		Reader reader = restTemplate.getForObject("http://localhost:9000/readers/logins/{readerLogin}", Reader.class,
 				params);
+		
+		return reader;
+	}
+	
+	private boolean checkReaderLogin(Reader theReader) {
+
+		Reader reader = getReaderByUsername(theReader.getUsername());
 
 		if (reader == null)
 			return true;
 		else
 			return false;
-
 	}
 
 	@Override

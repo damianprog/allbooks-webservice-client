@@ -42,7 +42,7 @@
 						method="POST">
 						<table>
 							<tr>
-								<td><form:input path="login" placeholder="Name"
+								<td><form:input path="username" placeholder="Name"
 										id="inputRegister" required="required" /></td>
 							</tr>
 							<tr>

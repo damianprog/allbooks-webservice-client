@@ -237,7 +237,7 @@ public class ReaderController {
 		int readerId = reader.getId();
 
 		review.setReaderId(readerId);
-		review.setReaderLogin(reader.getLogin());
+		review.setReaderLogin(reader.getUsername());
 		review.setReaderRating(readerService.getReaderRating(readerId, bookName));
 		review.setBookId(readerService.getBookId(bookName));
 		readerService.submitReview(review);
@@ -255,7 +255,7 @@ public class ReaderController {
 
 		comment.setReviewId(reviewId);
 		comment.setReaderId(readerId);
-		comment.setReaderLogin(reader.getLogin());
+		comment.setReaderLogin(reader.getUsername());
 		comment.setReaderRating(readerService.getReaderRating(readerId, params.get("bookName")));
 		readerService.submitComment(comment);
 
@@ -346,7 +346,7 @@ public class ReaderController {
 		System.out.println(readerBooks);
 		theModel.addAttribute("readerBooks", readerBooks);
 		theModel.addAttribute("myBooks", myBooksBoo);
-		theModel.addAttribute("reader", reader.getLogin());
+		theModel.addAttribute("reader", reader.getUsername());
 
 		return "mybooks";
 	}

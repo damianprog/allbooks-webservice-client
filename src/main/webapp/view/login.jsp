@@ -40,7 +40,7 @@
 					<td>Name</td>
 				</tr>
 				<tr>
-					<td><form:input path="login" placeholder="Name" id="joinInputBox" required="required"/></td>
+					<td><form:input path="username" placeholder="Name" id="joinInputBox" required="required"/></td>
 				</tr>
 				<tr>
 					<td>Password</td>

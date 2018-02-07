@@ -88,7 +88,7 @@ public class ProfileController {
 
 		if ((guestBoo == true) && ((boolean) session.getAttribute("logged") == true)) {
 			Friends checkFriends = profileService
-					.areTheyFriends(((Reader) session.getAttribute("loggedReader")).getLogin(), reader.getLogin());
+					.areTheyFriends(((Reader) session.getAttribute("loggedReader")).getUsername(), reader.getUsername());
 			if (checkFriends != null) {
 				if (checkFriends.getAccept().equals("false"))
 					pending = true;
@@ -99,7 +99,7 @@ public class ProfileController {
 		}
 
 		if ((boolean) session.getAttribute("logged") == true) {
-			if ((!session.getAttribute("loggedReader").equals(reader.getLogin()) && (guestBoo == true))) {
+			if ((!session.getAttribute("loggedReader").equals(reader.getUsername()) && (guestBoo == true))) {
 				invite = true;
 			}
 		}
