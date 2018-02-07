@@ -1,5 +1,7 @@
 package com.allbooks.webapp.entity;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
@@ -16,6 +18,8 @@ public class Reader {
 	
 	
 	private String email;
+	
+	private Set<Role> roles;
 	
 	public Reader(){
 		
@@ -56,6 +60,14 @@ public class Reader {
 	@Override
 	public String toString() {
 		return "Reader [id=" + id + ", login=" + login + ", password=" + password + ", email=" + email + "]";
+	}
+
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
 	}
 	
 }

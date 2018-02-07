@@ -47,17 +47,6 @@
 							</tr>
 						</c:when>
 					</c:choose>
-					<c:choose>
-						<c:when test="${not empty picError}">
-							<tr>
-								<td>
-									<div id="picError">
-										Wrong size of an image! (max 150x200)
-									</div>
-								</td>
-							</tr>
-						</c:when>
-					</c:choose>
 				</table>
 			</div>
 			<div id="firstTableDiv">
