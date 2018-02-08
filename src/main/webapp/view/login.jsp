@@ -33,20 +33,20 @@
 		
 		<div id="loginTable">
 		
-		<form:form action="login" modelAttribute="reader" method="POST">
+		<form:form method="POST" action="/login">
 		
 			<table>
 				<tr>
 					<td>Name</td>
 				</tr>
 				<tr>
-					<td><form:input path="username" placeholder="Name" id="joinInputBox" required="required"/></td>
+					<td><input name="username" type="text" placeholder="Name" id="joinInputBox" required="required"/></td>
 				</tr>
 				<tr>
 					<td>Password</td>
 				</tr>
 				<tr>
-					<td><form:password path="password" placeholder="Password" id="joinInputBox" required="required"/></td>
+					<td><input name="password" type="password" placeholder="Password" id="joinInputBox" required="required"/></td>
 				</tr>
 				
 				<tr>

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -46,7 +47,8 @@ public class ProfileController {
 
 	@GetMapping("/showProfile")
 	public String showProfile(@RequestParam(value = "guest", required = false) String guest,
-			@RequestParam(value = "readerId", required = false) String readerId, HttpSession session, Model theModel) {
+			@RequestParam(value = "readerId", required = false) String readerId, HttpSession session, Model theModel,
+			Principal principal) {
 
 		int read, currentlyReading, wantToRead, readerIdInt;
 		read = currentlyReading = wantToRead = readerIdInt = 0;
@@ -63,8 +65,8 @@ public class ProfileController {
 			reader = (Reader) profileService.getReaderById(gotenReaderId);
 			session.removeAttribute("readerId");
 		} else
-			reader = (Reader) session.getAttribute("loggedReader");
-
+			reader = readerService.getReaderByUsername(principal.getName());
+		
 		List<ReaderBook> readerBooks = readerService.getReaderBooks(reader.getId());
 		List<ReaderBook> currentlyReadingList = new ArrayList<ReaderBook>();
 		Details details = profileService.getDetails(reader.getId());
@@ -82,13 +84,13 @@ public class ProfileController {
 		if (guest != null) {
 			guestBoo = Boolean.valueOf(guest);
 		} else {
-			guestBoo = (boolean) session.getAttribute("guest");
-			session.removeAttribute("guest");
+			guestBoo = (boolean) session.getAttribute("guest"); //if reader accepts friends request then he goes to
+			session.removeAttribute("guest");					//friend's profile and then go back he gets null  
 		}
 
-		if ((guestBoo == true) && ((boolean) session.getAttribute("logged") == true)) {
+		if ((guestBoo == true) && (principal != null)) {
 			Friends checkFriends = profileService
-					.areTheyFriends(((Reader) session.getAttribute("loggedReader")).getUsername(), reader.getUsername());
+					.areTheyFriends(principal.getName(), reader.getUsername());
 			if (checkFriends != null) {
 				if (checkFriends.getAccept().equals("false"))
 					pending = true;
@@ -98,13 +100,14 @@ public class ProfileController {
 				booFriends = false;
 		}
 
-		if ((boolean) session.getAttribute("logged") == true) {
-			if ((!session.getAttribute("loggedReader").equals(reader.getUsername()) && (guestBoo == true))) {
+		if (principal != null) {
+			if ((!principal.getName().equals(reader.getUsername()) && (guestBoo == true))) {
 				invite = true;
 			}
+			theModel.addAttribute("principalName", principal.getName());
 		}
 
-		if ((guestBoo == false) && ((boolean) session.getAttribute("logged") == true)) {
+		if ((guestBoo == false) && (principal != null)) {
 			friendsInvites = profileService.getFriendsInvites(reader.getId());
 			theModel.addAttribute("friendsInvites", friendsInvites);
 		}
@@ -125,11 +128,6 @@ public class ProfileController {
 			}
 
 			theModel.addAttribute("profilePic", base64Encoded);
-		}
-		
-		if (session.getAttribute("picError") != null) {
-			theModel.addAttribute("picError", true);
-			session.removeAttribute("picError");
 		}
 		
 		theModel.addAttribute("details", details);
@@ -155,10 +153,10 @@ public class ProfileController {
 
 	@GetMapping("/updateState")
 	public String updateState(@RequestParam("bookName") String bookName, @RequestParam("newState") String newState,
-			HttpSession session, Model theModel) {
+			HttpSession session, Model theModel,Principal principal) {
 
 		int bookId = readerService.getBookId(bookName);
-		Reader reader = (Reader) session.getAttribute("loggedReader");
+		Reader reader = readerService.getReaderByUsername(principal.getName());
 		readerService.saveNewState(newState, bookId, reader.getId());
 
 		List<ReaderBook> readerBooks = readerService.getReaderBooks(reader.getId());
@@ -178,10 +176,10 @@ public class ProfileController {
 
 	@GetMapping("/updateDateRead")
 	public String updateDateRead(@RequestParam("bookName") String bookName, @RequestParam("dateRead") String dateRead,
-			HttpSession session, Model theModel) {
+			HttpSession session, Model theModel,Principal principal) {
 
 		int bookId = readerService.getBookId(bookName);
-		Reader reader = (Reader) session.getAttribute("loggedReader");
+		Reader reader = readerService.getReaderByUsername(principal.getName());
 		readerService.saveReadDate(dateRead, bookId, reader.getId());
 
 		List<ReaderBook> readerBooks = readerService.getReaderBooks(reader.getId());
@@ -250,9 +248,9 @@ public class ProfileController {
 	}
 
 	@GetMapping("/showEdit")
-	public String showEdit(HttpSession session, Model theModel) {
+	public String showEdit(HttpSession session, Model theModel,Principal principal) {
 
-		Reader reader = (Reader) session.getAttribute("loggedReader");
+		Reader reader = readerService.getReaderByUsername(principal.getName());
 		Details details;
 
 		details = profileService.getDetails(reader.getId());
@@ -269,11 +267,10 @@ public class ProfileController {
 	}
 
 	@PostMapping("/saveDetails")
-	public String saveDetails(HttpSession session, Model theModel, @ModelAttribute("details") Details details) {
+	public String saveDetails(HttpSession session, Model theModel, @ModelAttribute("details") Details details,
+			Principal principal) {
 
-		Reader reader = (Reader) session.getAttribute("loggedReader");
-
-		System.out.println("SAVE DETAILS " + details.toString());
+		Reader reader = readerService.getReaderByUsername(principal.getName());
 
 		profileService.saveDetails(details);
 
@@ -283,14 +280,14 @@ public class ProfileController {
 
 	@PostMapping("/profileUpload")
 	public String profileUpload(HttpSession session, Model theModel,
-			@RequestParam("file") MultipartFile multipartfile) {
+			@RequestParam("file") MultipartFile multipartfile,Principal principal) {
 
 		if (multipartfile.isEmpty()) {
 			session.setAttribute("guest", false);
 			return "redirect:/profile/showProfile";
 		}
 
-		Reader reader = (Reader) session.getAttribute("loggedReader");
+		Reader reader = readerService.getReaderByUsername(principal.getName());
 
 		try {
 

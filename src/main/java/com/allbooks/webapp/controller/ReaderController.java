@@ -1,9 +1,8 @@
 package com.allbooks.webapp.controller;
 
+import java.security.Principal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Comment;
@@ -77,16 +75,16 @@ public class ReaderController {
 
 	@GetMapping("/showBook")
 	public String showBook(@RequestParam(value = "bookName", required = false) String bookName, Model theModel,
-			HttpSession session) {
+			HttpSession session,Principal principal) {
 
 		if (bookName == null) {
 			bookName = (String) session.getAttribute("redirectBookName");
 		}
 
-		if (session.getAttribute("logged").equals(true)) {
+		if (principal != null) {
 
 			ReaderBook readerBook;
-			Reader reader = (Reader) session.getAttribute("loggedReader");
+			Reader reader = readerService.getReaderByUsername(principal.getName());
 
 			readerBook = readerService.getReaderBook(bookName, reader.getId());
 
@@ -187,22 +185,6 @@ public class ReaderController {
 		return "saved";
 	}
 
-//	@PostMapping("/login")
-//	public String login(@RequestParam("login") String login, @RequestParam("password") String passowrd, Model theModel,
-//			HttpSession session) {
-//
-//		Reader loggedReader = readerService.getReader(login, passowrd);
-//
-//		if (loggedReader == null) {
-//			theModel.addAttribute("loggingError", true);
-//			return "saved";
-//		} else {
-//			session.setAttribute("loggedReader", loggedReader);
-//			session.setAttribute("logged", true);
-//			return "main";
-//		}
-//	}
-
 	@GetMapping("/logout")
 	public String logout(HttpSession session, Model theModel) {
 
@@ -217,9 +199,9 @@ public class ReaderController {
 
 	@GetMapping("/rate")
 	public String rate(@ModelAttribute("rating") Rating rating, @RequestParam("bookName") String bookName,
-			Model theModel, HttpSession session) {
+			Model theModel, HttpSession session,Principal principal) {
 
-		Reader reader = (Reader) session.getAttribute("loggedReader");
+		Reader reader = readerService.getReaderByUsername(principal.getName());
 		int readerId = reader.getId();
 		rating.setBookId(readerService.getBookId(bookName));
 		rating.setUserId(readerId);
@@ -231,9 +213,9 @@ public class ReaderController {
 
 	@GetMapping("/submitReview")
 	public String submitReview(@ModelAttribute("review") Review review, @RequestParam("bookName") String bookName,
-			Model theModel, HttpSession session) {
+			Model theModel, HttpSession session,Principal principal) {
 
-		Reader reader = (Reader) session.getAttribute("loggedReader");
+		Reader reader = readerService.getReaderByUsername(principal.getName());
 		int readerId = reader.getId();
 
 		review.setReaderId(readerId);
@@ -248,9 +230,9 @@ public class ReaderController {
 
 	@GetMapping("/submitComment")
 	public String submitComment(@ModelAttribute("comment") Comment comment, @RequestParam Map<String, String> params,
-			@RequestParam("reviewId") int reviewId, HttpSession session, Model theModel) {
+			@RequestParam("reviewId") int reviewId, HttpSession session, Model theModel,Principal principal) {
 
-		Reader reader = (Reader) session.getAttribute("loggedReader");
+		Reader reader = readerService.getReaderByUsername(principal.getName());
 		int readerId = reader.getId();
 
 		comment.setReviewId(reviewId);
@@ -287,9 +269,9 @@ public class ReaderController {
 
 	@GetMapping("/readstate")
 	public String readState(@RequestParam("bookName") String bookName, @RequestParam("update") boolean update,
-			@ModelAttribute("readerBook") ReaderBook readerBook, HttpSession session) {
+			@ModelAttribute("readerBook") ReaderBook readerBook, HttpSession session,Principal principal) {
 
-		Reader reader = (Reader) session.getAttribute("loggedReader");
+		Reader reader = readerService.getReaderByUsername(principal.getName());
 		Book book = readerService.getBook(readerService.getBookId(bookName));
 		double rating = readerService.getOverallRating(bookName);
 
@@ -321,7 +303,8 @@ public class ReaderController {
 
 	@GetMapping("/showMyBooks")
 	public String showMyBooks(@RequestParam("myBooks") String myBooks,
-			@RequestParam(value = "readerId", required = false) String readerId, Model theModel, HttpSession session) {
+			@RequestParam(value = "readerId", required = false) String readerId, Model theModel, HttpSession session,
+			Principal principal) {
 
 		int readerIdInt = 0;
 
@@ -331,7 +314,7 @@ public class ReaderController {
 			readerIdInt = Integer.valueOf(readerId);
 			reader = profileService.getReaderById(readerIdInt);
 		} else
-			reader = (Reader) session.getAttribute("loggedReader");
+			reader = readerService.getReaderByUsername(principal.getName());
 
 		List<ReaderBook> readerBooks = readerService.getReaderBooks(reader.getId());
 

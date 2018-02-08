@@ -35,7 +35,7 @@
 					</tr>
 					<c:choose>
 						<c:when
-							test="${(guest == false) || (reader.id == sessionScope.loggedReader.id)}">
+							test="${reader.username == principalName}">
 							<tr>
 								<td>
 									<form method="POST" action="/profile/profileUpload"
@@ -51,23 +51,23 @@
 			</div>
 			<div id="firstTableDiv">
 				<div id="loginEdit">
-					<h2>${reader.login}</h2>
+					<h2>${reader.username}</h2>
 					<c:choose>
-						<c:when test="${reader.id == sessionScope.loggedReader.id}">
+						<c:when test="${reader.username == principalName}">
 							<a class="blackRefNon" href="/profile/showEdit">(edit
 								profile)</a>
 						</c:when>
 						<c:when test="${invite == true}">
 							<c:url var="friendUrl" value="/profile/inviteFriend">
-								<c:param name="reader1login" value="${reader.login}" />
+								<c:param name="reader1login" value="${reader.username}" />
 								<c:param name="reader2login"
-									value="${sessionScope.loggedReader.login}" />
+									value="${principalName}" />
 							</c:url>
 							<c:choose>
 								<c:when test="${pending == false}">
 									<c:choose>
 										<c:when
-											test="${(booFriends == false) && (reader.id != sessionScope.loggedReader.id)}">
+											test="${(booFriends == false) && (reader.username != principalName)}">
 											<a class="blackRef" href="${friendUrl}">Send friend
 												request</a>
 										</c:when>
@@ -113,7 +113,7 @@
 						<c:param name="readerId" value="${readerId}" />
 					</c:url>
 					<h4 id="topDesc">
-						<a class="blackRef" href="${myBooks}">${reader.login}'s
+						<a class="blackRef" href="${myBooks}">${reader.username}'s
 							Bookshelves</a>
 					</h4>
 					<hr>
@@ -128,7 +128,7 @@
 
 			</div>
 			<div class="underFirstTable">
-				<h4 id="topDesc">${reader.login} is currently reading</h4>
+				<h4 id="topDesc">${reader.username} is currently reading</h4>
 				<hr>
 				<table class="currentlyReadingBooks">
 					<c:forEach var="tempBook" items="${currentlyReadingList}">
@@ -139,7 +139,7 @@
 							<td><a href="${bookSite}"> <img
 									src="/css/images/m${tempBook.minBookName}.jpg" />
 							</a></td>
-							<td>${reader.login} is currently reading<br>
+							<td>${reader.username} is currently reading<br>
 								<h4 id="topDesc">
 									<a class="blackRef" href="${bookSite}">${tempBook.fullBookName}</a>
 								</h4> <br> by ${tempBook.author}<br> bookshelves:
@@ -153,7 +153,7 @@
 		<div id="rightSide">
 			<c:choose>
 				<c:when
-					test="${(guest == false) || (reader.id == sessionScope.loggedReader.id)}">
+					test="${reader.username == principalName}">
 					<div id="friendsInvites">
 						<h4 id="topDesc">Friends Invites</h4>
 						<hr>
@@ -184,7 +184,7 @@
 				</c:when>
 			</c:choose>
 			<div id="friendsList">
-				<h4 id="topDesc">${reader.login}'s friends(${friendsNum})</h4>
+				<h4 id="topDesc">${reader.username}'s friends(${friendsNum})</h4>
 				<br>
 				<hr>
 				<c:choose>
@@ -216,7 +216,7 @@
 						</c:otherwise>
 											</c:choose>
 									</a> <c:choose>
-											<c:when test="${reader.id == sessionScope.loggedReader.id }">
+											<c:when test="${reader.username == principalName }">
 												<form:form action="/profile/deleteFriends" method="GET"
 													id="deleteForm">
 													<input type="hidden" name="friendsId"
