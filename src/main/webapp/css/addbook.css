@@ -1,0 +1,45 @@
+body{
+	background-image: url("/css/images/upfeathers.png");
+	font-family: 'Roboto', sans-serif;
+	font-size:17px;
+	color:black;	
+}
+
+#container 
+{
+	width:1000px;
+     margin:0 auto;
+}
+
+.addingName{
+	font-size:12px;
+}
+
+.bottomTd{
+	padding-bottom:20px;
+}
+
+.inputBox{
+	width: 300px;
+	height: 23px;
+	font-family: 'Roboto', sans-serif;
+}
+
+.aboutArea{
+	width:400px;
+	height:200px;
+}
+
+.smallerArea{
+	width:300px;
+	height:150px;
+}
+
+.descriptionArea{
+	width:650px;
+	height:300px;
+}
+
+#submit{
+	margin-top:50px;
+}

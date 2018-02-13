@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,7 +16,9 @@ import com.allbooks.webapp.entity.Comment;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
+import com.allbooks.webapp.entity.ReaderRole;
 import com.allbooks.webapp.entity.Review;
+import com.allbooks.webapp.entity.Role;
 
 @Service
 public class ReaderServiceImpl implements ReaderService {
@@ -23,29 +26,52 @@ public class ReaderServiceImpl implements ReaderService {
 	@Autowired
 	RestTemplate restTemplate;
 
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 	@Override
 	public boolean saveReader(Reader theReader) {
 
+		ReaderRole readerRole = new ReaderRole();
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("readerLogin", theReader.getUsername());
+		
+		theReader.setPassword(bCryptPasswordEncoder.encode(theReader.getPassword()));
+
 		if (checkReaderLogin(theReader)) {
 			restTemplate.postForObject("http://localhost:9000/readers", theReader, Reader.class);
+			Reader reader = restTemplate.getForObject("http://localhost:9000/readers/logins/{readerLogin}", Reader.class,
+					params);
+			readerRole.setReaderId(reader.getId());
+			readerRole.setRoleId(1);
+			restTemplate.postForObject("http://localhost:9000/readerrole", readerRole, ReaderRole.class);
+			
 			return true;
 		} else
 			return false;
 	}
 
-	private boolean checkReaderLogin(Reader theReader) {
-
+	@Override
+	public Reader getReaderByUsername(String login) {
+		
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("readerLogin", theReader.getLogin());
-
+		params.put("readerLogin", login);
+		
 		Reader reader = restTemplate.getForObject("http://localhost:9000/readers/logins/{readerLogin}", Reader.class,
 				params);
+		
+		return reader;
+	}
+	
+	private boolean checkReaderLogin(Reader theReader) {
+
+		Reader reader = getReaderByUsername(theReader.getUsername());
 
 		if (reader == null)
 			return true;
 		else
 			return false;
-
 	}
 
 	@Override
@@ -121,9 +147,11 @@ public class ReaderServiceImpl implements ReaderService {
 		for (Rating rating : ratings) {
 			sum += rating.getRate();
 		}
-
+		if(ratingsLength != 0)
 		avg = sum / ratingsLength;
-
+		else
+		avg=0;
+		
 		return avg;
 	}
 
@@ -170,7 +198,10 @@ public class ReaderServiceImpl implements ReaderService {
 
 		Rating rating = restTemplate.getForObject("http://localhost:9000/readers/{readerId}/books/{bookId}/ratings",
 				Rating.class, params);
-
+		
+		if(rating == null)
+			return 0;
+		
 		return rating.getRate();
 	}
 
@@ -295,14 +326,15 @@ public class ReaderServiceImpl implements ReaderService {
 
 	@Override
 	public void saveNewState(String shelves, int bookId, int readerId) {
-		
+
 		Map<String, String> params = new HashMap<>();
 		params.put("readerId", String.valueOf(readerId));
 		params.put("bookId", String.valueOf(bookId));
-		
-		ReaderBook readerBook = restTemplate.getForObject("http://localhost:9000/readers/{readerId}/readerbooks/{bookId}", ReaderBook.class,params);
+
+		ReaderBook readerBook = restTemplate.getForObject(
+				"http://localhost:9000/readers/{readerId}/readerbooks/{bookId}", ReaderBook.class, params);
 		readerBook.setShelves(shelves);
-		
+
 		restTemplate.put("http://localhost:9000/readerbooks", readerBook);
 
 	}
@@ -328,24 +360,41 @@ public class ReaderServiceImpl implements ReaderService {
 
 	@Override
 	public Book getBook(int bookId) {
-		
+
 		Map<String, String> params = new HashMap<>();
 		params.put("bookId", String.valueOf(bookId));
-		
-		Book book = restTemplate.getForObject("http://localhost:9000/books/{bookId}", Book.class,params);
-		
+
+		Book book = restTemplate.getForObject("http://localhost:9000/books/{bookId}", Book.class, params);
+
 		return book;
 	}
 
 	@Override
 	public void saveReadDate(String dateRead, int bookId, int id) {
-		
+
 		String bookName = getBookName(bookId);
-		
-		ReaderBook readerBook = getReaderBook(bookName,id);
+
+		ReaderBook readerBook = getReaderBook(bookName, id);
 		readerBook.setDateRead(dateRead);
-		
+
 		restTemplate.put("http://localhost:9000/readerbooks", readerBook);
+	}
+
+	@Override
+	public Book getBookByName(String bookname) {
+		Map<String, String> params = new HashMap<>();
+		params.put("title", bookname);
+
+		Book book = restTemplate.getForObject("http://localhost:9000/books/title/{title}", Book.class, params);
+
+		return book;
+	}
+
+	@Override
+	public void saveBook(Book book) {
+		
+		restTemplate.postForObject("http://localhost:9000/books",book,Book.class);
+		
 	}
 
 }

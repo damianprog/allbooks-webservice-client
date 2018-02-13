@@ -8,6 +8,7 @@ import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.Review;
+import com.allbooks.webapp.entity.Role;
 
 public interface ReaderService {
 
@@ -50,7 +51,12 @@ public interface ReaderService {
 	public List<ReaderBook> getReaderBooks(int id);
 
 	public Book getBook(int bookId);
+	
+	public Book getBookByName(String bookname);
 
 	public void saveReadDate(String dateRead, int bookId, int id);
 	
+	public Reader getReaderByUsername(String login);
+	
+	public void saveBook(Book book);
 }

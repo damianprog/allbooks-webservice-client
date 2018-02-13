@@ -1,4 +1,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
@@ -30,8 +32,7 @@
 				src="/css/images/meet.png">
 		</div>
 
-		<c:choose>
-			<c:when test="${sessionScope.logged == false }">
+		<sec:authorize access="!isFullyAuthenticated()">
 				<div id="mainRegister">
 
 					<div id="newHere">
@@ -42,7 +43,7 @@
 						method="POST">
 						<table>
 							<tr>
-								<td><form:input path="login" placeholder="Name"
+								<td><form:input path="username" placeholder="Name"
 										id="inputRegister" required="required" /></td>
 							</tr>
 							<tr>
@@ -60,8 +61,8 @@
 						</table>
 					</form:form>
 				</div>
-			</c:when>
-			<c:when test="${sessionScope.logged == true }">
+			</sec:authorize>
+			<sec:authorize access="isFullyAuthenticated()">
 				<div id="quote">
 				<table>
 					<tr>
@@ -76,8 +77,7 @@
 					</tr>
 				</table>
 				</div>
-			</c:when>
-		</c:choose>
+			</sec:authorize>
 		<hr>
 
 		<div style=""></div>
