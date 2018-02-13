@@ -165,7 +165,6 @@
 								<c:forEach var="tempFriends" items="${friendsInvites}">
 									<c:url var="senderProfile" value="/profile/showProfile">
 										<c:param name="readerId" value="${tempFriends.reader2}" />
-										<c:param name="guest" value="true" />
 									</c:url>
 									<a href="${senderProfile}">${tempFriends.reader2Login}</a> Has sent you a friends request!
 				<form method="GET" action="/profile/acceptOrAbort">
@@ -203,7 +202,6 @@
 											<c:param name="readerId" value="${tempFriends.reader2}" />
 										</c:otherwise>
 									</c:choose>
-									<c:param name="guest" value="true" />
 								</c:url>
 								<tr>
 									<td>Friend's name: <a class="blackRef"

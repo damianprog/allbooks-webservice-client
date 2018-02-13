@@ -17,31 +17,34 @@
 
 	<div id="headerContainer">
 
-		<table id="title">
+		<table id="titleMain">
 			<tr>
 				<td id="titleImg"><img src="/css/images/bookshelf.png"></td>
 				<td id="allbooksName"><a id="allBooks" href="/reader/main">All
 						Books</a></td>
 
-				<td id="myBooks"><sec:authorize access="isFullyAuthenticated()">
-
+				<td class="pageRef"><sec:authorize
+						access="isFullyAuthenticated()">
 						<c:url var="myBooks" value="/reader/showMyBooks">
 							<c:param name="myBooks" value="true" />
 						</c:url>
 
-						<a id="myBooksRef" href="${myBooks}">My Books</a>
+						<a class="blackRef" href="${myBooks}">My Books</a>
 					</sec:authorize></td>
-
+				
+				<sec:authorize access="hasAuthority('ADMIN')">
+					<td class="pageRef"><c:url var="addBook"
+							value="/admin/addBookPage">
+						</c:url> <a class="blackRef" href="${addBook}">Add Book</a></td>
+				</sec:authorize>
 				<sec:authorize access="isFullyAuthenticated()">
 					<td id="loginPart"><c:url var="showProfile"
 							value="/profile/showProfile">
-							<c:param name="guest" value="false" />
 						</c:url> Profile:<a class="login" href="${showProfile}"><sec:authentication
-								property="principal.username" /></a></td><td> <form:form method="POST"
-							action="/logout">
+								property="principal.username" /></a></td>
+					<td><form:form method="POST" action="/logout">
 							<input class="logoutHeader" type="submit" value="Logout" />
-						</form:form>
-						</td>
+						</form:form></td>
 				</sec:authorize>
 
 				<sec:authorize access="!isFullyAuthenticated()">

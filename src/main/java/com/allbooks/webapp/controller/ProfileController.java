@@ -46,15 +46,14 @@ public class ProfileController {
 	ProfileService profileService;
 
 	@GetMapping("/showProfile")
-	public String showProfile(@RequestParam(value = "guest", required = false) String guest,
-			@RequestParam(value = "readerId", required = false) String readerId, HttpSession session, Model theModel,
+	public String showProfile(@RequestParam(value = "readerId", required = false) String readerId, HttpSession session, Model theModel,
 			Principal principal) {
 
 		int read, currentlyReading, wantToRead, readerIdInt;
 		read = currentlyReading = wantToRead = readerIdInt = 0;
 		Reader reader;
 		List<Friends> friendsInvites, friends;
-		boolean invite, guestBoo, booFriends, pending;
+		boolean invite, booFriends, pending;
 		invite = booFriends = pending = false;
 
 		if (readerId != null) {
@@ -81,14 +80,8 @@ public class ProfileController {
 				wantToRead++;
 		}
 
-		if (guest != null) {
-			guestBoo = Boolean.valueOf(guest);
-		} else {
-			guestBoo = (boolean) session.getAttribute("guest"); //if reader accepts friends request then he goes to
-			session.removeAttribute("guest");					//friend's profile and then go back he gets null  
-		}
-
-		if ((guestBoo == true) && (principal != null)) {
+		if(principal !=null) {
+		if ((!principal.getName().equals(reader.getUsername())) ) {
 			Friends checkFriends = profileService
 					.areTheyFriends(principal.getName(), reader.getUsername());
 			if (checkFriends != null) {
@@ -99,34 +92,29 @@ public class ProfileController {
 			} else
 				booFriends = false;
 		}
+		}
 
 		if (principal != null) {
-			if ((!principal.getName().equals(reader.getUsername()) && (guestBoo == true))) {
+			if ((!principal.getName().equals(reader.getUsername()))) {
 				invite = true;
 			}
 			theModel.addAttribute("principalName", principal.getName());
 		}
-
-		if ((guestBoo == false) && (principal != null)) {
+		
+		if((principal != null)) {
+		if ((principal.getName().equals(reader.getUsername()))) {
 			friendsInvites = profileService.getFriendsInvites(reader.getId());
 			theModel.addAttribute("friendsInvites", friendsInvites);
+		}
 		}
 
 		// friends list for reader
 		friends = profileService.getReaderFriends(reader.getId());
+		
 		ProfilePics profilePics = profileService.getProfilePics(reader.getId());
 
 		if (profilePics != null) {
-
-			String base64Encoded = null;
-
-			byte[] encodeBase64 = Base64.getEncoder().encode(profilePics.getPic());
-			try {
-				base64Encoded = new String(encodeBase64, "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-
+			String base64Encoded = getEncodedImage(profilePics.getPic());
 			theModel.addAttribute("profilePic", base64Encoded);
 		}
 		
@@ -135,7 +123,6 @@ public class ProfileController {
 		theModel.addAttribute("currentlyReading", currentlyReading);
 		theModel.addAttribute("currentlyReadingList", currentlyReadingList);
 		theModel.addAttribute("wantToRead", wantToRead);
-		theModel.addAttribute("guest", guestBoo);
 		theModel.addAttribute("reader", reader);
 		theModel.addAttribute("invite", invite);
 		theModel.addAttribute("booFriends", booFriends);
@@ -151,6 +138,20 @@ public class ProfileController {
 		return "profile";
 	}
 
+	public String getEncodedImage(byte[] theEncodedBase64) {
+		
+		String base64Encoded = null;
+
+		byte[] encodeBase64 = Base64.getEncoder().encode(theEncodedBase64);
+		try {
+			base64Encoded = new String(encodeBase64, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return base64Encoded;
+	}
+	
 	@GetMapping("/updateState")
 	public String updateState(@RequestParam("bookName") String bookName, @RequestParam("newState") String newState,
 			HttpSession session, Model theModel,Principal principal) {
@@ -213,7 +214,6 @@ public class ProfileController {
 		profileService.saveFriends(friends);
 
 		session.setAttribute("readerId", reader1Login);
-		session.setAttribute("guest", true);
 		return "redirect:/profile/showProfile";
 	}
 
@@ -233,16 +233,13 @@ public class ProfileController {
 			profileService.deleteFriends(friendsIdInt);
 		}
 
-		session.setAttribute("guest", false);
-
 		return "redirect:/profile/showProfile";
 	}
 
 	@GetMapping("/deleteFriends")
 	public String deleteFriends(@RequestParam("friendsId") int friendsId, Model theModel, HttpSession session) {
+		
 		profileService.deleteFriends(friendsId);
-
-		session.setAttribute("guest", false);
 
 		return "redirect:/profile/showProfile";
 	}
@@ -274,7 +271,6 @@ public class ProfileController {
 
 		profileService.saveDetails(details);
 
-		session.setAttribute("guest", false);
 		return "redirect:/profile/showProfile";
 	}
 
@@ -283,7 +279,6 @@ public class ProfileController {
 			@RequestParam("file") MultipartFile multipartfile,Principal principal) {
 
 		if (multipartfile.isEmpty()) {
-			session.setAttribute("guest", false);
 			return "redirect:/profile/showProfile";
 		}
 
@@ -315,7 +310,6 @@ public class ProfileController {
 			e.printStackTrace();
 		}
 
-		session.setAttribute("guest", false);
 		return "redirect:/profile/showProfile";
 	}
 

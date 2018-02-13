@@ -1,5 +1,7 @@
 package com.allbooks.webapp.entity;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -11,6 +13,8 @@ public class Book {
 	
 	private String title;
 
+	private String miniTitle;
+	
 	private String fullTitle;
 
 	private String author;
@@ -34,6 +38,15 @@ public class Book {
 	private String publishCompany;
 	
 	private String buyBook;
+
+	
+	public String getMiniTitle() {
+		return miniTitle;
+	}
+
+	public void setMiniTitle(String miniTitle) {
+		this.miniTitle = miniTitle;
+	}
 
 	public byte[] getBookPhoto() {
 		return bookPhoto;

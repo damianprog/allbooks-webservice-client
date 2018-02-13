@@ -147,9 +147,11 @@ public class ReaderServiceImpl implements ReaderService {
 		for (Rating rating : ratings) {
 			sum += rating.getRate();
 		}
-
+		if(ratingsLength != 0)
 		avg = sum / ratingsLength;
-
+		else
+		avg=0;
+		
 		return avg;
 	}
 
@@ -196,7 +198,10 @@ public class ReaderServiceImpl implements ReaderService {
 
 		Rating rating = restTemplate.getForObject("http://localhost:9000/readers/{readerId}/books/{bookId}/ratings",
 				Rating.class, params);
-
+		
+		if(rating == null)
+			return 0;
+		
 		return rating.getRate();
 	}
 
@@ -373,6 +378,23 @@ public class ReaderServiceImpl implements ReaderService {
 		readerBook.setDateRead(dateRead);
 
 		restTemplate.put("http://localhost:9000/readerbooks", readerBook);
+	}
+
+	@Override
+	public Book getBookByName(String bookname) {
+		Map<String, String> params = new HashMap<>();
+		params.put("title", bookname);
+
+		Book book = restTemplate.getForObject("http://localhost:9000/books/title/{title}", Book.class, params);
+
+		return book;
+	}
+
+	@Override
+	public void saveBook(Book book) {
+		
+		restTemplate.postForObject("http://localhost:9000/books",book,Book.class);
+		
 	}
 
 }

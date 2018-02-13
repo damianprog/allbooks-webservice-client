@@ -1,8 +1,10 @@
 package com.allbooks.webapp.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +49,7 @@ public class ReaderController {
 	}
 
 	@GetMapping("/main")
-	public String mainPage(Model theModel, HttpSession session) {
+	public String mainPage(Model theModel, HttpSession session, HttpServletRequest request) {
 
 		Reader reader = new Reader();
 		theModel.addAttribute("reader", reader);
@@ -75,14 +77,15 @@ public class ReaderController {
 
 	@GetMapping("/showBook")
 	public String showBook(@RequestParam(value = "bookName", required = false) String bookName, Model theModel,
-			HttpSession session,Principal principal) {
+			HttpSession session, Principal principal) {
 
 		if (bookName == null) {
 			bookName = (String) session.getAttribute("redirectBookName");
 		}
 
-		if (principal != null) {
+		Book book = readerService.getBookByName(bookName);
 
+		if (principal != null) {
 			ReaderBook readerBook;
 			Reader reader = readerService.getReaderByUsername(principal.getName());
 
@@ -109,6 +112,12 @@ public class ReaderController {
 			}
 		}
 
+		String base64Encoded = getEncodedImage(book.getBookPhoto());
+		String base64Encoded2 = getEncodedImage(book.getAuthorPhoto());
+		
+		theModel.addAttribute("bookPic", base64Encoded);
+		theModel.addAttribute("authorPic", base64Encoded2);
+
 		int[] ratesAndReviews = readerService.howManyRatesAndReviews(bookName);
 		theModel.addAttribute("rates", ratesAndReviews[0]);
 		theModel.addAttribute("reviews", ratesAndReviews[1]);
@@ -132,8 +141,23 @@ public class ReaderController {
 		theModel.addAttribute("review", review);
 
 		session.removeAttribute("redirectBookName");
+		theModel.addAttribute("book", book);
 
-		return "books/" + bookName;
+		return "book";
+	}
+
+	public String getEncodedImage(byte[] theEncodedBase64) {
+
+		String base64Encoded = null;
+
+		byte[] encodeBase64 = Base64.getEncoder().encode(theEncodedBase64);
+		try {
+			base64Encoded = new String(encodeBase64, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		return base64Encoded;
 	}
 
 	@GetMapping("/reviewPage")
@@ -199,7 +223,7 @@ public class ReaderController {
 
 	@GetMapping("/rate")
 	public String rate(@ModelAttribute("rating") Rating rating, @RequestParam("bookName") String bookName,
-			Model theModel, HttpSession session,Principal principal) {
+			Model theModel, HttpSession session, Principal principal) {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 		int readerId = reader.getId();
@@ -213,7 +237,7 @@ public class ReaderController {
 
 	@GetMapping("/submitReview")
 	public String submitReview(@ModelAttribute("review") Review review, @RequestParam("bookName") String bookName,
-			Model theModel, HttpSession session,Principal principal) {
+			Model theModel, HttpSession session, Principal principal) {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 		int readerId = reader.getId();
@@ -230,7 +254,7 @@ public class ReaderController {
 
 	@GetMapping("/submitComment")
 	public String submitComment(@ModelAttribute("comment") Comment comment, @RequestParam Map<String, String> params,
-			@RequestParam("reviewId") int reviewId, HttpSession session, Model theModel,Principal principal) {
+			@RequestParam("reviewId") int reviewId, HttpSession session, Model theModel, Principal principal) {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 		int readerId = reader.getId();
@@ -269,7 +293,7 @@ public class ReaderController {
 
 	@GetMapping("/readstate")
 	public String readState(@RequestParam("bookName") String bookName, @RequestParam("update") boolean update,
-			@ModelAttribute("readerBook") ReaderBook readerBook, HttpSession session,Principal principal) {
+			@ModelAttribute("readerBook") ReaderBook readerBook, HttpSession session, Principal principal) {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 		Book book = readerService.getBook(readerService.getBookId(bookName));

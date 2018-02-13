@@ -23,7 +23,6 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		 Reader reader = readerService.getReaderByUsername(username);
-		 System.out.println("USRNAME: " + reader.getUsername() + " PASSWORD: " + reader.getPassword());
 	        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 	        for (Role role : reader.getRoles()){
 	            grantedAuthorities.add(new SimpleGrantedAuthority(role.getRole()));

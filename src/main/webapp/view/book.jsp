@@ -25,7 +25,7 @@
 		<div>
 			<table>
 				<tr>
-					<td id="img"><img src="/css/images/magnusChasePage.jpg">
+					<td id="img"><img src="data:image/jpeg;base64,${bookPic}">
 						<br> <sec:authorize access="isFullyAuthenticated()">
 							<c:choose>
 								<c:when test="${userRated == false}">
@@ -39,7 +39,7 @@
 												<form:option value="4" label="4" />
 												<form:option value="5" label="5" selected="selected" />
 											</form:select>
-											<input type="hidden" name="bookName" value="magnusChase">
+											<input type="hidden" name="bookName" value="${book.title}">
 											<input type="submit" value="Submit" />
 										</form:form>
 									</div>
@@ -66,7 +66,7 @@
 										label="Currently Reading" />
 									<form:option value="Want to Read" label="Want to Read" />
 								</form:select>
-								<input type="hidden" name="bookName" value="magnusChase">
+								<input type="hidden" name="bookName" value="${book.title}">
 								<input type="hidden" name="update" value="${update}">
 								<input type="submit" value="Submit" />
 							</form:form>
@@ -74,57 +74,40 @@
 							<a href="/reader/loginPage">Sign In</a> to Rate this book!
 							</sec:authorize></td>
 					<td id="desc">
-						<h3 id="h3">The Ship of the Dead (Magnus Chase and the Gods
-							of Asgard #3)</h3>
-						<p id="credit">by Damian Andersen (AllBooks Author)</p>
+						<h3 id="h3">${book.fullTitle}</h3>
+						<p id="credit">by ${book.reviewAuthor} (AllBooks Author)</p>
 						<table>
 							<tr>
 								<td id="pInstead">Rating: ${overallRating}</td>
 								<td id="ratingDetails">Rating Details ${rates} Ratings
 									${reviews} Reviews</td>
 							</tr>
-						</table> Magnus Chase, a once-homeless teen, is a resident of the Hotel
-						Valhalla and one of Odin's chosen warriors. As the son of Frey,
-						the god of summer, fertility, and health, Magnus isn't naturally
-						inclined to fighting. But he has strong and steadfast friends,
-						including Hearthstone the elf, Blitzen the dwarf, and Samirah the
-						Valkyrie, and together they have achieved brave deeds, such as
-						defeating Fenris Wolf and battling giants for Thor's hammer,
-						Mjolnir. Now Magnus and his crew must sail to the farthest borders
-						of Jotunheim and Niflheim in pursuit of Asgard's greatest threat.
-						Will they succeed in their perilous journey, or is Ragnarok
-						lurking on the horizon?
+						</table>${book.description}
 						<hr> BUY A COPY<br> <a target="blank"
-						href="https://www.amazon.com/gp/product/1423160932/ref=x_gr_w_bb?ie=UTF8&tag=x_gr_w_bb-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=1423160932&SubscriptionId=1MGPYB6YW3HWK55XCGG2">
+						href="${book.buyBook}">
 							<button type="button">Amazon</button>
 					</a>
 						<hr>
 						<div id="details">
-							Hardcover, 423 pages<br> Published October 3rd 2017 by
-							Disney-Hyperion
+							${book.coverType}, ${book.pages} pages<br> Published ${book.publishDate} by
+							${book.publishCompany}
 						</div>
 					</td>
 					<td id="aboutAuthor">
-						<h4 id="h3">ABOUT RICK RIORDAN</h4>
+						<h4 id="h3">About ${book.author}</h4>
 						<hr>
-						<div>Rick Riordan is the #1 New York Times bestselling
-							author of many books, including the Percy Jackson & the Olympians
-							series. Please follow him on Twitter and via his official blog.</div>
+						<div>${book.aboutAuthor}</div>
 						<div id="quotesFromBook">
-							<h4 id="h3">QUOTES FROM THE SHIP OF THE DEAD</h4>
+							<h4 id="h3">Quotes From ${book.miniTitle}</h4>
 							<hr>
+							<c:forEach var="tempQuote" items="${book.bookQuotes}">
 							<p>
-								<i>"You're a strange person." "I prefer the term fabulously
-									weird."</i>
+								<i>${tempQuote}</i>
 							</p>
-							<p>
-								<i>"I figured something out. You can't hold onto hate
-									forever. It won't do a thing to the person you hate, but it'll
-									poison you, sure enough."</i>
-							</p>
+							</c:forEach>
 						</div>
 					</td>
-					<td id="img2"><img src="/css/images/RickRiordan.jpg"></td>
+					<td id="img2"><img src="data:image/jpeg;base64,${authorPic}"></td>
 				</tr>
 			</table>
 		</div>
@@ -142,7 +125,7 @@
 					Content<br>
 					<form:textarea id="reviewBox" path="text" required="required" />
 					<br>
-					<input type="hidden" name="bookName" value="magnusChase" />
+					<input type="hidden" name="bookName" value="${book.title}" />
 					<input type="submit" value="Submit">
 				</form:form>
 			</sec:authorize>
@@ -161,8 +144,8 @@
 							<c:param name="bookId" value="${tempReview.bookId}" />
 							<c:param name="readerRating" value="${tempReview.readerRating}" />
 							<c:param name="fullBookName"
-								value="The Ship of the Dead (Magnus Chase and the Gods of Asgard)" />
-							<c:param name="authorName" value="Rick Riordan" />
+								value="${book.fullTitle}" />
+							<c:param name="authorName" value="${book.author}" />
 						</c:url>
 
 						<c:url var="profileLink" value="/profile/showProfile">
@@ -187,7 +170,7 @@
 										<form:form action="/reader/dropLike" method="GET"
 											id="likeForm">
 											<input type="hidden" name="reviewId" value="${tempReview.id}" />
-											<input type="hidden" name="bookName" value="magnusChase" />
+											<input type="hidden" name="bookName" value="${book.title}" />
 											<input type="submit" value="Like" />
 										</form:form>
 									</sec:authorize>
