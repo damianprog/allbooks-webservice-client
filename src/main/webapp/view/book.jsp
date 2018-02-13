@@ -49,7 +49,6 @@
 									Your rate ${readerRating}
 						</c:when>
 							</c:choose>
-						</sec:authorize> <sec:authorize access="isFullyAuthenticated()">
 							<c:choose>
 								<c:when test="${update == true}">
 									<br>Current State:${readerBook.shelves}

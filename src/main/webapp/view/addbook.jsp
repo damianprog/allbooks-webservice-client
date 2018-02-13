@@ -24,106 +24,120 @@
 
 		<h2>Add Book</h2>
 		<hr />
-				<form:form action="addBook" modelAttribute="book" method="POST">
-					<table>
-						<tr>
-							<td class="addingName">Full Title</td>
-						</tr>
-						<tr>
-							<td class="bottomTd"><form:input path="fullTitle"
-									class="inputBox" required="required" /></td>
-						</tr>
-						<tr>
-							<td class="addingName">Mini Title</td>
-						</tr>
-						<tr>
-							<td class="bottomTd"><form:input path="miniTitle"
-									class="inputBox" required="required" /></td>
-						</tr>
-						<tr>
-							<td class="addingName">Small Mini Title</td>
-						</tr>
-						<tr>
-							<td class="bottomTd"><form:input path="title"
-									class="inputBox" required="required" /></td>
-						</tr>
-						<tr>
-							<td class="addingName">Review Author</td>
-						</tr>
-						<tr>
-							<td class="bottomTd"><form:input path="reviewAuthor"
-									class="inputBox" required="required" /></td>
-						</tr>
-						<tr>
-							<td class="addingName">Book Author</td>
-						</tr>
-						<tr>
-							<td class="bottomTd"><form:input path="author"
-									class="inputBox" required="required" /></td>
-						</tr>
-						<tr>
-							<td class="addingName">About Author</td>
-						</tr>
-						<tr>
-							<td class="bottomTd"><form:textarea path="aboutAuthor"
-									class="aboutArea" required="required" /></td>
-						</tr>
+		<form:form action="addBook" modelAttribute="book" method="POST" enctype="multipart/form-data">
+			<table>
+				<tr>
+					<td class="addingName">Book Photo (JPG extension, please)</td>
+				</tr>
+				<tr>
+					<td class="bottomTd"><input type="file" name="bookPhotoTemp"
+							class="inputBox" required="required" /></td>
+				</tr>
+				<tr>
+					<td class="addingName">Author Photo (JPG extension, please)</td>
+				</tr>
+				<tr>
+					<td class="bottomTd"><input type="file" name="authorPhotoTemp"
+							class="inputBox" required="required" /></td>
+				</tr>
+				<tr>
+					<td class="addingName">Full Title</td>
+				</tr>
+				<tr>
+					<td class="bottomTd"><form:input path="fullTitle"
+							class="inputBox" required="required" /></td>
+				</tr>
+				<tr>
+					<td class="addingName">Mini Title</td>
+				</tr>
+				<tr>
+					<td class="bottomTd"><form:input path="miniTitle"
+							class="inputBox" required="required" /></td>
+				</tr>
+				<tr>
+					<td class="addingName">Small Mini Title</td>
+				</tr>
+				<tr>
+					<td class="bottomTd"><form:input path="title" class="inputBox"
+							required="required" /></td>
+				</tr>
+				<tr>
+					<td class="addingName">Review Author</td>
+				</tr>
+				<tr>
+					<td class="bottomTd"><form:input path="reviewAuthor"
+							class="inputBox" required="required" /></td>
+				</tr>
+				<tr>
+					<td class="addingName">Book Author</td>
+				</tr>
+				<tr>
+					<td class="bottomTd"><form:input path="author"
+							class="inputBox" required="required" /></td>
+				</tr>
+				<tr>
+					<td class="addingName">About Author</td>
+				</tr>
+				<tr>
+					<td class="bottomTd"><form:textarea path="aboutAuthor"
+							class="aboutArea" required="required" /></td>
+				</tr>
 
-						<tr>
-							<td class="addingName">Book Quotes (Two Quotes in quotation
-								marks separated by coma)</td>
-						</tr>
-						<tr>
-							<!-- separate it in controller when showing book -->
-							<td class="bottomTd"><form:textarea path="bookQuotes"
-									class="smallerArea" required="required" /></td>
-						</tr>
-						<tr>
-							<td class="addingName">Cover Type</td>
-						</tr>
-						<tr>
-							<td class="bottomTd"><form:input path="coverType"
-									class="inputBox" required="required" /></td>
-						</tr>
-						<tr>
-							<td class="addingName">Pages</td>
-						</tr>
-						<tr>
-							<td class="bottomTd"><form:input path="pages"
-									class="inputBox" required="required" /></td>
-						</tr>
+				<tr>
+					<td class="addingName">Book Quotes (Two Quotes in quotation
+						marks separated by coma)</td>
+				</tr>
+				<tr>
+					<!-- separate it in controller when showing book -->
+					<td class="bottomTd"><form:textarea path="bookQuotes"
+							class="smallerArea" required="required" /></td>
+				</tr>
+				<tr>
+					<td class="addingName">Cover Type</td>
+				</tr>
+				<tr>
+					<td class="bottomTd"><form:input path="coverType"
+							class="inputBox" required="required" /></td>
+				</tr>
+				<tr>
+					<td class="addingName">Pages</td>
+				</tr>
+				<tr>
+					<td class="bottomTd"><form:input path="pages" class="inputBox"
+							required="required" /></td>
+				</tr>
 
-						<tr>
-							<td class="addingName">Publish Date</td>
-						</tr>
-						<tr>
-							<td class="bottomTd"><form:input type="date"
-									path="publishDate" class="inputBox" required="required" /></td>
-						</tr>
-						<tr>
-							<td class="addingName">Publish Company</td>
-						</tr>
-						<tr>
-							<td class="bottomTd"><form:input path="publishCompany"
-									class="inputBox" required="required" /></td>
-						</tr>
-						<tr>
-							<td class="addingName">Link to Shop</td>
-						</tr>
-						<tr>
-							<td class="bottomTd"><form:input path="buyBook"
-									class="inputBox" required="required" /></td>
-						</tr>
-						<tr>
-							<td class="addingName">Description</td>
-						</tr>
-						<tr>
-							<td class="bottomTd"><form:textarea path="description"
-									class="descriptionArea" required="required" /></td>
-						</tr>
-					</table>
-					<input id="submit" type="submit" value="Create" />
-				</form:form>
+				<tr>
+					<td class="addingName">Publish Date</td>
+				</tr>
+				<tr>
+					<td class="bottomTd"><form:input type="date"
+							path="publishDate" class="inputBox" required="required" /></td>
+				</tr>
+				<tr>
+					<td class="addingName">Publish Company</td>
+				</tr>
+				<tr>
+					<td class="bottomTd"><form:input path="publishCompany"
+							class="inputBox" required="required" /></td>
+				</tr>
+				<tr>
+					<td class="addingName">Link to Shop</td>
+				</tr>
+				<tr>
+					<td class="bottomTd"><form:input path="buyBook"
+							class="inputBox" required="required" /></td>
+				</tr>
+				<tr>
+					<td class="addingName">Description</td>
+				</tr>
+				<tr>
+					<td class="bottomTd"><form:textarea path="description"
+							class="descriptionArea" required="required" /></td>
+				</tr>
+			</table>
+			<input id="submit" type="submit" value="Create" />
+		</form:form>
 	</div>
 </body>
 

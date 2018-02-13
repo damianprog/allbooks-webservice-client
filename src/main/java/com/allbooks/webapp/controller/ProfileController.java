@@ -46,8 +46,8 @@ public class ProfileController {
 	ProfileService profileService;
 
 	@GetMapping("/showProfile")
-	public String showProfile(@RequestParam(value = "readerId", required = false) String readerId, HttpSession session, Model theModel,
-			Principal principal) {
+	public String showProfile(@RequestParam(value = "readerId", required = false) String readerId, HttpSession session,
+			Model theModel, Principal principal) {
 
 		int read, currentlyReading, wantToRead, readerIdInt;
 		read = currentlyReading = wantToRead = readerIdInt = 0;
@@ -65,7 +65,7 @@ public class ProfileController {
 			session.removeAttribute("readerId");
 		} else
 			reader = readerService.getReaderByUsername(principal.getName());
-		
+
 		List<ReaderBook> readerBooks = readerService.getReaderBooks(reader.getId());
 		List<ReaderBook> currentlyReadingList = new ArrayList<ReaderBook>();
 		Details details = profileService.getDetails(reader.getId());
@@ -80,44 +80,40 @@ public class ProfileController {
 				wantToRead++;
 		}
 
-		if(principal !=null) {
-		if ((!principal.getName().equals(reader.getUsername())) ) {
-			Friends checkFriends = profileService
-					.areTheyFriends(principal.getName(), reader.getUsername());
-			if (checkFriends != null) {
-				if (checkFriends.getAccept().equals("false"))
-					pending = true;
-				else if (checkFriends.getAccept().equals("true"))
-					booFriends = true;
-			} else
-				booFriends = false;
-		}
-		}
-
 		if (principal != null) {
+
+			if ((!principal.getName().equals(reader.getUsername()))) {
+				Friends checkFriends = profileService.areTheyFriends(principal.getName(), reader.getUsername());
+				if (checkFriends != null) {
+					if (checkFriends.getAccept().equals("false"))
+						pending = true;
+					else if (checkFriends.getAccept().equals("true"))
+						booFriends = true;
+				} else
+					booFriends = false;
+			}
+
 			if ((!principal.getName().equals(reader.getUsername()))) {
 				invite = true;
 			}
 			theModel.addAttribute("principalName", principal.getName());
-		}
-		
-		if((principal != null)) {
-		if ((principal.getName().equals(reader.getUsername()))) {
-			friendsInvites = profileService.getFriendsInvites(reader.getId());
-			theModel.addAttribute("friendsInvites", friendsInvites);
-		}
+
+			if ((principal.getName().equals(reader.getUsername()))) {
+				friendsInvites = profileService.getFriendsInvites(reader.getId());
+				theModel.addAttribute("friendsInvites", friendsInvites);
+			}
 		}
 
 		// friends list for reader
 		friends = profileService.getReaderFriends(reader.getId());
-		
+
 		ProfilePics profilePics = profileService.getProfilePics(reader.getId());
 
 		if (profilePics != null) {
 			String base64Encoded = getEncodedImage(profilePics.getPic());
 			theModel.addAttribute("profilePic", base64Encoded);
 		}
-		
+
 		theModel.addAttribute("details", details);
 		theModel.addAttribute("read", read);
 		theModel.addAttribute("currentlyReading", currentlyReading);
@@ -139,7 +135,7 @@ public class ProfileController {
 	}
 
 	public String getEncodedImage(byte[] theEncodedBase64) {
-		
+
 		String base64Encoded = null;
 
 		byte[] encodeBase64 = Base64.getEncoder().encode(theEncodedBase64);
@@ -148,13 +144,13 @@ public class ProfileController {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		
+
 		return base64Encoded;
 	}
-	
+
 	@GetMapping("/updateState")
 	public String updateState(@RequestParam("bookName") String bookName, @RequestParam("newState") String newState,
-			HttpSession session, Model theModel,Principal principal) {
+			HttpSession session, Model theModel, Principal principal) {
 
 		int bookId = readerService.getBookId(bookName);
 		Reader reader = readerService.getReaderByUsername(principal.getName());
@@ -177,7 +173,7 @@ public class ProfileController {
 
 	@GetMapping("/updateDateRead")
 	public String updateDateRead(@RequestParam("bookName") String bookName, @RequestParam("dateRead") String dateRead,
-			HttpSession session, Model theModel,Principal principal) {
+			HttpSession session, Model theModel, Principal principal) {
 
 		int bookId = readerService.getBookId(bookName);
 		Reader reader = readerService.getReaderByUsername(principal.getName());
@@ -238,14 +234,14 @@ public class ProfileController {
 
 	@GetMapping("/deleteFriends")
 	public String deleteFriends(@RequestParam("friendsId") int friendsId, Model theModel, HttpSession session) {
-		
+
 		profileService.deleteFriends(friendsId);
 
 		return "redirect:/profile/showProfile";
 	}
 
 	@GetMapping("/showEdit")
-	public String showEdit(HttpSession session, Model theModel,Principal principal) {
+	public String showEdit(HttpSession session, Model theModel, Principal principal) {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 		Details details;
@@ -275,8 +271,8 @@ public class ProfileController {
 	}
 
 	@PostMapping("/profileUpload")
-	public String profileUpload(HttpSession session, Model theModel,
-			@RequestParam("file") MultipartFile multipartfile,Principal principal) {
+	public String profileUpload(HttpSession session, Model theModel, @RequestParam("file") MultipartFile multipartfile,
+			Principal principal) {
 
 		if (multipartfile.isEmpty()) {
 			return "redirect:/profile/showProfile";
@@ -290,9 +286,9 @@ public class ProfileController {
 
 			BufferedImage bimg = ImageIO.read(convFile);
 
-			BufferedImage resized = resize(bimg,150,200);
-			
-			//SAVED BUFFERED IMAGE	
+			BufferedImage resized = resize(bimg, 150, 200);
+
+			// SAVED BUFFERED IMAGE
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ImageIO.write(resized, "jpg", baos);
 			byte[] bytes = baos.toByteArray();
@@ -321,8 +317,8 @@ public class ProfileController {
 		fos.close();
 		return convFile;
 	}
-	
+
 	public static BufferedImage resize(BufferedImage img, int newW, int newH) throws IOException {
-		  return Thumbnails.of(img).size(newW, newH).asBufferedImage();
-		}
+		return Thumbnails.of(img).size(newW, newH).asBufferedImage();
+	}
 }
