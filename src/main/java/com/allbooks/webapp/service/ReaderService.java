@@ -59,4 +59,8 @@ public interface ReaderService {
 	public Reader getReaderByUsername(String login);
 	
 	public void saveBook(Book book);
+	
+	public void updateReader(Reader reader);
+
+	public void updateReview(Review review);
 }

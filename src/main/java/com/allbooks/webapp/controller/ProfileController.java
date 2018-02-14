@@ -154,6 +154,7 @@ public class ProfileController {
 
 		int bookId = readerService.getBookId(bookName);
 		Reader reader = readerService.getReaderByUsername(principal.getName());
+		
 		readerService.saveNewState(newState, bookId, reader.getId());
 
 		List<ReaderBook> readerBooks = readerService.getReaderBooks(reader.getId());
@@ -264,8 +265,9 @@ public class ProfileController {
 			Principal principal) {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
-
-		profileService.saveDetails(details);
+		reader.setDetails(details);
+		
+		readerService.updateReader(reader);
 
 		return "redirect:/profile/showProfile";
 	}

@@ -99,7 +99,7 @@
 						<div id="quotesFromBook">
 							<h4 id="h3">Quotes From ${book.miniTitle}</h4>
 							<hr>
-							<c:forEach var="tempQuote" items="${book.bookQuotes}">
+							<c:forEach var="tempQuote" items="${quotesSplit}">
 							<p>
 								<i>${tempQuote}</i>
 							</p>
@@ -148,7 +148,7 @@
 						</c:url>
 
 						<c:url var="profileLink" value="/profile/showProfile">
-							<c:param name="readerId" value="${tempReview.readerId}" />
+							<c:param name="readerId" value="${tempReview.readerIdentity}" />
 							<c:param name="guest" value="true" />
 						</c:url>
 

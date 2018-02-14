@@ -1,28 +1,46 @@
 package com.allbooks.webapp.entity;
 
+import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Reader {
 
-	
 	private int id;
-	
-	
+
 	private String username;
-	
-	
+
 	private String password;
-	
-	
+
 	private String email;
-	
+
 	private Set<Role> roles;
-	
-	public Reader(){
-		
+
+	private Details details;
+
+	private List<Review> reviews;
+
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
+	}
+
+	public Details getDetails() {
+		return details;
+	}
+
+	public void setDetails(Details details) {
+		this.details = details;
+	}
+
+	public Reader() {
+
 	}
 
 	public int getId() {
@@ -69,5 +87,5 @@ public class Reader {
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
-	
+
 }

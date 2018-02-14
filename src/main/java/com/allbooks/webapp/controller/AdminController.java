@@ -51,14 +51,14 @@ public class AdminController {
 
 		
 		try {
-			File convFile = convert(mfBookPhoto);
-			File convFile2 = convert(mfAuthorPhoto);
+			File convFile = ProfileController.convert(mfBookPhoto);
+			File convFile2 = ProfileController.convert(mfAuthorPhoto);
 
 			BufferedImage bookPhotoBimg = ImageIO.read(convFile);
 			BufferedImage authorPhotoBimg = ImageIO.read(convFile2);
 
-			BufferedImage resized = resize(bookPhotoBimg, 150, 228);
-			BufferedImage resized2 = resize(authorPhotoBimg, 50, 66);
+			BufferedImage resized = ProfileController.resize(bookPhotoBimg, 150, 228);
+			BufferedImage resized2 = ProfileController.resize(authorPhotoBimg, 50, 66);
 
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ImageIO.write(resized, "jpg", baos);
@@ -80,19 +80,6 @@ public class AdminController {
 		theModel.addAttribute("book", book);
 
 		return "addbook";
-	}
-
-	public static File convert(MultipartFile file) throws IOException {
-		File convFile = new File(file.getOriginalFilename());
-		convFile.createNewFile();
-		FileOutputStream fos = new FileOutputStream(convFile);
-		fos.write(file.getBytes());
-		fos.close();
-		return convFile;
-	}
-
-	public static BufferedImage resize(BufferedImage img, int newW, int newH) throws IOException {
-		return Thumbnails.of(img).size(newW, newH).asBufferedImage();
 	}
 	
 }

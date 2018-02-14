@@ -4,7 +4,10 @@ import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -82,7 +84,6 @@ public class ReaderController {
 		if (bookName == null) {
 			bookName = (String) session.getAttribute("redirectBookName");
 		}
-
 		Book book = readerService.getBookByName(bookName);
 
 		if (principal != null) {
@@ -112,9 +113,14 @@ public class ReaderController {
 			}
 		}
 
+		String quotes = book.getBookQuotes();
+
+		List<String> quotesSplit = Arrays.asList(quotes.split("/"));
+		theModel.addAttribute("quotesSplit", quotesSplit);
+
 		String base64Encoded = getEncodedImage(book.getBookPhoto());
 		String base64Encoded2 = getEncodedImage(book.getAuthorPhoto());
-		
+
 		theModel.addAttribute("bookPic", base64Encoded);
 		theModel.addAttribute("authorPic", base64Encoded2);
 
@@ -134,13 +140,23 @@ public class ReaderController {
 		theModel.addAttribute("overallRating", overallRating);
 		List<Review> bookReviews;
 
-		bookReviews = readerService.getBookReviews(bookName, bookName);
+		bookReviews = readerService.getBookReviews(bookName, bookName);// ?
+
+		// update current reader ratings in reviews
+		if (bookReviews != null) {
+			for (Review tempReview : bookReviews) {
+				int rating = readerService.getReaderRating(tempReview.getReaderIdentity(), book.getTitle());
+				tempReview.setReaderRating(rating);
+			}
+
+			bookReviews.sort(Comparator.comparingInt(Review::getId).reversed());
+		}
+
 		theModel.addAttribute("bookReviews", bookReviews);
 
 		Review review = new Review();
 		theModel.addAttribute("review", review);
 
-		session.removeAttribute("redirectBookName");
 		theModel.addAttribute("book", book);
 
 		return "book";
@@ -181,6 +197,8 @@ public class ReaderController {
 		String reviewText = review.getText();
 
 		List<Comment> reviewComments = readerService.getReviewComments(reviewId);
+
+		reviewComments.sort(Comparator.comparingInt(Comment::getId).reversed());
 
 		theModel.addAttribute("bookId", bookId);
 		theModel.addAttribute("readerRating", readerRating);
@@ -235,18 +253,27 @@ public class ReaderController {
 		return "redirect:/reader/showBook";
 	}
 
-	@GetMapping("/submitReview")
+	@GetMapping("/submitReview") // POST
 	public String submitReview(@ModelAttribute("review") Review review, @RequestParam("bookName") String bookName,
 			Model theModel, HttpSession session, Principal principal) {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 		int readerId = reader.getId();
 
-		review.setReaderId(readerId);
+		review.setReaderIdentity(readerId);
 		review.setReaderLogin(reader.getUsername());
 		review.setReaderRating(readerService.getReaderRating(readerId, bookName));
 		review.setBookId(readerService.getBookId(bookName));
-		readerService.submitReview(review);
+
+		List<Review> reviewsList = reader.getReviews();
+		if (reviewsList == null)
+			reviewsList = new ArrayList<Review>();
+
+		reviewsList.add(review);
+
+		reader.setReviews(reviewsList);
+
+		readerService.updateReader(reader);
 		session.setAttribute("redirectBookName", bookName);
 
 		return "redirect:/reader/showBook";
@@ -259,11 +286,21 @@ public class ReaderController {
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 		int readerId = reader.getId();
 
-		comment.setReviewId(reviewId);
 		comment.setReaderId(readerId);
+		comment.setReviewIdentity(reviewId);
 		comment.setReaderLogin(reader.getUsername());
 		comment.setReaderRating(readerService.getReaderRating(readerId, params.get("bookName")));
-		readerService.submitComment(comment);
+
+		Review review = readerService.getOneReview(reviewId);
+		List<Comment> comments = review.getComments();
+
+		if (comments == null)
+			comments = new ArrayList<Comment>();
+
+		comments.add(comment);
+		review.setComments(comments);
+
+		readerService.updateReview(review);
 
 		session.setAttribute("params", params);
 
@@ -344,6 +381,7 @@ public class ReaderController {
 
 		for (ReaderBook tempReaderBook : readerBooks) {
 
+			System.out.println(tempReaderBook.getMinBookName());
 			int readerRating = readerService.getReaderRating(reader.getId(), tempReaderBook.getMinBookName());
 			tempReaderBook.setReaderRating(readerRating);
 			tempReaderBook.setRating(readerService.getOverallRating(tempReaderBook.getMinBookName()));

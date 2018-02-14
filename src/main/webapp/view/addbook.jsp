@@ -85,7 +85,7 @@
 
 				<tr>
 					<td class="addingName">Book Quotes (Two Quotes in quotation
-						marks separated by coma)</td>
+						marks separated by right slash)</td>
 				</tr>
 				<tr>
 					<!-- separate it in controller when showing book -->

@@ -52,6 +52,8 @@ public class ReaderServiceImpl implements ReaderService {
 			return false;
 	}
 
+	
+	
 	@Override
 	public Reader getReaderByUsername(String login) {
 		
@@ -217,7 +219,7 @@ public class ReaderServiceImpl implements ReaderService {
 		reviewLikes++;
 		review.setLikes(reviewLikes);
 
-		restTemplate.put("http://localhost:9000/reviews/{reviewId}", review, params);
+		restTemplate.put("http://localhost:9000/reviews",review);
 	}
 
 	@Override
@@ -394,6 +396,20 @@ public class ReaderServiceImpl implements ReaderService {
 	public void saveBook(Book book) {
 		
 		restTemplate.postForObject("http://localhost:9000/books",book,Book.class);
+		
+	}
+
+
+
+	@Override
+	public void updateReader(Reader reader) {
+		restTemplate.put("http://localhost:9000/readers", reader);
+		
+	}
+
+	@Override
+	public void updateReview(Review review) {
+		restTemplate.put("http://localhost:9000/reviews", review);
 		
 	}
 
