@@ -3,8 +3,10 @@ package com.allbooks.webapp.entity;
 import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Reader {
@@ -19,9 +21,39 @@ public class Reader {
 
 	private Set<Role> roles;
 
+	private ProfilePics profilePic;
+
 	private Details details;
 
 	private List<Review> reviews;
+
+	private List<Rating> ratings;
+
+	private List<ReaderBook> readerBooks;
+
+	public ProfilePics getProfilePic() {
+		return profilePic;
+	}
+
+	public void setProfilePic(ProfilePics profilePic) {
+		this.profilePic = profilePic;
+	}
+
+	public List<ReaderBook> getReaderBooks() {
+		return readerBooks;
+	}
+
+	public void setReaderBooks(List<ReaderBook> readerBooks) {
+		this.readerBooks = readerBooks;
+	}
+
+	public List<Rating> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(List<Rating> ratings) {
+		this.ratings = ratings;
+	}
 
 	public List<Review> getReviews() {
 		return reviews;

@@ -35,4 +35,6 @@ public interface ProfileService {
 
 	public ProfilePics getProfilePics(int id);
 
+	public void deleteReader(int readerId);
+
 }

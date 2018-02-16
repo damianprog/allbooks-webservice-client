@@ -34,8 +34,7 @@
 							</c:choose></td>
 					</tr>
 					<c:choose>
-						<c:when
-							test="${reader.username == principalName}">
+						<c:when test="${reader.username == principalName}">
 							<tr>
 								<td>
 									<form method="POST" action="/profile/profileUpload"
@@ -60,8 +59,7 @@
 						<c:when test="${invite == true}">
 							<c:url var="friendUrl" value="/profile/inviteFriend">
 								<c:param name="reader1login" value="${reader.username}" />
-								<c:param name="reader2login"
-									value="${principalName}" />
+								<c:param name="reader2login" value="${principalName}" />
 							</c:url>
 							<c:choose>
 								<c:when test="${pending == false}">
@@ -128,7 +126,7 @@
 
 			</div>
 			<div class="underFirstTable">
-				<h4 id="topDesc">${reader.username} is currently reading</h4>
+				<h4 id="topDesc">${reader.username}is currently reading</h4>
 				<hr>
 				<table class="currentlyReadingBooks">
 					<c:forEach var="tempBook" items="${currentlyReadingList}">
@@ -139,7 +137,7 @@
 							<td><a href="${bookSite}"> <img
 									src="/css/images/m${tempBook.minBookName}.jpg" />
 							</a></td>
-							<td>${reader.username} is currently reading<br>
+							<td>${reader.username}is currently reading<br>
 								<h4 id="topDesc">
 									<a class="blackRef" href="${bookSite}">${tempBook.fullBookName}</a>
 								</h4> <br> by ${tempBook.author}<br> bookshelves:
@@ -152,8 +150,7 @@
 		</div>
 		<div id="rightSide">
 			<c:choose>
-				<c:when
-					test="${reader.username == principalName}">
+				<c:when test="${reader.username == principalName}">
 					<div id="friendsInvites">
 						<h4 id="topDesc">Friends Invites</h4>
 						<hr>
@@ -183,7 +180,7 @@
 				</c:when>
 			</c:choose>
 			<div id="friendsList">
-				<h4 id="topDesc">${reader.username}'s friends(${friendsNum})</h4>
+				<h4 id="topDesc">${reader.username}'sfriends(${friendsNum})</h4>
 				<br>
 				<hr>
 				<c:choose>

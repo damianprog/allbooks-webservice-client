@@ -68,7 +68,7 @@ public class ProfileController {
 
 		List<ReaderBook> readerBooks = readerService.getReaderBooks(reader.getId());
 		List<ReaderBook> currentlyReadingList = new ArrayList<ReaderBook>();
-		Details details = profileService.getDetails(reader.getId());
+		Details details = reader.getDetails();
 		for (ReaderBook readerBook : readerBooks) {
 
 			if (readerBook.getShelves().equals("Read"))
@@ -154,7 +154,7 @@ public class ProfileController {
 
 		int bookId = readerService.getBookId(bookName);
 		Reader reader = readerService.getReaderByUsername(principal.getName());
-		
+
 		readerService.saveNewState(newState, bookId, reader.getId());
 
 		List<ReaderBook> readerBooks = readerService.getReaderBooks(reader.getId());
@@ -193,7 +193,14 @@ public class ProfileController {
 
 		return "mybooks";
 	}
-
+	//temporary method
+	@GetMapping("/deleteReader")
+	public String deleteReader(@RequestParam("readerId") int readerId,HttpSession session) {
+		
+		profileService.deleteReader(readerId);
+		
+		return "redirect:/reader/start";
+	}
 	@GetMapping("/inviteFriend")
 	public String inviteFriend(@RequestParam("reader1login") String reader1Login,
 			@RequestParam("reader2login") String reader2Login, HttpSession session) {
@@ -266,7 +273,7 @@ public class ProfileController {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 		reader.setDetails(details);
-		
+
 		readerService.updateReader(reader);
 
 		return "redirect:/profile/showProfile";
@@ -295,10 +302,10 @@ public class ProfileController {
 			ImageIO.write(resized, "jpg", baos);
 			byte[] bytes = baos.toByteArray();
 
-			ProfilePics profilePics = profileService.getProfilePics(reader.getId());
+			ProfilePics profilePics = profileService.getProfilePics(reader.getId()); //?
 
 			if (profilePics == null)
-				profilePics = new ProfilePics(reader.getId(), bytes);
+				profilePics = new ProfilePics(bytes,reader.getId());
 			else
 				profilePics.setPic(bytes);
 

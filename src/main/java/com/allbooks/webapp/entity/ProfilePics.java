@@ -3,14 +3,22 @@ package com.allbooks.webapp.entity;
 public class ProfilePics {
 
 	private int id;
-	
-	private int readerId;
-	
-	private byte[] pic;
 
-	public ProfilePics(int readerId, byte[] pic) {
+	private int readerId;
+
+	private byte[] pic;
+	
+	public int getReaderId() {
+		return readerId;
+	}
+
+	public void setReaderId(int readerId) {
 		this.readerId = readerId;
+	}
+
+	public ProfilePics(byte[] pic,int readerId) {
 		this.pic = pic;
+		this.readerId = readerId;
 	}
 
 	public ProfilePics() {
@@ -24,14 +32,6 @@ public class ProfilePics {
 		this.id = id;
 	}
 
-	public int getReaderId() {
-		return readerId;
-	}
-
-	public void setReaderId(int readerId) {
-		this.readerId = readerId;
-	}
-
 	public byte[] getPic() {
 		return pic;
 	}
@@ -39,5 +39,5 @@ public class ProfilePics {
 	public void setPic(byte[] pic) {
 		this.pic = pic;
 	}
-	
+
 }

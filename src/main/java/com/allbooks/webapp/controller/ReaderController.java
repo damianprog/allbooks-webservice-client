@@ -140,7 +140,7 @@ public class ReaderController {
 		theModel.addAttribute("overallRating", overallRating);
 		List<Review> bookReviews;
 
-		bookReviews = readerService.getBookReviews(bookName, bookName);// ?
+		bookReviews = readerService.getBookReviews(bookName, bookName);
 
 		// update current reader ratings in reviews
 		if (bookReviews != null) {
@@ -244,9 +244,17 @@ public class ReaderController {
 			Model theModel, HttpSession session, Principal principal) {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
-		int readerId = reader.getId();
 		rating.setBookId(readerService.getBookId(bookName));
-		rating.setUserId(readerId);
+		rating.setReaderIdentity(reader.getId());
+		
+		List<Rating> ratings =  reader.getRatings();
+		
+		if(ratings == null)
+			ratings = new ArrayList<>();
+		
+		ratings.add(rating);
+		reader.setRatings(ratings);
+		
 		readerService.submitRating(rating);
 		session.setAttribute("redirectBookName", bookName);
 
@@ -264,16 +272,28 @@ public class ReaderController {
 		review.setReaderLogin(reader.getUsername());
 		review.setReaderRating(readerService.getReaderRating(readerId, bookName));
 		review.setBookId(readerService.getBookId(bookName));
-
+		
 		List<Review> reviewsList = reader.getReviews();
-		if (reviewsList == null)
-			reviewsList = new ArrayList<Review>();
 
+		if(reviewsList == null)
+			reviewsList = new ArrayList<Review>();
+		
 		reviewsList.add(review);
 
 		reader.setReviews(reviewsList);
 
-		readerService.updateReader(reader);
+		readerService.submitReview(review,readerId);
+		session.setAttribute("redirectBookName", bookName);
+
+		return "redirect:/reader/showBook";
+	}
+	
+	//temporary method
+	@GetMapping("/deleteReview")
+	public String deleteReview(@RequestParam("bookName") String bookName,@RequestParam("reviewId") int reviewId,HttpSession session) {
+		
+		readerService.deleteReviewById(reviewId);
+		
 		session.setAttribute("redirectBookName", bookName);
 
 		return "redirect:/reader/showBook";
@@ -287,7 +307,6 @@ public class ReaderController {
 		int readerId = reader.getId();
 
 		comment.setReaderId(readerId);
-		comment.setReviewIdentity(reviewId);
 		comment.setReaderLogin(reader.getUsername());
 		comment.setReaderRating(readerService.getReaderRating(readerId, params.get("bookName")));
 
@@ -335,26 +354,35 @@ public class ReaderController {
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 		Book book = readerService.getBook(readerService.getBookId(bookName));
 		double rating = readerService.getOverallRating(bookName);
+		
+		int readerId = reader.getId();
 
 		if (update == false) {
 
-			int readerId = reader.getId();
 
 			LocalDate localDate = LocalDate.now();
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 			String text = localDate.format(formatter);
 
 			readerBook.setBookId(readerService.getBookId(bookName));
-			readerBook.setReaderId(readerId);
+			readerBook.setReaderIdentity(readerId);
 			readerBook.setDateAdded(text);
 			readerBook.setMinBookName(book.getTitle());
 			readerBook.setFullBookName(book.getFullTitle());
 			readerBook.setAuthor(book.getAuthor());
 			readerBook.setRating(rating);
 
+			List<ReaderBook> readerBooks = reader.getReaderBooks();
+			
+			if(readerBooks == null)
+				readerBooks = new ArrayList<>();
+			
+			readerBooks.add(readerBook);
+			reader.setReaderBooks(readerBooks);
+			
 			readerService.saveReaderBook(readerBook);
 		} else {
-			readerService.saveNewState(readerBook.getShelves(), readerService.getBookId(bookName), reader.getId());
+			readerService.saveNewState(readerBook.getShelves(), readerService.getBookId(bookName), readerId);
 		}
 
 		session.setAttribute("redirectBookName", bookName);

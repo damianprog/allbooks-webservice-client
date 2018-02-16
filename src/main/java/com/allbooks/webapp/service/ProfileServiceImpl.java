@@ -177,4 +177,13 @@ public class ProfileServiceImpl implements ProfileService {
 		return profilePics;
 	}
 
+	@Override
+	public void deleteReader(int readerId) {
+		
+		Map<String, Integer> params = new HashMap<String, Integer>();
+		params.put("readerId", readerId);
+		
+		restTemplate.delete("http://localhost:9000/readers/{readerId}",params);
+	}
+
 }

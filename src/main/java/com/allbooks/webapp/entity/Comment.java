@@ -17,16 +17,6 @@ public class Comment {
 
 	private int readerRating;
 
-	private int reviewIdentity;
-
-	public int getReviewIdentity() {
-		return reviewIdentity;
-	}
-
-	public void setReviewIdentity(int reviewIdentity) {
-		this.reviewIdentity = reviewIdentity;
-	}
-
 	public int getReviewId() {
 		return reviewId;
 	}

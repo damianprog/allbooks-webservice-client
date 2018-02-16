@@ -33,39 +33,37 @@ public class ReaderServiceImpl implements ReaderService {
 	public boolean saveReader(Reader theReader) {
 
 		ReaderRole readerRole = new ReaderRole();
-		
+
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("readerLogin", theReader.getUsername());
-		
+
 		theReader.setPassword(bCryptPasswordEncoder.encode(theReader.getPassword()));
 
 		if (checkReaderLogin(theReader)) {
 			restTemplate.postForObject("http://localhost:9000/readers", theReader, Reader.class);
-			Reader reader = restTemplate.getForObject("http://localhost:9000/readers/logins/{readerLogin}", Reader.class,
-					params);
+			Reader reader = restTemplate.getForObject("http://localhost:9000/readers/logins/{readerLogin}",
+					Reader.class, params);
 			readerRole.setReaderId(reader.getId());
 			readerRole.setRoleId(1);
 			restTemplate.postForObject("http://localhost:9000/readerrole", readerRole, ReaderRole.class);
-			
+
 			return true;
 		} else
 			return false;
 	}
 
-	
-	
 	@Override
 	public Reader getReaderByUsername(String login) {
-		
+
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("readerLogin", login);
-		
+
 		Reader reader = restTemplate.getForObject("http://localhost:9000/readers/logins/{readerLogin}", Reader.class,
 				params);
-		
+
 		return reader;
 	}
-	
+
 	private boolean checkReaderLogin(Reader theReader) {
 
 		Reader reader = getReaderByUsername(theReader.getUsername());
@@ -149,18 +147,18 @@ public class ReaderServiceImpl implements ReaderService {
 		for (Rating rating : ratings) {
 			sum += rating.getRate();
 		}
-		if(ratingsLength != 0)
-		avg = sum / ratingsLength;
+		if (ratingsLength != 0)
+			avg = sum / ratingsLength;
 		else
-		avg=0;
-		
+			avg = 0;
+
 		return avg;
 	}
 
 	@Override
-	public void submitReview(Review review) {
+	public void submitReview(Review review, int readerId) {
 
-		restTemplate.postForObject("http://localhost:9000/reviews", review, Review.class);
+		restTemplate.postForEntity("http://localhost:9000/reviews", review, Review.class);
 
 	}
 
@@ -200,10 +198,10 @@ public class ReaderServiceImpl implements ReaderService {
 
 		Rating rating = restTemplate.getForObject("http://localhost:9000/readers/{readerId}/books/{bookId}/ratings",
 				Rating.class, params);
-		
-		if(rating == null)
+
+		if (rating == null)
 			return 0;
-		
+
 		return rating.getRate();
 	}
 
@@ -219,7 +217,7 @@ public class ReaderServiceImpl implements ReaderService {
 		reviewLikes++;
 		review.setLikes(reviewLikes);
 
-		restTemplate.put("http://localhost:9000/reviews",review);
+		restTemplate.put("http://localhost:9000/reviews", review);
 	}
 
 	@Override
@@ -306,7 +304,7 @@ public class ReaderServiceImpl implements ReaderService {
 	@Override
 	public void saveReaderBook(ReaderBook readerBook) {
 
-		restTemplate.put("http://localhost:9000/readerbooks", readerBook);
+		restTemplate.postForObject("http://localhost:9000/readerbooks", readerBook,ReaderBook.class);
 
 	}
 
@@ -394,23 +392,28 @@ public class ReaderServiceImpl implements ReaderService {
 
 	@Override
 	public void saveBook(Book book) {
-		
-		restTemplate.postForObject("http://localhost:9000/books",book,Book.class);
-		
+		restTemplate.postForObject("http://localhost:9000/books", book, Book.class);
 	}
-
-
 
 	@Override
 	public void updateReader(Reader reader) {
 		restTemplate.put("http://localhost:9000/readers", reader);
-		
+
 	}
 
 	@Override
 	public void updateReview(Review review) {
 		restTemplate.put("http://localhost:9000/reviews", review);
-		
+
+	}
+
+	@Override
+	public void deleteReviewById(int reviewId) {
+
+		Map<String, Integer> params = new HashMap<>();
+		params.put("reviewId", reviewId);
+
+		restTemplate.delete("http://localhost:9000/reviews/{reviewId}", params);
 	}
 
 }
