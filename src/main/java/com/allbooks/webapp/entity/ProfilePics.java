@@ -1,24 +1,18 @@
 package com.allbooks.webapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProfilePics {
 
 	private int id;
 
-	private int readerId;
 
 	private byte[] pic;
 	
-	public int getReaderId() {
-		return readerId;
-	}
 
-	public void setReaderId(int readerId) {
-		this.readerId = readerId;
-	}
-
-	public ProfilePics(byte[] pic,int readerId) {
+	public ProfilePics(byte[] pic) {
 		this.pic = pic;
-		this.readerId = readerId;
 	}
 
 	public ProfilePics() {

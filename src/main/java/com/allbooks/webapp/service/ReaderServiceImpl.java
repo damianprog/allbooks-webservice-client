@@ -60,7 +60,7 @@ public class ReaderServiceImpl implements ReaderService {
 
 		Reader reader = restTemplate.getForObject("http://localhost:9000/readers/logins/{readerLogin}", Reader.class,
 				params);
-
+		
 		return reader;
 	}
 

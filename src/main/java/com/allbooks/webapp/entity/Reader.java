@@ -21,7 +21,7 @@ public class Reader {
 
 	private Set<Role> roles;
 
-	private ProfilePics profilePic;
+	private ProfilePics profilePics;
 
 	private Details details;
 
@@ -31,12 +31,12 @@ public class Reader {
 
 	private List<ReaderBook> readerBooks;
 
-	public ProfilePics getProfilePic() {
-		return profilePic;
+	public ProfilePics getProfilePics() {
+		return profilePics;
 	}
 
-	public void setProfilePic(ProfilePics profilePic) {
-		this.profilePic = profilePic;
+	public void setProfilePics(ProfilePics profilePics) {
+		this.profilePics = profilePics;
 	}
 
 	public List<ReaderBook> getReaderBooks() {

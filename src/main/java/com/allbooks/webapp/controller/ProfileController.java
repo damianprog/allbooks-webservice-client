@@ -48,7 +48,7 @@ public class ProfileController {
 	@GetMapping("/showProfile")
 	public String showProfile(@RequestParam(value = "readerId", required = false) String readerId, HttpSession session,
 			Model theModel, Principal principal) {
-
+		
 		int read, currentlyReading, wantToRead, readerIdInt;
 		read = currentlyReading = wantToRead = readerIdInt = 0;
 		Reader reader;
@@ -66,6 +66,7 @@ public class ProfileController {
 		} else
 			reader = readerService.getReaderByUsername(principal.getName());
 
+		
 		List<ReaderBook> readerBooks = readerService.getReaderBooks(reader.getId());
 		List<ReaderBook> currentlyReadingList = new ArrayList<ReaderBook>();
 		Details details = reader.getDetails();
@@ -107,7 +108,7 @@ public class ProfileController {
 		// friends list for reader
 		friends = profileService.getReaderFriends(reader.getId());
 
-		ProfilePics profilePics = profileService.getProfilePics(reader.getId());
+		ProfilePics profilePics = reader.getProfilePics();
 
 		if (profilePics != null) {
 			String base64Encoded = getEncodedImage(profilePics.getPic());
@@ -295,21 +296,23 @@ public class ProfileController {
 
 			BufferedImage bimg = ImageIO.read(convFile);
 
-			BufferedImage resized = resize(bimg, 150, 200);
+			BufferedImage resized = resize(bimg, 200, 250);
 
 			// SAVED BUFFERED IMAGE
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ImageIO.write(resized, "jpg", baos);
 			byte[] bytes = baos.toByteArray();
 
-			ProfilePics profilePics = profileService.getProfilePics(reader.getId()); //?
+			ProfilePics profilePics = reader.getProfilePics(); //?
 
-			if (profilePics == null)
-				profilePics = new ProfilePics(bytes,reader.getId());
-			else
+			if (profilePics == null) {
+				profilePics = new ProfilePics(bytes);
+			}
+				else
 				profilePics.setPic(bytes);
 
-			profileService.saveProfilePics(profilePics, reader.getId());
+			reader.setProfilePics(profilePics);
+			readerService.updateReader(reader);
 
 		} catch (IOException e) {
 			e.printStackTrace();
