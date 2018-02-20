@@ -23,6 +23,8 @@ public class Reader {
 
 	private ProfilePics profilePics;
 
+	private List<Reader> friends;
+
 	private Details details;
 
 	private List<Review> reviews;
@@ -30,6 +32,14 @@ public class Reader {
 	private List<Rating> ratings;
 
 	private List<ReaderBook> readerBooks;
+
+	public List<Reader> getFriends() {
+		return friends;
+	}
+
+	public void setFriends(List<Reader> friends) {
+		this.friends = friends;
+	}
 
 	public ProfilePics getProfilePics() {
 		return profilePics;

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Comment;
+import com.allbooks.webapp.entity.ProfilePics;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
@@ -200,7 +201,12 @@ public class ReaderController {
 
 		reviewComments.sort(Comparator.comparingInt(Comment::getId).reversed());
 
+		Book book = readerService.getBook(bookId);
+		
+		String bookPicEncoded = getEncodedImage(book.getBookPhoto());
+		
 		theModel.addAttribute("bookId", bookId);
+		theModel.addAttribute("bookPic", bookPicEncoded);
 		theModel.addAttribute("readerRating", readerRating);
 		theModel.addAttribute("readerLogin", readerLogin);
 		theModel.addAttribute("bookName", bookName);
