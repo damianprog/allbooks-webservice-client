@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.allbooks.webapp.entity.Details;
 import com.allbooks.webapp.entity.Friends;
@@ -45,8 +46,8 @@ public class ProfileController {
 	ProfileService profileService;
 
 	@GetMapping("/showProfile")
-	public String showProfile(@RequestParam(value = "readerId", required = false) String readerId, HttpSession session,
-			Model theModel, Principal principal) {
+	public String showProfile(@RequestParam(value = "readerId", required = false) String readerId,
+			@ModelAttribute("recipentId") String recipentId, HttpSession session, Model theModel, Principal principal) {
 
 		int read, currentlyReading, wantToRead, readerIdInt, friendsNum;
 		read = currentlyReading = wantToRead = readerIdInt = friendsNum = 0;
@@ -56,17 +57,14 @@ public class ProfileController {
 
 		boolean invite, booFriends, pending;
 		invite = booFriends = pending = false;
-
+		
 		if (readerId != null) {
-			readerIdInt = Integer.valueOf(readerId);
-			reader = profileService.getReaderById(readerIdInt);
-		} else if ((readerId == null) && (session.getAttribute("recipentLogin") != null)) {
-			int gotenReaderId = profileService.getReaderId((String) session.getAttribute("recipentLogin"));
-			reader = (Reader) profileService.getReaderById(gotenReaderId);
-			session.removeAttribute("recipentLogin");
-		} else
+			reader = profileService.getReaderById(Integer.valueOf(readerId));
+		} else if (!recipentId.isEmpty()) {
+			reader = profileService.getReaderById(Integer.valueOf(recipentId));
+		} else 
 			reader = readerService.getReaderByUsername(principal.getName());
-
+		
 		List<ReaderBook> readerBooks = readerService.getReaderBooks(reader.getId());
 		List<ReaderBook> currentlyReadingList = new ArrayList<ReaderBook>();
 		Details details = reader.getDetails();
@@ -76,13 +74,14 @@ public class ProfileController {
 				read++;
 			else if (readerBook.getShelves().equals("Currently Reading")) {
 				currentlyReading++;
+				readerBook.setEncodedBookPic(getEncodedImage(readerBook.getBookPic()));
 				currentlyReadingList.add(readerBook);
 			} else if (readerBook.getShelves().equals("Want To Read"))
 				wantToRead++;
 		}
 
 		if (principal != null) {
-
+			
 			if ((!principal.getName().equals(reader.getUsername()))) {
 				Friends checkFriends = profileService.areTheyFriends(principal.getName(), reader.getUsername());
 				Pending pendingObject = profileService.getPending(reader.getUsername(), principal.getName());
@@ -144,7 +143,7 @@ public class ProfileController {
 		return "profile";
 	}
 
-	public String getEncodedImage(byte[] theEncodedBase64) {
+	public static String getEncodedImage(byte[] theEncodedBase64) {
 
 		String base64Encoded = null;
 
@@ -197,51 +196,33 @@ public class ProfileController {
 
 		return "redirect:/profile/showProfile";
 	}
-	
+
 	@GetMapping("/updateState")
 	public String updateState(@RequestParam("bookName") String bookName, @RequestParam("newState") String newState,
-			HttpSession session, Model theModel, Principal principal) {
+			HttpSession session, Model theModel, Principal principal, RedirectAttributes ra) {
 
 		int bookId = readerService.getBookId(bookName);
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 
 		readerService.saveNewState(newState, bookId, reader.getId());
 
-		List<ReaderBook> readerBooks = readerService.getReaderBooks(reader.getId());
+		ra.addAttribute("myBooks", true);
 
-		for (ReaderBook tempReaderBook : readerBooks) {
-
-			int readerRating = readerService.getReaderRating(reader.getId(), tempReaderBook.getMinBookName());
-			tempReaderBook.setReaderRating(readerRating);
-		}
-
-		theModel.addAttribute("readerBooks", readerBooks);
-		theModel.addAttribute("myBooks", true);
-
-		return "mybooks";
+		return "redirect:/reader/showMyBooks";
 
 	}
 
 	@GetMapping("/updateDateRead")
 	public String updateDateRead(@RequestParam("bookName") String bookName, @RequestParam("dateRead") String dateRead,
-			HttpSession session, Model theModel, Principal principal) {
+			HttpSession session, Model theModel, Principal principal, RedirectAttributes ra) {
 
 		int bookId = readerService.getBookId(bookName);
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 		readerService.saveReadDate(dateRead, bookId, reader.getId());
 
-		List<ReaderBook> readerBooks = readerService.getReaderBooks(reader.getId());
+		ra.addAttribute("myBooks", true);
 
-		for (ReaderBook tempReaderBook : readerBooks) {
-
-			int readerRating = readerService.getReaderRating(reader.getId(), tempReaderBook.getMinBookName());
-			tempReaderBook.setReaderRating(readerRating);
-		}
-
-		theModel.addAttribute("readerBooks", readerBooks);
-		theModel.addAttribute("myBooks", true);
-
-		return "mybooks";
+		return "redirect:/reader/showMyBooks";
 	}
 
 	// temporary method
@@ -255,7 +236,8 @@ public class ProfileController {
 
 	@GetMapping("/inviteFriend")
 	public String inviteFriend(@RequestParam("recipentLogin") String recipentLogin,
-			@RequestParam("senderLogin") String senderLogin, HttpSession session, Principal principal) {
+			@RequestParam("senderLogin") String senderLogin, HttpSession session, Principal principal,
+			RedirectAttributes ra) {
 
 		int recipentId = profileService.getReaderId(recipentLogin);
 		int senderId = profileService.getReaderId(senderLogin);
@@ -268,7 +250,7 @@ public class ProfileController {
 
 		profileService.savePending(pending);
 
-		session.setAttribute("recipentLogin", recipentLogin);
+		ra.addFlashAttribute("recipentId", recipentId);
 		return "redirect:/profile/showProfile";
 	}
 
@@ -300,12 +282,12 @@ public class ProfileController {
 	}
 
 	@GetMapping("/deleteFriends")
-	public String deleteFriends(@RequestParam("friendsId") int reader2Id, Model theModel, HttpSession session,
+	public String deleteFriends(@RequestParam("reader2Id") int reader2Id, Model theModel, HttpSession session,
 			Principal principal) {
 
 		Reader loggedReader = readerService.getReaderByUsername(principal.getName());
-		
-		profileService.deleteFriends(loggedReader.getId(),reader2Id);
+
+		profileService.deleteFriends(loggedReader.getId(), reader2Id);
 
 		return "redirect:/profile/showProfile";
 	}

@@ -55,13 +55,6 @@
 							class="inputBox" required="required" /></td>
 				</tr>
 				<tr>
-					<td class="addingName">Small Mini Title</td>
-				</tr>
-				<tr>
-					<td class="bottomTd"><form:input path="title" class="inputBox"
-							required="required" /></td>
-				</tr>
-				<tr>
 					<td class="addingName">Review Author</td>
 				</tr>
 				<tr>

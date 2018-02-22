@@ -13,6 +13,10 @@ public class ReaderBook {
 
 	private String fullBookName;
 
+	private byte[] bookPic;
+
+	private String encodedBookPic;
+
 	private String author;
 
 	private double rating;
@@ -28,6 +32,22 @@ public class ReaderBook {
 	private String dateRead;
 
 	private String dateAdded;
+
+	public String getEncodedBookPic() {
+		return encodedBookPic;
+	}
+
+	public void setEncodedBookPic(String encodedBookPic) {
+		this.encodedBookPic = encodedBookPic;
+	}
+
+	public byte[] getBookPic() {
+		return bookPic;
+	}
+
+	public void setBookPic(byte[] bookPic) {
+		this.bookPic = bookPic;
+	}
 
 	public int getId() {
 		return id;

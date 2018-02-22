@@ -31,6 +31,7 @@
 								<c:when test="${userRated == false}">
 									<div id="rating">
 										Rate this book
+										
 										<form:form action="rate" modelAttribute="rating" method="GET">
 											<form:select path="rate">
 												<form:option value="1" label="1" />
@@ -39,7 +40,7 @@
 												<form:option value="4" label="4" />
 												<form:option value="5" label="5" selected="selected" />
 											</form:select>
-											<input type="hidden" name="bookName" value="${book.title}">
+											<input type="hidden" name="bookName" value="${book.miniTitle}">
 											<input type="submit" value="Submit" />
 										</form:form>
 									</div>
@@ -57,7 +58,7 @@
 									<br>Add this book to your books
 									</c:otherwise>
 							</c:choose>
-							<form:form action="readstate" modelAttribute="readerBook"
+							<form:form action="readState" modelAttribute="readerBook"
 								method="GET">
 								<form:select path="shelves">
 									<form:option value="Read" label="Read" />
@@ -65,7 +66,7 @@
 										label="Currently Reading" />
 									<form:option value="Want to Read" label="Want to Read" />
 								</form:select>
-								<input type="hidden" name="bookName" value="${book.title}">
+								<input type="hidden" name="bookName" value="${book.miniTitle}">
 								<input type="hidden" name="update" value="${update}">
 								<input type="submit" value="Submit" />
 							</form:form>
@@ -124,7 +125,7 @@
 					Content<br>
 					<form:textarea id="reviewBox" path="text" required="required" />
 					<br>
-					<input type="hidden" name="bookName" value="${book.title}" />
+					<input type="hidden" name="bookName" value="${book.miniTitle}" />
 					<input type="submit" value="Submit">
 				</form:form>
 			</sec:authorize>
@@ -149,7 +150,6 @@
 
 						<c:url var="profileLink" value="/profile/showProfile">
 							<c:param name="readerId" value="${tempReview.readerIdentity}" />
-							<c:param name="guest" value="true" />
 						</c:url>
 
 						<tr>
@@ -169,7 +169,7 @@
 										<form:form action="/reader/dropLike" method="GET"
 											id="likeForm">
 											<input type="hidden" name="reviewId" value="${tempReview.id}" />
-											<input type="hidden" name="bookName" value="${book.title}" />
+											<input type="hidden" name="bookName" value="${book.miniTitle}" />
 											<input type="submit" value="Like" />
 										</form:form>
 									</sec:authorize>

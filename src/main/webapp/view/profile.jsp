@@ -134,8 +134,8 @@
 							<c:param name="bookName" value="${tempBook.minBookName}" />
 						</c:url>
 						<tr>
-							<td><a href="${bookSite}"> <img
-									src="/css/images/m${tempBook.minBookName}.jpg" />
+							<td><a href="${bookSite}"> <img 
+									src="data:image/jpeg;base64,${tempBook.encodedBookPic}" />
 							</a></td>
 							<td>${reader.username} is currently reading<br>
 								<h4 id="topDesc">
@@ -203,7 +203,7 @@
 											<c:when test="${reader.username == principalName }">
 												<form:form action="/profile/deleteFriends" method="GET"
 													id="deleteForm">
-													<input type="hidden" name="friendsId"
+													<input type="hidden" name="reader2Id"
 														value="${tempFriends.id}">
 													<input type="submit" value="Delete" />
 												</form:form>

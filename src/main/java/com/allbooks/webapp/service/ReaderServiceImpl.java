@@ -100,7 +100,6 @@ public class ReaderServiceImpl implements ReaderService {
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("title", bookName);
-
 		Book book = restTemplate.getForObject(url + "/books/title/{title}", Book.class, params);
 
 		int bookId = book.getId();
@@ -110,7 +109,7 @@ public class ReaderServiceImpl implements ReaderService {
 
 	@Override
 	public Rating checkIfRated(int id, String bookName) {
-
+		
 		int bookId = getBookId(bookName);
 
 		Map<String, String> params = new HashMap<String, String>();
@@ -169,9 +168,9 @@ public class ReaderServiceImpl implements ReaderService {
 
 		int bookId;
 
-		if (redirectBookName != null)
+		if (redirectBookName != null) {
 			bookId = getBookId(redirectBookName);
-		else
+		}else
 			bookId = getBookId(bookName);
 
 		Map<String, String> params = new HashMap<String, String>();
@@ -264,7 +263,7 @@ public class ReaderServiceImpl implements ReaderService {
 		params.put("bookId", String.valueOf(bookId));
 
 		Book book = restTemplate.getForObject(url + "/books/{bookId}", Book.class, params);
-		String bookName = book.getTitle();
+		String bookName = book.getMiniTitle();
 
 		return bookName;
 	}

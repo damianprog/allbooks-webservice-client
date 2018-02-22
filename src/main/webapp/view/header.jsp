@@ -11,6 +11,8 @@
 <link type="text/css" rel="stylesheet" href="/css/header.css" />
 <link href="https://fonts.googleapis.com/css?family=Roboto|Spectral+SC"
 	rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css?family=Lato:700" rel="stylesheet"> 
 </head>
 
 <body>
@@ -22,7 +24,11 @@
 				<td id="titleImg"><img src="/css/images/bookshelf.png"></td>
 				<td id="allbooksName"><a id="allBooks" href="/reader/main">All
 						Books</a></td>
-
+				
+				<td id="homeRef">
+					<a class="blackRef" href="/reader/main">Home</a>
+				</td>
+				
 				<td class="pageRef"><sec:authorize
 						access="isFullyAuthenticated()">
 						<c:url var="myBooks" value="/reader/showMyBooks">
@@ -31,7 +37,7 @@
 
 						<a class="blackRef" href="${myBooks}">My Books</a>
 					</sec:authorize></td>
-				
+
 				<sec:authorize access="hasAuthority('ADMIN')">
 					<td class="pageRef"><c:url var="addBook"
 							value="/admin/addBookPage">
@@ -40,7 +46,7 @@
 				<sec:authorize access="isFullyAuthenticated()">
 					<td id="loginPart"><c:url var="showProfile"
 							value="/profile/showProfile">
-						</c:url> Profile:<a class="login" href="${showProfile}"><sec:authentication
+						</c:url> Reader:<a class="login" href="${showProfile}"><sec:authentication
 								property="principal.username" /></a></td>
 					<td><form:form method="POST" action="/logout">
 							<input class="logoutHeader" type="submit" value="Logout" />

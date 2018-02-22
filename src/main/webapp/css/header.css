@@ -83,19 +83,32 @@ hr {
 }
 
 #loginPart{
+	font-family: 'Lato', sans-serif;
 	font-size:20px;
 	padding-left:80px;
 	width:300px;
 }
 
 .pageRef{
-	font-size:20px;
+	font-family: 'Lato', sans-serif;
+	font-size:17px;
 	margin-left:50px;
 	padding-top:20px;
 	vertical-align:middle;
 	padding-bottom:20px;
-	width:150px;
+	width:90px;
 }
+
+#homeRef{
+	font-family: 'Lato', sans-serif;
+	font-size:17px;
+	margin-left:50px;
+	padding-top:20px;
+	vertical-align:middle;
+	padding-bottom:20px;
+	width:60px;
+}
+
 .blackRef{
 	text-decoration:none;
 	color:black;
