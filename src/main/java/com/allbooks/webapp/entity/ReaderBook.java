@@ -2,7 +2,7 @@ package com.allbooks.webapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReaderBook {
 
 	private int id;
@@ -13,19 +13,41 @@ public class ReaderBook {
 
 	private String fullBookName;
 
+	private byte[] bookPic;
+
+	private String encodedBookPic;
+
 	private String author;
 
 	private double rating;
 
 	private int readerRating;
 
-	private int readerId;
+	private int readerIdentity;
+
+	private Reader reader;
 
 	private String shelves;
 
 	private String dateRead;
 
 	private String dateAdded;
+
+	public String getEncodedBookPic() {
+		return encodedBookPic;
+	}
+
+	public void setEncodedBookPic(String encodedBookPic) {
+		this.encodedBookPic = encodedBookPic;
+	}
+
+	public byte[] getBookPic() {
+		return bookPic;
+	}
+
+	public void setBookPic(byte[] bookPic) {
+		this.bookPic = bookPic;
+	}
 
 	public int getId() {
 		return id;
@@ -43,12 +65,20 @@ public class ReaderBook {
 		this.bookId = bookId;
 	}
 
-	public int getReaderId() {
-		return readerId;
+	public int getReaderIdentity() {
+		return readerIdentity;
 	}
 
-	public void setReaderId(int readerId) {
-		this.readerId = readerId;
+	public void setReaderIdentity(int readerIdentity) {
+		this.readerIdentity = readerIdentity;
+	}
+
+	public Reader getReader() {
+		return reader;
+	}
+
+	public void setReader(Reader reader) {
+		this.reader = reader;
 	}
 
 	public String getShelves() {

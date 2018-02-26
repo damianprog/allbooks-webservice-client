@@ -24,7 +24,7 @@ public interface ReaderService {
 
 	public double getOverallRating(String bookName);
 
-	public void submitReview(Review review);
+	public void submitReview(Review review,int readerId);
 
 	public List<Review> getBookReviews(String redirectBookName, String bookName);
 
@@ -59,4 +59,10 @@ public interface ReaderService {
 	public Reader getReaderByUsername(String login);
 	
 	public void saveBook(Book book);
+	
+	public void updateReader(Reader reader);
+
+	public void updateReview(Review review);
+
+	public void deleteReviewById(int reviewId);
 }

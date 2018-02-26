@@ -101,13 +101,13 @@
 				<td id="browse">
 					<h3>New Releases in Fantasy</h3> <c:url var="magnusChase"
 						value="showBook">
-						<c:param name="bookName" value="magnusChase" />
+						<c:param name="bookName" value="The Ship of the Dead" />
 					</c:url> <c:url var="rulesOfMagic" value="showBook">
-						<c:param name="bookName" value="rulesOfMagic" />
+						<c:param name="bookName" value="The Rules of Magic" />
 					</c:url> <c:url var="bookOfDust" value="showBook">
-						<c:param name="bookName" value="bookOfDust" />
+						<c:param name="bookName" value="La Belle Sauvage" />
 					</c:url> <c:url var="crookedSaints" value="showBook">
-						<c:param name="bookName" value="crookedSaints" />
+						<c:param name="bookName" value="All the Crooked Saints " />
 					</c:url> <a href="${magnusChase }"><img class="minBrowse"
 						src="/css/images/mmagnusChase.jpg" /></a>
 					<a href="${rulesOfMagic }"><img class="minBrowse"

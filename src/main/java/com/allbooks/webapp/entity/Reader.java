@@ -1,28 +1,88 @@
 package com.allbooks.webapp.entity;
 
+import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Reader {
 
-	
 	private int id;
-	
-	
+
 	private String username;
-	
-	
+
 	private String password;
-	
-	
+
 	private String email;
-	
+
 	private Set<Role> roles;
-	
-	public Reader(){
-		
+
+	private ProfilePics profilePics;
+
+	private List<Reader> friends;
+
+	private Details details;
+
+	private List<Review> reviews;
+
+	private List<Rating> ratings;
+
+	private List<ReaderBook> readerBooks;
+
+	public List<Reader> getFriends() {
+		return friends;
+	}
+
+	public void setFriends(List<Reader> friends) {
+		this.friends = friends;
+	}
+
+	public ProfilePics getProfilePics() {
+		return profilePics;
+	}
+
+	public void setProfilePics(ProfilePics profilePics) {
+		this.profilePics = profilePics;
+	}
+
+	public List<ReaderBook> getReaderBooks() {
+		return readerBooks;
+	}
+
+	public void setReaderBooks(List<ReaderBook> readerBooks) {
+		this.readerBooks = readerBooks;
+	}
+
+	public List<Rating> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(List<Rating> ratings) {
+		this.ratings = ratings;
+	}
+
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
+	}
+
+	public Details getDetails() {
+		return details;
+	}
+
+	public void setDetails(Details details) {
+		this.details = details;
+	}
+
+	public Reader() {
+
 	}
 
 	public int getId() {
@@ -69,5 +129,5 @@ public class Reader {
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
-	
+
 }

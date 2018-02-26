@@ -55,13 +55,6 @@
 							class="inputBox" required="required" /></td>
 				</tr>
 				<tr>
-					<td class="addingName">Small Mini Title</td>
-				</tr>
-				<tr>
-					<td class="bottomTd"><form:input path="title" class="inputBox"
-							required="required" /></td>
-				</tr>
-				<tr>
 					<td class="addingName">Review Author</td>
 				</tr>
 				<tr>
@@ -85,7 +78,7 @@
 
 				<tr>
 					<td class="addingName">Book Quotes (Two Quotes in quotation
-						marks separated by coma)</td>
+						marks separated by right slash)</td>
 				</tr>
 				<tr>
 					<!-- separate it in controller when showing book -->

@@ -15,7 +15,14 @@ public class Friends {
 
 	private String reader2Login;
 
-	private String accept;
+	
+	public Friends(int reader1, int reader2) {
+		this.reader1 = reader1;
+		this.reader2 = reader2;
+	}
+
+	public Friends() {
+	}
 
 	public int getId() {
 		return id;
@@ -39,14 +46,6 @@ public class Friends {
 
 	public void setReader2(int reader2) {
 		this.reader2 = reader2;
-	}
-
-	public String getAccept() {
-		return accept;
-	}
-
-	public void setAccept(String accept) {
-		this.accept = accept;
 	}
 
 	public String getReader1Login() {

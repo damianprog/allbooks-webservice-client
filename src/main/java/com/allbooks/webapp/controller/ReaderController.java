@@ -1,18 +1,25 @@
 package com.allbooks.webapp.controller;
 
-import java.io.UnsupportedEncodingException;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Base64;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +27,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Comment;
@@ -42,8 +50,6 @@ public class ReaderController {
 
 	@GetMapping("/start")
 	public String start(HttpSession session) {
-
-		session.setAttribute("logged", false);
 
 		return "redirect:/reader/main";
 	}
@@ -79,10 +85,9 @@ public class ReaderController {
 	public String showBook(@RequestParam(value = "bookName", required = false) String bookName, Model theModel,
 			HttpSession session, Principal principal) {
 
-		if (bookName == null) {
-			bookName = (String) session.getAttribute("redirectBookName");
-		}
-
+		// if (bookName == null) {
+		// bookName = (String) session.getAttribute("redirectBookName");
+		// }
 		Book book = readerService.getBookByName(bookName);
 
 		if (principal != null) {
@@ -110,19 +115,23 @@ public class ReaderController {
 				theModel.addAttribute("readerRating", readerRating.getRate());
 				theModel.addAttribute("userRated", true);
 			}
+
 		}
 
-		String base64Encoded = getEncodedImage(book.getBookPhoto());
-		String base64Encoded2 = getEncodedImage(book.getAuthorPhoto());
-		
+		String quotes = book.getBookQuotes();
+
+		List<String> quotesSplit = Arrays.asList(quotes.split("/"));
+		theModel.addAttribute("quotesSplit", quotesSplit);
+
+		String base64Encoded = ProfileController.getEncodedImage(book.getBookPhoto());
+		String base64Encoded2 = ProfileController.getEncodedImage(book.getAuthorPhoto());
+
 		theModel.addAttribute("bookPic", base64Encoded);
 		theModel.addAttribute("authorPic", base64Encoded2);
 
 		int[] ratesAndReviews = readerService.howManyRatesAndReviews(bookName);
 		theModel.addAttribute("rates", ratesAndReviews[0]);
 		theModel.addAttribute("reviews", ratesAndReviews[1]);
-
-		session.removeAttribute("params");
 
 		double overallRating;
 
@@ -135,38 +144,70 @@ public class ReaderController {
 		List<Review> bookReviews;
 
 		bookReviews = readerService.getBookReviews(bookName, bookName);
+
+		// update current reader ratings in reviews
+		if (bookReviews != null) {
+			for (Review tempReview : bookReviews) {
+				int rating = readerService.getReaderRating(tempReview.getReaderIdentity(), book.getMiniTitle());
+				tempReview.setReaderRating(rating);
+			}
+
+			bookReviews.sort(Comparator.comparingInt(Review::getId).reversed());
+		}
+
 		theModel.addAttribute("bookReviews", bookReviews);
 
 		Review review = new Review();
 		theModel.addAttribute("review", review);
 
-		session.removeAttribute("redirectBookName");
 		theModel.addAttribute("book", book);
 
 		return "book";
 	}
 
-	public String getEncodedImage(byte[] theEncodedBase64) {
+	@GetMapping("/showMyBooks")
+	public String showMyBooks(@RequestParam(value = "myBooks", required = false) String myBooks,
+			@RequestParam(value = "readerId", required = false) String readerId, Model theModel, HttpSession session,
+			Principal principal) {
 
-		String base64Encoded = null;
+		boolean myBooksBoo;
+		int readerIdInt = 0;
+		Reader reader;
 
-		byte[] encodeBase64 = Base64.getEncoder().encode(theEncodedBase64);
-		try {
-			base64Encoded = new String(encodeBase64, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			myBooksBoo = Boolean.valueOf(myBooks);
+		
+
+		if (readerId != null) {
+			readerIdInt = Integer.valueOf(readerId);
+			reader = profileService.getReaderById(readerIdInt);
+		} else
+			reader = readerService.getReaderByUsername(principal.getName());
+
+		List<ReaderBook> readerBooks = readerService.getReaderBooks(reader.getId());
+
+		Map<String, String> bookPics = new HashMap<>();
+
+		for (ReaderBook tempReaderBook : readerBooks) {
+			int readerRating = readerService.getReaderRating(reader.getId(), tempReaderBook.getMinBookName());
+			tempReaderBook.setReaderRating(readerRating);
+			tempReaderBook.setRating(readerService.getOverallRating(tempReaderBook.getMinBookName()));
+			tempReaderBook.setEncodedBookPic(ProfileController.getEncodedImage(tempReaderBook.getBookPic()));
 		}
 
-		return base64Encoded;
+		theModel.addAttribute("bookPicsMap", bookPics);
+		theModel.addAttribute("readerBooks", readerBooks);
+		theModel.addAttribute("myBooks", myBooksBoo);
+		theModel.addAttribute("reader", reader.getUsername());
+
+		return "mybooks";
 	}
 
 	@GetMapping("/reviewPage")
-	public String reviewPage(@RequestParam Map<String, String> params, Model theModel, HttpSession session) {
+	public String reviewPage(@ModelAttribute("params") Map<String, String> redirectParams,
+			@RequestParam Map<String, String> params, Model theModel, HttpSession session) {
 
-		Map<String, String> sessionParams = (Map<String, String>) session.getAttribute("params");
-
-		if (sessionParams != null)
-			params = sessionParams;
+		if (params == null)
+			params = redirectParams;
 
 		int reviewId = Integer.valueOf(params.get("reviewId"));
 		int bookId = Integer.valueOf(params.get("bookId"));
@@ -182,7 +223,14 @@ public class ReaderController {
 
 		List<Comment> reviewComments = readerService.getReviewComments(reviewId);
 
+		reviewComments.sort(Comparator.comparingInt(Comment::getId).reversed());
+
+		Book book = readerService.getBook(bookId);
+
+		String bookPicEncoded = ProfileController.getEncodedImage(book.getBookPhoto());
+
 		theModel.addAttribute("bookId", bookId);
+		theModel.addAttribute("bookPic", bookPicEncoded);
 		theModel.addAttribute("readerRating", readerRating);
 		theModel.addAttribute("readerLogin", readerLogin);
 		theModel.addAttribute("bookName", bookName);
@@ -209,153 +257,183 @@ public class ReaderController {
 		return "saved";
 	}
 
-	@GetMapping("/logout")
-	public String logout(HttpSession session, Model theModel) {
-
-		session.removeAttribute("loggedReader");
-		session.setAttribute("logged", false);
-
-		Reader reader = new Reader();
-		theModel.addAttribute("reader", reader);
-
-		return "main";
-	}
+	// check if you can delete this method
+//	@GetMapping("/logout")
+//	public String logout(HttpSession session, Model theModel) {
+//
+//		session.removeAttribute("loggedReader");
+//		session.setAttribute("logged", false);
+//
+//		Reader reader = new Reader();
+//		theModel.addAttribute("reader", reader);
+//
+//		return "main";
+//	}
 
 	@GetMapping("/rate")
 	public String rate(@ModelAttribute("rating") Rating rating, @RequestParam("bookName") String bookName,
-			Model theModel, HttpSession session, Principal principal) {
+			Model theModel, HttpSession session, Principal principal, RedirectAttributes ra) {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
-		int readerId = reader.getId();
 		rating.setBookId(readerService.getBookId(bookName));
-		rating.setUserId(readerId);
+		rating.setReaderIdentity(reader.getId());
+
+		List<Rating> ratings = reader.getRatings();
+
+		if (ratings == null)
+			ratings = new ArrayList<>();
+
+		ratings.add(rating);
+		reader.setRatings(ratings);
+
 		readerService.submitRating(rating);
-		session.setAttribute("redirectBookName", bookName);
+		ra.addAttribute("bookName", bookName);
 
 		return "redirect:/reader/showBook";
 	}
 
-	@GetMapping("/submitReview")
+	@GetMapping("/submitReview") // POST
 	public String submitReview(@ModelAttribute("review") Review review, @RequestParam("bookName") String bookName,
-			Model theModel, HttpSession session, Principal principal) {
+			Model theModel, HttpSession session, Principal principal, RedirectAttributes ra) {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 		int readerId = reader.getId();
 
-		review.setReaderId(readerId);
+		review.setReaderIdentity(readerId);
 		review.setReaderLogin(reader.getUsername());
 		review.setReaderRating(readerService.getReaderRating(readerId, bookName));
 		review.setBookId(readerService.getBookId(bookName));
-		readerService.submitReview(review);
-		session.setAttribute("redirectBookName", bookName);
+
+		List<Review> reviewsList = reader.getReviews();
+
+		if (reviewsList == null)
+			reviewsList = new ArrayList<Review>();
+
+		reviewsList.add(review);
+
+		reader.setReviews(reviewsList);
+
+		readerService.submitReview(review, readerId);
+		ra.addAttribute("bookName", bookName);
+
+		return "redirect:/reader/showBook";
+	}
+
+	// temporary method
+	@GetMapping("/deleteReview")
+	public String deleteReview(@RequestParam("bookName") String bookName, @RequestParam("reviewId") int reviewId,
+			HttpSession session, RedirectAttributes ra) {
+
+		readerService.deleteReviewById(reviewId);
+
+		ra.addAttribute("bookName", bookName);
 
 		return "redirect:/reader/showBook";
 	}
 
 	@GetMapping("/submitComment")
 	public String submitComment(@ModelAttribute("comment") Comment comment, @RequestParam Map<String, String> params,
-			@RequestParam("reviewId") int reviewId, HttpSession session, Model theModel, Principal principal) {
+			@RequestParam("reviewId") int reviewId, HttpSession session, Model theModel, Principal principal,
+			RedirectAttributes ra) {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 		int readerId = reader.getId();
 
-		comment.setReviewId(reviewId);
 		comment.setReaderId(readerId);
 		comment.setReaderLogin(reader.getUsername());
 		comment.setReaderRating(readerService.getReaderRating(readerId, params.get("bookName")));
-		readerService.submitComment(comment);
 
-		session.setAttribute("params", params);
+		Review review = readerService.getOneReview(reviewId);
+		List<Comment> comments = review.getComments();
+
+		if (comments == null)
+			comments = new ArrayList<Comment>();
+
+		comments.add(comment);
+		review.setComments(comments);
+
+		readerService.updateReview(review);
+
+		ra.addFlashAttribute("params", params);
 
 		return "redirect:/reader/reviewPage";
 	}
 
 	@GetMapping("/dropLike")
 	public String dropLike(@RequestParam("reviewId") int reviewId, @RequestParam("bookName") String bookName,
-			HttpSession session, HttpServletRequest request) {
+			HttpSession session, HttpServletRequest request, RedirectAttributes ra) {
 
 		readerService.dropLike(reviewId);
-		session.setAttribute("redirectBookName", bookName);
+		ra.addAttribute("bookName", bookName);
 
 		return "redirect:/reader/showBook";
 	}
 
 	@GetMapping("/dropLikeReview")
-	public String dropLikeReview(@RequestParam Map<String, String> params, Model theModel, HttpSession session) {
+	public String dropLikeReview(@RequestParam Map<String, String> params, Model theModel, HttpSession session,
+			RedirectAttributes ra) {
 
 		int reviewId = Integer.valueOf(params.get("reviewId"));
-		session.setAttribute("params", params);
 		readerService.dropLike(reviewId);
+		ra.addFlashAttribute("params", params);
 
 		return "redirect:/reader/reviewPage";
 
 	}
 
-	@GetMapping("/readstate")
+	@GetMapping("/readState")
 	public String readState(@RequestParam("bookName") String bookName, @RequestParam("update") boolean update,
-			@ModelAttribute("readerBook") ReaderBook readerBook, HttpSession session, Principal principal) {
+			@ModelAttribute("readerBook") ReaderBook readerBook, HttpSession session, Principal principal,
+			RedirectAttributes ra) throws IOException {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 		Book book = readerService.getBook(readerService.getBookId(bookName));
+
+		byte[] bookPicBytes = book.getBookPhoto();
+		InputStream in = new ByteArrayInputStream(bookPicBytes);
+		BufferedImage imgToResize = ImageIO.read(in);
+		BufferedImage resizedBookPic = ProfileController.resize(imgToResize, 125, 190);
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(resizedBookPic, "jpg", baos);
+		byte[] bookPic = baos.toByteArray();
+
+		readerBook.setBookPic(bookPic);
+
 		double rating = readerService.getOverallRating(bookName);
 
-		if (update == false) {
+		int readerId = reader.getId();
 
-			int readerId = reader.getId();
+		if (update == false) {
 
 			LocalDate localDate = LocalDate.now();
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 			String text = localDate.format(formatter);
 
 			readerBook.setBookId(readerService.getBookId(bookName));
-			readerBook.setReaderId(readerId);
+			readerBook.setReaderIdentity(readerId);
 			readerBook.setDateAdded(text);
-			readerBook.setMinBookName(book.getTitle());
+			readerBook.setMinBookName(book.getMiniTitle());
 			readerBook.setFullBookName(book.getFullTitle());
 			readerBook.setAuthor(book.getAuthor());
 			readerBook.setRating(rating);
 
+			List<ReaderBook> readerBooks = reader.getReaderBooks();
+
+			if (readerBooks == null)
+				readerBooks = new ArrayList<>();
+
+			readerBooks.add(readerBook);
+			reader.setReaderBooks(readerBooks);
+
 			readerService.saveReaderBook(readerBook);
 		} else {
-			readerService.saveNewState(readerBook.getShelves(), readerService.getBookId(bookName), reader.getId());
+			readerService.saveNewState(readerBook.getShelves(), readerService.getBookId(bookName), readerId);
 		}
 
-		session.setAttribute("redirectBookName", bookName);
+		ra.addAttribute("bookName", bookName);
 
 		return "redirect:/reader/showBook";
-	}
-
-	@GetMapping("/showMyBooks")
-	public String showMyBooks(@RequestParam("myBooks") String myBooks,
-			@RequestParam(value = "readerId", required = false) String readerId, Model theModel, HttpSession session,
-			Principal principal) {
-
-		int readerIdInt = 0;
-
-		Reader reader;
-
-		if (readerId != null) {
-			readerIdInt = Integer.valueOf(readerId);
-			reader = profileService.getReaderById(readerIdInt);
-		} else
-			reader = readerService.getReaderByUsername(principal.getName());
-
-		List<ReaderBook> readerBooks = readerService.getReaderBooks(reader.getId());
-
-		for (ReaderBook tempReaderBook : readerBooks) {
-
-			int readerRating = readerService.getReaderRating(reader.getId(), tempReaderBook.getMinBookName());
-			tempReaderBook.setReaderRating(readerRating);
-			tempReaderBook.setRating(readerService.getOverallRating(tempReaderBook.getMinBookName()));
-		}
-
-		boolean myBooksBoo = Boolean.valueOf(myBooks);
-		System.out.println(readerBooks);
-		theModel.addAttribute("readerBooks", readerBooks);
-		theModel.addAttribute("myBooks", myBooksBoo);
-		theModel.addAttribute("reader", reader.getUsername());
-
-		return "mybooks";
 	}
 
 }

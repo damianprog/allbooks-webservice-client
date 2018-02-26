@@ -17,6 +17,14 @@ public class Comment {
 
 	private int readerRating;
 
+	public int getReviewId() {
+		return reviewId;
+	}
+
+	public void setReviewId(int reviewId) {
+		this.reviewId = reviewId;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -47,14 +55,6 @@ public class Comment {
 
 	public void setReaderId(int readerId) {
 		this.readerId = readerId;
-	}
-
-	public int getReviewId() {
-		return reviewId;
-	}
-
-	public void setReviewId(int reviewId) {
-		this.reviewId = reviewId;
 	}
 
 	public int getReaderRating() {

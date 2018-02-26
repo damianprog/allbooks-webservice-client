@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.allbooks.webapp.entity.Details;
 import com.allbooks.webapp.entity.Friends;
+import com.allbooks.webapp.entity.Pending;
 import com.allbooks.webapp.entity.ProfilePics;
 import com.allbooks.webapp.entity.Reader;
 
@@ -19,20 +20,28 @@ public interface ProfileService {
 
 	public Friends areTheyFriends(String reader1, String reader2);
 
-	public List<Friends> getFriendsInvites(int id);
+	public List<Pending> getFriendsInvites(int id);
 
 	public Friends getFriendsById(int friendsIdInt);
 
-	public void deleteFriends(int friendsIdInt);
+	public void deleteFriends(int friendsIdInt, int reader2Id);
 
 	public List<Friends> getAllReaderFriends(int id);
 
-	public List<Friends> getReaderFriends(int id);
+	public List<Reader> getReaderFriends(int id);
 
 	public void saveDetails(Details details);
 
 	public void saveProfilePics(ProfilePics profilePics,int readerId);
 
 	public ProfilePics getProfilePics(int id);
+
+	public void deleteReader(int readerId);
+
+	public void savePending(Pending pending);
+
+	public Pending getPending(String name, String username);
+
+	public void deletePending(int pendingIdInt);
 
 }

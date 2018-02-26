@@ -31,7 +31,7 @@
 
 					<td id="img">
 						<div id="imgRateReview">
-							<img src="/css/images/${bookName}Page.jpg"> <br>
+							<img src="data:image/jpeg;base64,${bookPic}"> <br>
 							<sec:authorize access="isFullyAuthenticated()">
 								<c:choose>
 									<c:when test="${userRated == false}">

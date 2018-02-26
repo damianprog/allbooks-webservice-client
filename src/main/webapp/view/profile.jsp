@@ -34,8 +34,7 @@
 							</c:choose></td>
 					</tr>
 					<c:choose>
-						<c:when
-							test="${reader.username == principalName}">
+						<c:when test="${reader.username == principalName}">
 							<tr>
 								<td>
 									<form method="POST" action="/profile/profileUpload"
@@ -59,16 +58,15 @@
 						</c:when>
 						<c:when test="${invite == true}">
 							<c:url var="friendUrl" value="/profile/inviteFriend">
-								<c:param name="reader1login" value="${reader.username}" />
-								<c:param name="reader2login"
-									value="${principalName}" />
+								<c:param name="recipentLogin" value="${reader.username}" />
+								<c:param name="senderLogin" value="${principalName}" />
 							</c:url>
 							<c:choose>
 								<c:when test="${pending == false}">
 									<c:choose>
 										<c:when
 											test="${(booFriends == false) && (reader.username != principalName)}">
-											<a class="blackRef" href="${friendUrl}">Send friend
+											<a class="blackRef" href="${friendUrl}">Send friend's
 												request</a>
 										</c:when>
 										<c:when test="${(booFriends == true) }">
@@ -136,8 +134,8 @@
 							<c:param name="bookName" value="${tempBook.minBookName}" />
 						</c:url>
 						<tr>
-							<td><a href="${bookSite}"> <img
-									src="/css/images/m${tempBook.minBookName}.jpg" />
+							<td><a href="${bookSite}"> <img 
+									src="data:image/jpeg;base64,${tempBook.encodedBookPic}" />
 							</a></td>
 							<td>${reader.username} is currently reading<br>
 								<h4 id="topDesc">
@@ -152,8 +150,7 @@
 		</div>
 		<div id="rightSide">
 			<c:choose>
-				<c:when
-					test="${reader.username == principalName}">
+				<c:when test="${reader.username == principalName}">
 					<div id="friendsInvites">
 						<h4 id="topDesc">Friends Invites</h4>
 						<hr>
@@ -164,16 +161,18 @@
 							<c:otherwise>
 								<c:forEach var="tempFriends" items="${friendsInvites}">
 									<c:url var="senderProfile" value="/profile/showProfile">
-										<c:param name="readerId" value="${tempFriends.reader2}" />
+										<c:param name="readerId" value="${tempFriends.senderId}" />
 									</c:url>
-									<a href="${senderProfile}">${tempFriends.reader2Login}</a> Has sent you a friends request!
+									<a href="${senderProfile}">${tempFriends.senderLogin}</a> Has sent you a friends request!
 				<form method="GET" action="/profile/acceptOrAbort">
 										<select name="acceptOrAbort">
 											<option value="accept">Accept</option>
 											<option value="abort">Abort</option>
-										</select> <input type="hidden" name="readerProfile"
+										</select> <input type="hidden" name="recipentId"
 											value="${reader.id}"> <input type="hidden"
-											name="friendsId" value="${tempFriends.id}"> <input
+											name="senderId" value="${tempFriends.senderId}">
+											<input type="hidden"
+											name="pendingId" value="${tempFriends.id}"> <input
 											type="submit" value="Submit" />
 									</form>
 								</c:forEach>
@@ -194,30 +193,17 @@
 						<table>
 							<c:forEach var="tempFriends" items="${friends}">
 								<c:url var="friendProfile" value="/profile/showProfile">
-									<c:choose>
-										<c:when test="${reader.id != tempFriends.reader1}">
-											<c:param name="readerId" value="${tempFriends.reader1}" />
-										</c:when>
-										<c:otherwise>
-											<c:param name="readerId" value="${tempFriends.reader2}" />
-										</c:otherwise>
-									</c:choose>
+											<c:param name="readerId" value="${tempFriends.id}" />
 								</c:url>
 								<tr>
 									<td>Friend's name: <a class="blackRef"
-										href="${friendProfile}"> <c:choose>
-												<c:when test="${reader.id != tempFriends.reader1}">
-						${tempFriends.reader1Login}
-						</c:when>
-												<c:otherwise>
-						${tempFriends.reader2Login}
-						</c:otherwise>
-											</c:choose>
+										href="${friendProfile}"> ${tempFriends.username}
+						
 									</a> <c:choose>
 											<c:when test="${reader.username == principalName }">
 												<form:form action="/profile/deleteFriends" method="GET"
 													id="deleteForm">
-													<input type="hidden" name="friendsId"
+													<input type="hidden" name="reader2Id"
 														value="${tempFriends.id}">
 													<input type="submit" value="Delete" />
 												</form:form>

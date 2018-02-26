@@ -51,7 +51,7 @@
 					<c:param name="bookName" value="${tempBook.minBookName}"/>
 				</c:url>
 					<tr>
-						<td ><img src="/css/images/m${tempBook.minBookName}.jpg"/></td>
+						<td ><img src="data:image/jpeg;base64,${tempBook.encodedBookPic}"/></td>
 						<td  class="cells"><a id="titleRef" href="${titleRef}">${tempBook.fullBookName}</a></td>
 						<td  class="cells">${tempBook.author}</td>
 						<td  class="cells">${tempBook.rating}</td>

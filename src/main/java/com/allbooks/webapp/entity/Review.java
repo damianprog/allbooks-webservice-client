@@ -1,5 +1,6 @@
 package com.allbooks.webapp.entity;
 
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -16,14 +17,42 @@ public class Review {
 
 	private String readerLogin;
 
+	private Reader reader;
+
 	private int readerRating;
 
-	private int readerId;
+	private int readerIdentity;
 
 	private int bookId;
-	
-	@JsonIgnore //may cause problems while updating/saving review(?)
+
+	private List<Comment> comments;
+
+	@JsonIgnore
 	private byte[] profilePic;
+
+	public int getReaderIdentity() {
+		return readerIdentity;
+	}
+
+	public void setReaderIdentity(int readerIdentity) {
+		this.readerIdentity = readerIdentity;
+	}
+
+	public Reader getReader() {
+		return reader;
+	}
+
+	public void setReader(Reader reader) {
+		this.reader = reader;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
 
 	public byte[] getProfilePic() {
 		return profilePic;
@@ -50,14 +79,6 @@ public class Review {
 
 	public void setText(String text) {
 		this.text = text;
-	}
-
-	public int getReaderId() {
-		return readerId;
-	}
-
-	public void setReaderId(int readerId) {
-		this.readerId = readerId;
 	}
 
 	public int getBookId() {
