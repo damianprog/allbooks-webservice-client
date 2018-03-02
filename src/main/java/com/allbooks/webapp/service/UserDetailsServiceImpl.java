@@ -15,21 +15,33 @@ import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.Role;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService{
+public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
 	ReaderService readerService;
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		 Reader reader = readerService.getReaderByUsername(username);
-	        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-	        for (Role role : reader.getRoles()){
-	            grantedAuthorities.add(new SimpleGrantedAuthority(role.getRole()));
-	        }
-	        
-	        return new org.springframework.security.core.userdetails.User(reader.getUsername(), reader.getPassword(), grantedAuthorities);
-	    }
+		Reader reader;
+
+		boolean isUserInDb = readerService.checkReaderLogin(username);
+
+		if (isUserInDb == true) {
+			reader = readerService.getReaderByUsername(username);
+
+			if (reader.isEnabled() == false)
+				throw new UsernameNotFoundException(username);
+			else {
+				Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+				for (Role role : reader.getRoles()) {
+
+					grantedAuthorities.add(new SimpleGrantedAuthority(role.getRole()));
+				}
+
+				return new org.springframework.security.core.userdetails.User(reader.getUsername(),
+						reader.getPassword(), grantedAuthorities);
+			}
+		} else
+			throw new UsernameNotFoundException(username);
 	}
-
-
+}

@@ -11,10 +11,6 @@ public class Friends {
 
 	private int reader2;
 
-	private String reader1Login;
-
-	private String reader2Login;
-
 	
 	public Friends(int reader1, int reader2) {
 		this.reader1 = reader1;
@@ -46,21 +42,5 @@ public class Friends {
 
 	public void setReader2(int reader2) {
 		this.reader2 = reader2;
-	}
-
-	public String getReader1Login() {
-		return reader1Login;
-	}
-
-	public void setReader1Login(String reader1Login) {
-		this.reader1Login = reader1Login;
-	}
-
-	public String getReader2Login() {
-		return reader2Login;
-	}
-
-	public void setReader2Login(String reader2Login) {
-		this.reader2Login = reader2Login;
 	}
 }

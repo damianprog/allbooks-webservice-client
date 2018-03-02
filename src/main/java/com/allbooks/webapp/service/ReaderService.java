@@ -1,6 +1,7 @@
 package com.allbooks.webapp.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Comment;
@@ -8,7 +9,7 @@ import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.Review;
-import com.allbooks.webapp.entity.Role;
+import com.allbooks.webapp.entity.VerificationToken;
 
 public interface ReaderService {
 
@@ -65,4 +66,12 @@ public interface ReaderService {
 	public void updateReview(Review review);
 
 	public void deleteReviewById(int reviewId);
+	
+	public void createVerificationToken(Reader reader,String verificationToken);
+	
+	public VerificationToken getTokenByReaderId(int readerId);
+
+	public void deleteTokenById(int tokenId);
+	
+	public boolean checkReaderLogin(String username);
 }

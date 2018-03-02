@@ -26,12 +26,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 		.antMatchers("**/main/").permitAll()
+		.antMatchers("/admin/**").hasAuthority("ADMIN")
 		.and()
         .formLogin()
+        .loginPage("/login")
+        .failureUrl("/login?error=true")
         .defaultSuccessUrl("/reader/main")
         .permitAll()
         .and()
-        .logout().logoutSuccessUrl("/reader/start");
+        .logout().logoutSuccessUrl("/reader/start")
+        .and()
+        .exceptionHandling().accessDeniedPage("/reader/accessDenied");
+	
 
 		http.csrf().disable();
 	}

@@ -17,6 +17,8 @@ public class Reader {
 
 	private String password;
 
+	private boolean enabled;
+
 	private String email;
 
 	private Set<Role> roles;
@@ -32,6 +34,14 @@ public class Reader {
 	private List<Rating> ratings;
 
 	private List<ReaderBook> readerBooks;
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 
 	public List<Reader> getFriends() {
 		return friends;
