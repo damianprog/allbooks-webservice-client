@@ -44,6 +44,7 @@
 					<th>shelves</th>
 					<th>date read</th>
 					<th>date added</th>
+					<th>Delete</th>
 				</tr>
 				
 				<c:forEach var="tempBook" items="${readerBooks}">

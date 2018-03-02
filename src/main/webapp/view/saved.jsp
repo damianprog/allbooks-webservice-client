@@ -31,7 +31,7 @@
 				<h3>You've been successfully Registered</h3>
 				<p><a href="/reader/main">Allbooks Home</a></p>
 				<p>or</p>
-				<p>Login Page</p>
+				<p><a href="/reader/loginPage">Login Page</a></p>
 			</c:when>
 			<c:when test="${success == false }">
 				<h3>This login is taken</h3>
@@ -41,6 +41,10 @@
 			<c:when test="${loggingError == true }">
 				<h3>Login or password is not correct</h3>
 				<p><a href="/reader/loginPage">Go back to Login page</a></p>
+			</c:when>
+			<c:when test="${accessDenied == true}">
+				<h3>You don't have access to this page.</h3>
+				<p><a href="/reader/main">Allbooks Home</a></p>
 			</c:when>
 		</c:choose>
 		

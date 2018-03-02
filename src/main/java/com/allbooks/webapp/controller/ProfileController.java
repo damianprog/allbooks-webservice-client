@@ -10,6 +10,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpSession;
@@ -46,9 +47,10 @@ public class ProfileController {
 	ProfileService profileService;
 
 	@GetMapping("/showProfile")
-	public String showProfile(@RequestParam(value = "readerId", required = false) String readerId,
-			@ModelAttribute("recipentId") String recipentId, HttpSession session, Model theModel, Principal principal) {
-
+	public String showProfile(@RequestParam(value = "readerId", required = false) Optional<Integer> readerId,
+			@RequestParam(value = "recipentId", required = false) Optional<Integer> recipentId, HttpSession session,
+			Model theModel, Principal principal) {
+		
 		int read, currentlyReading, wantToRead, readerIdInt, friendsNum;
 		read = currentlyReading = wantToRead = readerIdInt = friendsNum = 0;
 		Reader reader;
@@ -57,12 +59,12 @@ public class ProfileController {
 
 		boolean invite, booFriends, pending;
 		invite = booFriends = pending = false;
-		
-		if (readerId != null) {
-			reader = profileService.getReaderById(Integer.valueOf(readerId));
-		} else if (!recipentId.isEmpty()) {
-			reader = profileService.getReaderById(Integer.valueOf(recipentId));
-		} else 
+
+		if (readerId.isPresent()) {
+			reader = profileService.getReaderById(readerId.get());
+		} else if (recipentId.isPresent()) {
+			reader = profileService.getReaderById(recipentId.get());
+		} else
 			reader = readerService.getReaderByUsername(principal.getName());
 		
 		List<ReaderBook> readerBooks = readerService.getReaderBooks(reader.getId());
@@ -70,18 +72,28 @@ public class ProfileController {
 		Details details = reader.getDetails();
 		for (ReaderBook readerBook : readerBooks) {
 
-			if (readerBook.getShelves().equals("Read"))
+			switch (readerBook.getShelves()) {
+
+			case "Read":
 				read++;
-			else if (readerBook.getShelves().equals("Currently Reading")) {
+				break;
+
+			case "Currently Reading":
 				currentlyReading++;
 				readerBook.setEncodedBookPic(getEncodedImage(readerBook.getBookPic()));
 				currentlyReadingList.add(readerBook);
-			} else if (readerBook.getShelves().equals("Want To Read"))
+				break;
+
+			case "Want To Read":
 				wantToRead++;
+				break;
+
+			}
+
 		}
 
 		if (principal != null) {
-			
+
 			if ((!principal.getName().equals(reader.getUsername()))) {
 				Friends checkFriends = profileService.areTheyFriends(principal.getName(), reader.getUsername());
 				Pending pendingObject = profileService.getPending(reader.getUsername(), principal.getName());
@@ -91,19 +103,16 @@ public class ProfileController {
 					if (pendingObject != null)
 						pending = true;
 
-					booFriends = false;
 				}
-			}
-
-			if ((!principal.getName().equals(reader.getUsername()))) {
 				invite = true;
 			}
-			theModel.addAttribute("principalName", principal.getName());
 
-			if ((principal.getName().equals(reader.getUsername()))) {
+			else {
 				friendsInvites = profileService.getFriendsInvites(reader.getId());
 				theModel.addAttribute("friendsInvites", friendsInvites);
 			}
+
+			theModel.addAttribute("principalName", principal.getName());
 		}
 
 		ProfilePics profilePics = reader.getProfilePics();
@@ -116,6 +125,7 @@ public class ProfileController {
 		if (!reader.getFriends().isEmpty()) {
 			friendsNum = reader.getFriends().size();
 			friends = reader.getFriends();
+			System.out.println(reader.getFriends().toString());
 		} else {
 			friends = profileService.getReaderFriends(reader.getId());
 			if (friends.isEmpty())
@@ -159,7 +169,7 @@ public class ProfileController {
 
 	@PostMapping("/profileUpload")
 	public String profileUpload(HttpSession session, Model theModel, @RequestParam("file") MultipartFile multipartfile,
-			Principal principal) {
+			Principal principal) throws IOException {
 
 		if (multipartfile.isEmpty()) {
 			return "redirect:/profile/showProfile";
@@ -167,20 +177,9 @@ public class ProfileController {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 
-		try {
+			byte[] bytes = ControllerUtils.convertMultipartImage(multipartfile, 200, 250);
 
-			File convFile = convert(multipartfile);
-
-			BufferedImage bimg = ImageIO.read(convFile);
-
-			BufferedImage resized = resize(bimg, 200, 250);
-
-			// SAVED BUFFERED IMAGE
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ImageIO.write(resized, "jpg", baos);
-			byte[] bytes = baos.toByteArray();
-
-			ProfilePics profilePics = reader.getProfilePics(); // ?
+			ProfilePics profilePics = reader.getProfilePics();
 
 			if (profilePics == null) {
 				profilePics = new ProfilePics(bytes);
@@ -190,9 +189,7 @@ public class ProfileController {
 			reader.setProfilePics(profilePics);
 			readerService.updateReader(reader);
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
 
 		return "redirect:/profile/showProfile";
 	}
@@ -239,7 +236,7 @@ public class ProfileController {
 			@RequestParam("senderLogin") String senderLogin, HttpSession session, Principal principal,
 			RedirectAttributes ra) {
 
-		int recipentId = profileService.getReaderId(recipentLogin);
+		Integer recipentId = profileService.getReaderId(recipentLogin);
 		int senderId = profileService.getReaderId(senderLogin);
 
 		Pending pending = new Pending();
@@ -250,7 +247,7 @@ public class ProfileController {
 
 		profileService.savePending(pending);
 
-		ra.addFlashAttribute("recipentId", recipentId);
+		ra.addAttribute("recipentId", recipentId);
 		return "redirect:/profile/showProfile";
 	}
 
@@ -259,7 +256,6 @@ public class ProfileController {
 			@RequestParam("recipentId") String recipentId, @RequestParam("senderId") String senderId,
 			@RequestParam("pendingId") String pendingId, Model theModel, HttpSession session) {
 
-		// check if its possible to transfer int type of id's
 		int senderIdInt = Integer.valueOf(senderId);
 		int recipentIdInt = Integer.valueOf(recipentId);
 		int pendingIdInt = Integer.valueOf(pendingId);
@@ -269,8 +265,6 @@ public class ProfileController {
 
 		if (acceptOrAbort.equals("accept")) {
 			Friends friends = new Friends(senderIdInt, recipentIdInt);
-			friends.setReader1Login(reader1.getUsername());
-			friends.setReader2Login(reader2.getUsername());
 			profileService.saveFriends(friends);
 			profileService.deletePending(pendingIdInt);
 
@@ -321,18 +315,5 @@ public class ProfileController {
 		readerService.updateReader(reader);
 
 		return "redirect:/profile/showProfile";
-	}
-
-	public static File convert(MultipartFile file) throws IOException {
-		File convFile = new File(file.getOriginalFilename());
-		convFile.createNewFile();
-		FileOutputStream fos = new FileOutputStream(convFile);
-		fos.write(file.getBytes());
-		fos.close();
-		return convFile;
-	}
-
-	public static BufferedImage resize(BufferedImage img, int newW, int newH) throws IOException {
-		return Thumbnails.of(img).size(newW, newH).asBufferedImage();
 	}
 }

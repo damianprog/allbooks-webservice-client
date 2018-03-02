@@ -47,39 +47,21 @@ public class AdminController {
 
 	@PostMapping("/addBook")
 	public String addBook(@RequestParam("bookPhotoTemp") MultipartFile mfBookPhoto,
-			@RequestParam("authorPhotoTemp") MultipartFile mfAuthorPhoto, @ModelAttribute("book") Book book, Model theModel) {
+			@RequestParam("authorPhotoTemp") MultipartFile mfAuthorPhoto, @ModelAttribute("book") Book book,
+			Model theModel) throws IOException {
 
-		
-		try {
-			File convFile = ProfileController.convert(mfBookPhoto);
-			File convFile2 = ProfileController.convert(mfAuthorPhoto);
+		byte[] bookPhotoBytes = ControllerUtils.convertMultipartImage(mfBookPhoto, 150, 228);
 
-			BufferedImage bookPhotoBimg = ImageIO.read(convFile);
-			BufferedImage authorPhotoBimg = ImageIO.read(convFile2);
+		byte[] authorPhotoBytes = ControllerUtils.convertMultipartImage(mfAuthorPhoto, 50, 66);
 
-			BufferedImage resized = ProfileController.resize(bookPhotoBimg, 150, 228);
-			BufferedImage resized2 = ProfileController.resize(authorPhotoBimg, 50, 66);
+		book.setBookPhoto(bookPhotoBytes);
+		book.setAuthorPhoto(authorPhotoBytes);
 
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ImageIO.write(resized, "jpg", baos);
-			byte[] bookPhotoBytes = baos.toByteArray();
-			
-			ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
-			ImageIO.write(resized2, "jpg", baos2);
-			byte[] authorPhotoBytes = baos2.toByteArray();
-			
-			book.setBookPhoto(bookPhotoBytes);
-			book.setAuthorPhoto(authorPhotoBytes);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
 		readerService.saveBook(book);
 
 		theModel.addAttribute("book", book);
 
 		return "addbook";
 	}
-	
+
 }

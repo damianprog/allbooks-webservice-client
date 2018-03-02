@@ -31,11 +31,8 @@
 				
 				<td class="pageRef"><sec:authorize
 						access="isFullyAuthenticated()">
-						<c:url var="myBooks" value="/reader/showMyBooks">
-							<c:param name="myBooks" value="true" />
-						</c:url>
 
-						<a class="blackRef" href="${myBooks}">My Books</a>
+						<a class="blackRef" href="/reader/showMyBooks">My Books</a>
 					</sec:authorize></td>
 
 				<sec:authorize access="hasAuthority('ADMIN')">
@@ -56,6 +53,7 @@
 				<sec:authorize access="!isFullyAuthenticated()">
 
 					<form:form method="POST" action="/login">
+					<td>
 						<table id="mainLogin">
 							<tr>
 								<td><input type="text" placeholder="Login" id="inputBox"
@@ -68,10 +66,11 @@
 							<tr>
 								<td id="cbMain"><input type="checkbox" name="cb"
 									value="remember" /> Remember me</td>
-								<td id="cbMainForgot"><a href="/reader/loginPage">Forgot
+								<td id="cbMainForgot"><a href="/reader/login">Forgot
 										it?</a></td>
 							</tr>
 						</table>
+					</td>
 					</form:form>
 				</sec:authorize>
 			</tr>

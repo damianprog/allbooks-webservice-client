@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,20 +28,26 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Comment;
+import com.allbooks.webapp.entity.OnRegistrationCompleteEvent;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.Review;
+import com.allbooks.webapp.entity.VerificationToken;
 import com.allbooks.webapp.service.ProfileService;
 import com.allbooks.webapp.service.ReaderService;
 
 @Controller
 @RequestMapping("/reader")
 public class ReaderController {
+
+	@Autowired
+	ApplicationEventPublisher eventPublisher;
 
 	@Autowired
 	ReaderService readerService;
@@ -72,7 +79,7 @@ public class ReaderController {
 		return "join";
 	}
 
-	@GetMapping("/loginPage")
+	@GetMapping("/login")
 	public String loginPage(Model theModel) {
 
 		Reader reader = new Reader();
@@ -85,9 +92,6 @@ public class ReaderController {
 	public String showBook(@RequestParam(value = "bookName", required = false) String bookName, Model theModel,
 			HttpSession session, Principal principal) {
 
-		// if (bookName == null) {
-		// bookName = (String) session.getAttribute("redirectBookName");
-		// }
 		Book book = readerService.getBookByName(bookName);
 
 		if (principal != null) {
@@ -165,17 +169,39 @@ public class ReaderController {
 		return "book";
 	}
 
+	@GetMapping("/registrationConfirm")
+	public String registrationConfirm(@RequestParam("token") String token, @RequestParam("readerId") Integer readerId,
+			Model theModel, HttpSession session, Principal principal) {
+		
+		Reader reader = profileService.getReaderById(readerId);
+		
+		if(reader.isEnabled()) {
+			theModel.addAttribute("alreadyDone",true);
+			return "registrationConfirm";
+		}
+		
+		VerificationToken tokenObj = readerService.getTokenByReaderId(readerId);
+		
+		if(token.equals(tokenObj.getToken())) {
+			reader.setEnabled(true);
+			readerService.updateReader(reader);
+			theModel.addAttribute("success",true);
+			readerService.deleteTokenById(tokenObj.getId());
+		}else
+			theModel.addAttribute("success",false);
+			
+		
+		return "registrationConfirm";
+	}
+
 	@GetMapping("/showMyBooks")
-	public String showMyBooks(@RequestParam(value = "myBooks", required = false) String myBooks,
-			@RequestParam(value = "readerId", required = false) String readerId, Model theModel, HttpSession session,
+	public String showMyBooks(@RequestParam(value = "readerId", required = false) String readerId, Model theModel, HttpSession session,
 			Principal principal) {
 
-		boolean myBooksBoo;
+		boolean myBooksBoo=false;
 		int readerIdInt = 0;
 		Reader reader;
 
-			myBooksBoo = Boolean.valueOf(myBooks);
-		
 
 		if (readerId != null) {
 			readerIdInt = Integer.valueOf(readerId);
@@ -183,6 +209,9 @@ public class ReaderController {
 		} else
 			reader = readerService.getReaderByUsername(principal.getName());
 
+		if((principal != null) && (principal.getName().equals(reader.getUsername())))
+			myBooksBoo = true;
+		
 		List<ReaderBook> readerBooks = readerService.getReaderBooks(reader.getId());
 
 		Map<String, String> bookPics = new HashMap<>();
@@ -202,13 +231,15 @@ public class ReaderController {
 		return "mybooks";
 	}
 
+	@SuppressWarnings("unchecked")
 	@GetMapping("/reviewPage")
-	public String reviewPage(@ModelAttribute("params") Map<String, String> redirectParams,
-			@RequestParam Map<String, String> params, Model theModel, HttpSession session) {
+	public String reviewPage(@RequestParam(required=false) Map<String, String> params, Model theModel,
+			HttpSession session) {
 
-		if (params == null)
-			params = redirectParams;
-
+		if (params.isEmpty()) {
+			params = (Map<String, String>) session.getAttribute("redirectParams");
+			session.removeAttribute("redirectParams");
+		}
 		int reviewId = Integer.valueOf(params.get("reviewId"));
 		int bookId = Integer.valueOf(params.get("bookId"));
 		int readerRating = Integer.valueOf(params.get("readerRating"));
@@ -246,29 +277,19 @@ public class ReaderController {
 	}
 
 	@PostMapping("/saveReader")
-	public String saveReader(@ModelAttribute("reader") Reader reader, Model theModel, HttpSession session) {
+	public String saveReader(@ModelAttribute("reader") Reader reader, Model theModel, HttpSession session,
+			WebRequest request) {
 
 		if (readerService.saveReader(reader)) {
 			theModel.addAttribute("success", true);
+			Reader readerPass = readerService.getReaderByUsername(reader.getUsername());
+			eventPublisher.publishEvent(new OnRegistrationCompleteEvent(readerPass, request.getLocale()));
 		} else {
 			theModel.addAttribute("success", false);
 		}
 
 		return "saved";
 	}
-
-	// check if you can delete this method
-//	@GetMapping("/logout")
-//	public String logout(HttpSession session, Model theModel) {
-//
-//		session.removeAttribute("loggedReader");
-//		session.setAttribute("logged", false);
-//
-//		Reader reader = new Reader();
-//		theModel.addAttribute("reader", reader);
-//
-//		return "main";
-//	}
 
 	@GetMapping("/rate")
 	public String rate(@ModelAttribute("rating") Rating rating, @RequestParam("bookName") String bookName,
@@ -354,8 +375,8 @@ public class ReaderController {
 
 		readerService.updateReview(review);
 
-		ra.addFlashAttribute("params", params);
-
+		session.setAttribute("redirectParams",params);
+		
 		return "redirect:/reader/reviewPage";
 	}
 
@@ -375,7 +396,7 @@ public class ReaderController {
 
 		int reviewId = Integer.valueOf(params.get("reviewId"));
 		readerService.dropLike(reviewId);
-		ra.addFlashAttribute("params", params);
+		ra.addAttribute("params", params);
 
 		return "redirect:/reader/reviewPage";
 
@@ -392,7 +413,7 @@ public class ReaderController {
 		byte[] bookPicBytes = book.getBookPhoto();
 		InputStream in = new ByteArrayInputStream(bookPicBytes);
 		BufferedImage imgToResize = ImageIO.read(in);
-		BufferedImage resizedBookPic = ProfileController.resize(imgToResize, 125, 190);
+		BufferedImage resizedBookPic = ControllerUtils.resize(imgToResize, 125, 190);
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ImageIO.write(resizedBookPic, "jpg", baos);
@@ -436,4 +457,12 @@ public class ReaderController {
 		return "redirect:/reader/showBook";
 	}
 
+	@GetMapping("/accessDenied")
+	public String accessDenied(Model theModel) {
+		
+		theModel.addAttribute("accessDenied",true);
+		
+		return "saved";
+	} 
+	
 }
