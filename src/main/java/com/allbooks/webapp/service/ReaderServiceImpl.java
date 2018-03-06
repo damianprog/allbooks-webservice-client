@@ -1,12 +1,14 @@
 package com.allbooks.webapp.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,7 +32,8 @@ public class ReaderServiceImpl implements ReaderService {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	String url = "http://localhost:9000";
+	@Value("${service.url.name}")
+	private String serviceUrlName;
 
 	@Override
 	public boolean saveReader(Reader theReader) {
@@ -43,11 +46,11 @@ public class ReaderServiceImpl implements ReaderService {
 		theReader.setPassword(bCryptPasswordEncoder.encode(theReader.getPassword()));
 
 		if (!checkReaderLogin(theReader.getUsername())) {
-			restTemplate.postForObject(url + "/readers", theReader, Reader.class);
-			Reader reader = restTemplate.getForObject(url + "/readers/logins/{readerLogin}", Reader.class, params);
+			restTemplate.postForObject(serviceUrlName + "/readers", theReader, Reader.class);
+			Reader reader = restTemplate.getForObject(serviceUrlName + "/readers/logins/{readerLogin}", Reader.class, params);
 			readerRole.setReaderId(reader.getId());
 			readerRole.setRoleId(2);
-			restTemplate.postForObject(url + "/readerrole", readerRole, ReaderRole.class);
+			restTemplate.postForObject(serviceUrlName + "/readerrole", readerRole, ReaderRole.class);
 			return true;
 		} else
 			return false;
@@ -59,16 +62,16 @@ public class ReaderServiceImpl implements ReaderService {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("readerLogin", login);
 
-		Reader reader = restTemplate.getForObject(url + "/readers/logins/{readerLogin}", Reader.class, params);
+		Reader reader = restTemplate.getForObject(serviceUrlName + "/readers/logins/{readerLogin}", Reader.class, params);
 
 		return reader;
 	}
 
 	@Override
 	public boolean checkReaderLogin(String username) {
-		
+
 		Reader reader = getReaderByUsername(username);
-		
+
 		if (reader == null)
 			return false;
 		else
@@ -81,7 +84,7 @@ public class ReaderServiceImpl implements ReaderService {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("readerLogin", login);
 
-		Reader reader = restTemplate.getForObject(url + "/readers/logins/{readerLogin}", Reader.class, params);
+		Reader reader = restTemplate.getForObject(serviceUrlName + "/readers/logins/{readerLogin}", Reader.class, params);
 
 		if (reader != null) {
 			if (reader.getPassword().equals(password))
@@ -98,7 +101,7 @@ public class ReaderServiceImpl implements ReaderService {
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("title", bookName);
-		Book book = restTemplate.getForObject(url + "/books/title/{title}", Book.class, params);
+		Book book = restTemplate.getForObject(serviceUrlName + "/books/title/{title}", Book.class, params);
 
 		int bookId = book.getId();
 
@@ -114,7 +117,7 @@ public class ReaderServiceImpl implements ReaderService {
 		params.put("readerId", String.valueOf(id));
 		params.put("bookId", String.valueOf(bookId));
 
-		Rating rating = restTemplate.getForObject(url + "/readers/{readerId}/books/{bookId}/ratings", Rating.class,
+		Rating rating = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/books/{bookId}/ratings", Rating.class,
 				params);
 
 		return rating;
@@ -123,7 +126,7 @@ public class ReaderServiceImpl implements ReaderService {
 	@Override
 	public void submitRating(Rating rating) {
 
-		restTemplate.put(url + "/ratings", rating);
+		restTemplate.put(serviceUrlName + "/ratings", rating);
 
 	}
 
@@ -137,7 +140,7 @@ public class ReaderServiceImpl implements ReaderService {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("bookId", String.valueOf(bookId));
 
-		ResponseEntity<Rating[]> responseEntity = restTemplate.getForEntity(url + "/books/{bookId}/ratings",
+		ResponseEntity<Rating[]> responseEntity = restTemplate.getForEntity(serviceUrlName + "/books/{bookId}/ratings",
 				Rating[].class, params);
 		Rating[] ratings = responseEntity.getBody();
 
@@ -157,7 +160,7 @@ public class ReaderServiceImpl implements ReaderService {
 	@Override
 	public void submitReview(Review review, int readerId) {
 
-		restTemplate.postForEntity(url + "/reviews", review, Review.class);
+		restTemplate.postForEntity(serviceUrlName + "/reviews", review, Review.class);
 
 	}
 
@@ -174,14 +177,10 @@ public class ReaderServiceImpl implements ReaderService {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("bookId", String.valueOf(bookId));
 
-		ResponseEntity<Review[]> responseEntity = restTemplate.getForEntity(url + "/books/{bookId}/reviews",
+		ResponseEntity<Review[]> responseEntity = restTemplate.getForEntity(serviceUrlName + "/books/{bookId}/reviews",
 				Review[].class, params);
 		Review[] reviews = responseEntity.getBody();
-		List<Review> reviewList = new ArrayList<>();
-
-		for (Review review : reviews) {
-			reviewList.add(review);
-		}
+		List<Review> reviewList = Arrays.asList(reviews);
 
 		return reviewList;
 	}
@@ -195,7 +194,7 @@ public class ReaderServiceImpl implements ReaderService {
 		params.put("readerId", String.valueOf(readerId));
 		params.put("bookId", String.valueOf(bookId));
 
-		Rating rating = restTemplate.getForObject(url + "/readers/{readerId}/books/{bookId}/ratings", Rating.class,
+		Rating rating = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/books/{bookId}/ratings", Rating.class,
 				params);
 
 		if (rating == null)
@@ -210,13 +209,13 @@ public class ReaderServiceImpl implements ReaderService {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("reviewId", String.valueOf(reviewId));
 
-		Review review = restTemplate.getForObject(url + "/reviews/{reviewId}", Review.class, params);
+		Review review = restTemplate.getForObject(serviceUrlName + "/reviews/{reviewId}", Review.class, params);
 
 		int reviewLikes = review.getLikes();
 		reviewLikes++;
 		review.setLikes(reviewLikes);
 
-		restTemplate.put(url + "/reviews", review);
+		restTemplate.put(serviceUrlName + "/reviews", review);
 	}
 
 	@Override
@@ -232,11 +231,11 @@ public class ReaderServiceImpl implements ReaderService {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("bookId", String.valueOf(bookId));
 
-		ResponseEntity<Rating[]> responseEntity = restTemplate.getForEntity(url + "/books/{bookId}/ratings",
+		ResponseEntity<Rating[]> responseEntity = restTemplate.getForEntity(serviceUrlName + "/books/{bookId}/ratings",
 				Rating[].class, params);
 		Rating[] ratings = responseEntity.getBody();
 
-		ResponseEntity<Review[]> responseEntity2 = restTemplate.getForEntity(url + "/books/{bookId}/reviews",
+		ResponseEntity<Review[]> responseEntity2 = restTemplate.getForEntity(serviceUrlName + "/books/{bookId}/reviews",
 				Review[].class, params);
 		Review[] reviews = responseEntity2.getBody();
 
@@ -260,7 +259,7 @@ public class ReaderServiceImpl implements ReaderService {
 		Map<String, String> params = new HashMap<>();
 		params.put("bookId", String.valueOf(bookId));
 
-		Book book = restTemplate.getForObject(url + "/books/{bookId}", Book.class, params);
+		Book book = restTemplate.getForObject(serviceUrlName + "/books/{bookId}", Book.class, params);
 		String bookName = book.getMiniTitle();
 
 		return bookName;
@@ -272,14 +271,14 @@ public class ReaderServiceImpl implements ReaderService {
 		Map<String, String> params = new HashMap<>();
 		params.put("reviewId", String.valueOf(reviewId));
 
-		Review review = restTemplate.getForObject(url + "/reviews/{reviewId}", Review.class, params);
+		Review review = restTemplate.getForObject(serviceUrlName + "/reviews/{reviewId}", Review.class, params);
 
 		return review;
 	}
 
 	@Override
 	public void submitComment(Comment comment) {
-		restTemplate.postForObject(url + "/comments", comment, Comment.class);
+		restTemplate.postForObject(serviceUrlName + "/comments", comment, Comment.class);
 	}
 
 	@Override
@@ -288,14 +287,11 @@ public class ReaderServiceImpl implements ReaderService {
 		Map<String, String> params = new HashMap<>();
 		params.put("reviewId", String.valueOf(reviewId));
 
-		ResponseEntity<Comment[]> responseEntity = restTemplate.getForEntity(url + "/reviews/{reviewId}/comments",
+		ResponseEntity<Comment[]> responseEntity = restTemplate.getForEntity(serviceUrlName + "/reviews/{reviewId}/comments",
 				Comment[].class, params);
 		Comment[] comments = responseEntity.getBody();
 
-		List<Comment> commentsList = new ArrayList<>();
-
-		for (Comment comment : comments)
-			commentsList.add(comment);
+		List<Comment> commentsList = Arrays.asList(comments);
 
 		return commentsList;
 	}
@@ -303,7 +299,7 @@ public class ReaderServiceImpl implements ReaderService {
 	@Override
 	public void saveReaderBook(ReaderBook readerBook) {
 
-		restTemplate.postForObject(url + "/readerbooks", readerBook, ReaderBook.class);
+		restTemplate.postForObject(serviceUrlName + "/readerbooks", readerBook, ReaderBook.class);
 
 	}
 
@@ -316,7 +312,7 @@ public class ReaderServiceImpl implements ReaderService {
 		params.put("readerId", String.valueOf(readerId));
 		params.put("bookId", String.valueOf(bookId));
 
-		ReaderBook readerBook = restTemplate.getForObject(url + "/readers/{readerId}/readerbooks/{bookId}",
+		ReaderBook readerBook = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/readerbooks/{bookId}",
 				ReaderBook.class, params);
 
 		return readerBook;
@@ -330,7 +326,7 @@ public class ReaderServiceImpl implements ReaderService {
 		params.put("readerId", String.valueOf(readerId));
 		params.put("bookId", String.valueOf(bookId));
 
-		ReaderBook readerBook = restTemplate.getForObject(url + "/readers/{readerId}/readerbooks/{bookId}",
+		ReaderBook readerBook = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/readerbooks/{bookId}",
 				ReaderBook.class, params);
 		readerBook.setShelves(shelves);
 
@@ -344,14 +340,11 @@ public class ReaderServiceImpl implements ReaderService {
 		Map<String, String> params = new HashMap<>();
 		params.put("readerId", String.valueOf(id));
 
-		ResponseEntity<ReaderBook[]> responseEntity = restTemplate.getForEntity(url + "/readers/{readerId}/readerbooks",
+		ResponseEntity<ReaderBook[]> responseEntity = restTemplate.getForEntity(serviceUrlName + "/readers/{readerId}/readerbooks",
 				ReaderBook[].class, params);
 		ReaderBook[] readerBooks = responseEntity.getBody();
 
-		List<ReaderBook> readerBooksList = new ArrayList<>();
-
-		for (ReaderBook r : readerBooks)
-			readerBooksList.add(r);
+		List<ReaderBook> readerBooksList = Arrays.asList(readerBooks);
 
 		return readerBooksList;
 
@@ -363,7 +356,7 @@ public class ReaderServiceImpl implements ReaderService {
 		Map<String, String> params = new HashMap<>();
 		params.put("bookId", String.valueOf(bookId));
 
-		Book book = restTemplate.getForObject(url + "/books/{bookId}", Book.class, params);
+		Book book = restTemplate.getForObject(serviceUrlName + "/books/{bookId}", Book.class, params);
 
 		return book;
 	}
@@ -376,7 +369,7 @@ public class ReaderServiceImpl implements ReaderService {
 		ReaderBook readerBook = getReaderBook(bookName, id);
 		readerBook.setDateRead(dateRead);
 
-		restTemplate.put(url + "/readerbooks", readerBook);
+		restTemplate.put(serviceUrlName + "/readerbooks", readerBook);
 	}
 
 	@Override
@@ -384,25 +377,25 @@ public class ReaderServiceImpl implements ReaderService {
 		Map<String, String> params = new HashMap<>();
 		params.put("title", bookname);
 
-		Book book = restTemplate.getForObject(url + "/books/title/{title}", Book.class, params);
+		Book book = restTemplate.getForObject(serviceUrlName + "/books/title/{title}", Book.class, params);
 
 		return book;
 	}
 
 	@Override
 	public void saveBook(Book book) {
-		restTemplate.postForObject(url + "/books", book, Book.class);
+		restTemplate.postForObject(serviceUrlName + "/books", book, Book.class);
 	}
 
 	@Override
 	public void updateReader(Reader reader) {
-		restTemplate.put(url + "/readers", reader);
+		restTemplate.put(serviceUrlName + "/readers", reader);
 
 	}
 
 	@Override
 	public void updateReview(Review review) {
-		restTemplate.put(url + "/reviews", review);
+		restTemplate.put(serviceUrlName + "/reviews", review);
 
 	}
 
@@ -412,7 +405,16 @@ public class ReaderServiceImpl implements ReaderService {
 		Map<String, Integer> params = new HashMap<>();
 		params.put("reviewId", reviewId);
 
-		restTemplate.delete(url + "/reviews/{reviewId}", params);
+		restTemplate.delete(serviceUrlName + "/reviews/{reviewId}", params);
+	}
+
+	@Override
+	public void deleteReaderBookById(int id) {
+		
+		Map<String, Integer> params = new HashMap<>();
+		params.put("readerBookId", id);
+		
+		restTemplate.delete(serviceUrlName + "/readerbooks/{readerBookId}",params);
 	}
 
 	@Override
@@ -420,7 +422,7 @@ public class ReaderServiceImpl implements ReaderService {
 
 		VerificationToken tokenObj = new VerificationToken(token, reader);
 
-		restTemplate.postForObject(url + "/readers/verificationTokens", tokenObj, VerificationToken.class);
+		restTemplate.postForObject(serviceUrlName + "/readers/verificationTokens", tokenObj, VerificationToken.class);
 
 	}
 
@@ -430,7 +432,7 @@ public class ReaderServiceImpl implements ReaderService {
 		Map<String, Integer> params = new HashMap<>();
 		params.put("readerId", readerId);
 
-		VerificationToken verificationToken = restTemplate.getForObject(url + "/readers/{readerId}/verificationTokens",
+		VerificationToken verificationToken = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/verificationTokens",
 				VerificationToken.class, params);
 
 		return verificationToken;
@@ -442,7 +444,23 @@ public class ReaderServiceImpl implements ReaderService {
 		Map<String, Integer> params = new HashMap<>();
 		params.put("tokenId", tokenId);
 
-		restTemplate.delete(url + "/readers/verificationTokens/{tokenId}", params);
+		restTemplate.delete(serviceUrlName + "/readers/verificationTokens/{tokenId}", params);
+	}
+
+	@Override
+	public List<Review> getReaderReviews(String username) {
+
+		Map<String, String> params = new HashMap<>();
+		params.put("username", username);
+
+		ResponseEntity<Review[]> reviews = restTemplate.getForEntity(serviceUrlName + "/readers/{username}/books/reviews",
+				Review[].class, params);
+		
+		Review[] reviewsArray = reviews.getBody();
+		List<Review> reviewsList = Arrays.asList(reviewsArray);
+		
+		
+		return reviewsList;
 	}
 
 }

@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.allbooks.webapp.entity.Details;
 import com.allbooks.webapp.entity.Friends;
+import com.allbooks.webapp.entity.PasswordToken;
 import com.allbooks.webapp.entity.Pending;
 import com.allbooks.webapp.entity.ProfilePics;
 import com.allbooks.webapp.entity.Reader;
@@ -22,7 +24,8 @@ public class ProfileServiceImpl implements ProfileService {
 	@Autowired
 	RestTemplate restTemplate;
 
-	String url = "http://localhost:9000";
+	@Value("${service.url.name}")
+	String serviceUrlName;
 
 	@Override
 	public Details getDetails(int readerId) {
@@ -30,7 +33,8 @@ public class ProfileServiceImpl implements ProfileService {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("readerId", String.valueOf(readerId));
 
-		Details details = restTemplate.getForObject(url + "/readers/{readerId}/details", Details.class, params);
+		Details details = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/details", Details.class,
+				params);
 
 		return details;
 	}
@@ -41,7 +45,7 @@ public class ProfileServiceImpl implements ProfileService {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("readerId", String.valueOf(readerId));
 
-		Reader reader = restTemplate.getForObject(url + "/readers/{readerId}", Reader.class, params);
+		Reader reader = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}", Reader.class, params);
 
 		return reader;
 	}
@@ -52,7 +56,8 @@ public class ProfileServiceImpl implements ProfileService {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("readerLogin", String.valueOf(readerLogin));
 
-		Reader reader = restTemplate.getForObject(url + "/readers/logins/{readerLogin}", Reader.class, params);
+		Reader reader = restTemplate.getForObject(serviceUrlName + "/readers/logins/{readerLogin}", Reader.class,
+				params);
 
 		return reader.getId();
 	}
@@ -86,8 +91,8 @@ public class ProfileServiceImpl implements ProfileService {
 		Map<String, Integer> params = new HashMap<String, Integer>();
 		params.put("readerId", readerId);
 
-		ResponseEntity<Pending[]> response = restTemplate.getForEntity(url + "/readers/{readerId}/friends/pending",
-				Pending[].class, params);
+		ResponseEntity<Pending[]> response = restTemplate
+				.getForEntity(serviceUrlName + "/readers/{readerId}/friends/pending", Pending[].class, params);
 
 		Pending[] pendingArray = response.getBody();
 
@@ -106,19 +111,19 @@ public class ProfileServiceImpl implements ProfileService {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("id", String.valueOf(friendsIdInt));
 
-		Friends friends = restTemplate.getForObject(url + "/friends/{id}", Friends.class, params);
+		Friends friends = restTemplate.getForObject(serviceUrlName + "/friends/{id}", Friends.class, params);
 
 		return friends;
 	}
 
 	@Override
-	public void deleteFriends(int reader1,int reader2) {
+	public void deleteFriends(int reader1, int reader2) {
 
 		Map<String, Integer> params = new HashMap<>();
-		params.put("reader1Id",reader1);
-		params.put("reader2Id",reader2);
+		params.put("reader1Id", reader1);
+		params.put("reader2Id", reader2);
 
-		restTemplate.delete(url + "/readers/{reader1Id}/friends/{reader2Id}", params);
+		restTemplate.delete(serviceUrlName + "/readers/{reader1Id}/friends/{reader2Id}", params);
 
 	}
 
@@ -127,7 +132,7 @@ public class ProfileServiceImpl implements ProfileService {
 		Map<String, Integer> params = new HashMap<String, Integer>();
 		params.put("readerId", reader1);
 
-		ResponseEntity<Friends[]> response = restTemplate.getForEntity(url + "/readers/{readerId}/friends",
+		ResponseEntity<Friends[]> response = restTemplate.getForEntity(serviceUrlName + "/readers/{readerId}/friends",
 				Friends[].class, params);
 		Friends[] friendsArray = response.getBody();
 
@@ -144,23 +149,22 @@ public class ProfileServiceImpl implements ProfileService {
 		Map<String, Integer> params = new HashMap<String, Integer>();
 		params.put("readerId", readerId);
 
-		ResponseEntity<Friends[]> response = restTemplate.getForEntity(url + "/readers/{readerId}/friends",
+		ResponseEntity<Friends[]> response = restTemplate.getForEntity(serviceUrlName + "/readers/{readerId}/friends",
 				Friends[].class, params);
 		Friends[] friendsArray = response.getBody();
 
 		List<Reader> friends = new ArrayList<>();
-		
+
 		for (Friends f : friendsArray) {
 			if (f.getReader1() == readerId)
 				params.put("readerId", f.getReader2());
-			
-			else if(f.getReader2() == readerId) 
+
+			else if (f.getReader2() == readerId)
 				params.put("readerId", f.getReader1());
-			
-			Reader reader = restTemplate.getForObject(url + "/readers/{readerId}",
-					Reader.class, params);
+
+			Reader reader = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}", Reader.class, params);
 			friends.add(reader);
-			
+
 			reader.getUsername();
 		}
 
@@ -170,13 +174,13 @@ public class ProfileServiceImpl implements ProfileService {
 	@Override
 	public void saveDetails(Details details) {
 		System.out.println("DETAILS FROM SAVE DETAILS" + details.toString());
-		restTemplate.put(url + "/details", details);
+		restTemplate.put(serviceUrlName + "/details", details);
 
 	}
 
 	@Override
 	public void saveProfilePics(ProfilePics profilePics, int readerId) {
-		restTemplate.postForObject(url + "/profilepics", profilePics, ProfilePics.class);
+		restTemplate.postForObject(serviceUrlName + "/profilepics", profilePics, ProfilePics.class);
 
 	}
 
@@ -186,8 +190,8 @@ public class ProfileServiceImpl implements ProfileService {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("readerId", String.valueOf(readerId));
 
-		ProfilePics profilePics = restTemplate.getForObject(url + "/readers/{readerId}/profilepics", ProfilePics.class,
-				params);
+		ProfilePics profilePics = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/profilepics",
+				ProfilePics.class, params);
 
 		return profilePics;
 	}
@@ -198,12 +202,12 @@ public class ProfileServiceImpl implements ProfileService {
 		Map<String, Integer> params = new HashMap<String, Integer>();
 		params.put("readerId", readerId);
 
-		restTemplate.delete(url + "/readers/{readerId}", params);
+		restTemplate.delete(serviceUrlName + "/readers/{readerId}", params);
 	}
 
 	@Override
 	public void savePending(Pending pending) {
-		restTemplate.postForObject(url + "/friends/pending", pending, Pending.class);
+		restTemplate.postForObject(serviceUrlName + "/friends/pending", pending, Pending.class);
 	}
 
 	@Override
@@ -216,8 +220,8 @@ public class ProfileServiceImpl implements ProfileService {
 		params.put("reader1", reader1Id);
 		params.put("reader2", reader2Id);
 
-		Pending pending = restTemplate.getForObject(url + "/readers/{reader1}/friends/{reader2}/pending", Pending.class,
-				params);
+		Pending pending = restTemplate.getForObject(serviceUrlName + "/readers/{reader1}/friends/{reader2}/pending",
+				Pending.class, params);
 
 		return pending;
 	}
@@ -227,8 +231,60 @@ public class ProfileServiceImpl implements ProfileService {
 		Map<String, Integer> params = new HashMap<String, Integer>();
 		params.put("pendingId", pendingIdInt);
 
-		restTemplate.delete(url + "/pending/{pendingId}", params);
+		restTemplate.delete(serviceUrlName + "/pending/{pendingId}", params);
 
+	}
+
+	@Override
+	public Reader getReaderByEmail(String email) {
+
+		Map<String, String> params = new HashMap<>();
+		params.put("email", email);
+
+		Reader reader = restTemplate.getForObject(serviceUrlName + "/readers/emails/{email}", Reader.class, params);
+
+		return reader;
+	}
+
+	@Override
+	public void createPasswordToken(Reader reader, String token) {
+
+		PasswordToken passwordToken = new PasswordToken(token, reader);
+
+		restTemplate.postForObject(serviceUrlName + "/readers/passwordTokens", passwordToken, PasswordToken.class);
+
+	}
+
+	@Override
+	public PasswordToken getPasswordTokenByReaderId(int readerId) {
+
+		Map<String, Integer> params = new HashMap<>();
+		params.put("readerId", readerId);
+
+		PasswordToken passwordToken = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/passwordTokens",
+				PasswordToken.class, params);
+
+		return passwordToken;
+	}
+
+	@Override
+	public PasswordToken getPasswordTokenByCredentials(int readerId, String token) {
+
+		Map<String, String> params = new HashMap<>();
+		params.put("readerId", String.valueOf(readerId));
+		params.put("passwordToken", token);
+
+		return restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/passwordTokens/{passwordToken}",
+				PasswordToken.class, params);
+	}
+
+	@Override
+	public void deletePasswordToken(int readerId) {
+		Map<String, Integer> params = new HashMap<>();
+		params.put("readerId", readerId);
+
+		restTemplate.delete(serviceUrlName + "/readers/{readerId}/passwordTokens",params);
+		
 	}
 
 }

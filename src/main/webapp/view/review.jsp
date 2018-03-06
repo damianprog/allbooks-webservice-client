@@ -57,13 +57,13 @@
 								</c:choose>
 							</sec:authorize>
 							<sec:authorize access="!isFullyAuthenticated()">
-								<a href="/reader/loginPage">Sign In</a> to Rate this book!
+								<a href="/login">Sign In</a> to Rate this book!
 							</sec:authorize>
 
 						</div>
 						<div id="reviewDesc">
 							<h4 id="h3">${fullBookName}</h4>
-							by ${authorName}(Allbooks Author)<br> ${readerLogin}'s
+							by ${authorName}<br> ${readerLogin}'s
 							Review<br>
 							<p>${reviewText }</p>
 
@@ -86,7 +86,7 @@
 										</form:form>
 									</sec:authorize>
 									<sec:authorize access="!isFullyAuthenticated()">
-										<form:form action="/reader/loginPage" method="GET"
+										<form:form action="/login" method="GET"
 											id="likeForm">
 											<input type="submit" value="Like" />
 										</form:form>
@@ -120,7 +120,7 @@
 					</form:form>
 				</sec:authorize>
 				<sec:authorize access="!isFullyAuthenticated()">
-					<a href="/reader/loginPage">Sign In to post a comment!</a>
+					<a href="/login">Sign In to post a comment!</a>
 				</sec:authorize>
 			<hr>
 		</div>

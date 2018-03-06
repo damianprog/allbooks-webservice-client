@@ -1,50 +1,45 @@
 package com.allbooks.webapp.service;
 
-import java.util.UUID;
+import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.TemplateEngine;
 
 import com.allbooks.webapp.entity.OnRegistrationCompleteEvent;
-import com.allbooks.webapp.entity.Reader;
+import com.allbooks.webapp.utils.MailUtils;
+import com.allbooks.webapp.utils.MailUtils.TokenType;
 
 @Component
 public class RegistrationListener implements
 ApplicationListener<OnRegistrationCompleteEvent>{
-
-	@Autowired
-	private ReaderService readerService;
 	
 	@Autowired
-    private JavaMailSender mailSender;
-	
+	MailUtils mailUtils;
 	
 	@Override
 	public void onApplicationEvent(OnRegistrationCompleteEvent event) {
-		this.confirmRegistration(event);
+		try {
+			this.confirmRegistration(event);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public void confirmRegistration(OnRegistrationCompleteEvent event) {
+	public void confirmRegistration(OnRegistrationCompleteEvent event) throws MessagingException {
 		
-		Reader reader = event.getReader();
-		String token = UUID.randomUUID().toString();
-		readerService.createVerificationToken(reader,token);
+		mailUtils.setReader(event.getReader());
+		mailUtils.setSubject("Registration Confirmation");
+		mailUtils.setTokenType(TokenType.REGISTRATION_CONFIRM);
+		mailUtils.setSubjectHeader("Thanks for joining us!");
+		mailUtils.setSubjectMessage("Click on the link below to confirm your account!");
+		mailUtils.setTemplateName("template");
 		
-		String recipentAddress = reader.getEmail();
-		String subject = "Registration Confirmation";
-		String confirmationUrl = "/reader/registrationConfirm?token=" + token + "&readerId=" + reader.getId();
+		mailUtils.sendMessage();
 		
-		SimpleMailMessage email = new SimpleMailMessage();
-		email.setTo(recipentAddress);
-		email.setReplyTo("damian.pukszta@outlook.com");
-		email.setFrom("damian.pukszta@outlook.com");
-		email.setSubject(subject);
-		email.setText( "http://localhost:8080" + confirmationUrl);
-		
-		mailSender.send(email);
 	}
 	
 

@@ -124,7 +124,7 @@
 
 			</div>
 			<div class="underFirstTable">
-				<h4 id="topDesc">${reader.username}is currently reading</h4>
+				<h4 id="topDesc">${reader.username} is currently reading</h4>
 				<hr>
 				<table class="currentlyReadingBooks">
 					<c:forEach var="tempBook" items="${currentlyReadingList}">
@@ -135,7 +135,7 @@
 							<td><a href="${bookSite}"> <img
 									src="data:image/jpeg;base64,${tempBook.encodedBookPic}" />
 							</a></td>
-							<td>${reader.username}is currently reading<br>
+							<td>${reader.username} is currently reading<br>
 								<h4 id="topDesc">
 									<a class="blackRef" href="${bookSite}">${tempBook.fullBookName}</a>
 								</h4> <br> by ${tempBook.author}<br> bookshelves:
@@ -144,6 +144,38 @@
 						</tr>
 					</c:forEach>
 				</table>
+			</div>
+			<div class="underFirstTable">
+				<h4>${reader.username}'s recent reviews</h4>
+				<hr>
+				<c:choose>
+				<c:when test="${!empty readerReviews}">
+				<table>
+					<c:forEach var="tempReview" items="${readerReviews}" begin="0"
+						end="2">
+						<c:url var="reviewLink" value="/reader/reviewPage">
+							<c:param name="reviewId" value="${tempReview.id}" />
+							<c:param name="readerLogin" value="${tempReview.readerLogin}" />
+							<c:param name="bookId" value="${tempReview.bookId}" />
+							<c:param name="readerRating" value="${tempReview.readerRating}" />
+							<c:param name="fullBookName" value="${book.fullTitle}" />
+							<c:param name="authorName" value="${book.author}" />
+						</c:url>
+						<c:url var="bookPage" value="/reader/showBook">
+							<c:param name="bookName" value="${tempReview.bookTitle}" />
+						</c:url>
+						<tr>
+							<td>
+								<h4>
+									<a class="blackRef" href="${bookPage}"> ${tempReview.bookTitle}</a>
+								</h4> <a class="blackRef" href="${reviewLink}"> ${tempReview.title}</a>
+							</td>
+						</tr>
+					</c:forEach>
+				</table>
+				</c:when>
+				<c:otherwise>${reader.username} has no any recent reviews</c:otherwise>
+				</c:choose>
 			</div>
 		</div>
 		<div id="rightSide">
@@ -179,7 +211,7 @@
 				</c:when>
 			</c:choose>
 			<div id="friendsList">
-				<h4 id="topDesc">${reader.username}'sfriends(${friendsNum})</h4>
+				<h4 id="topDesc">${reader.username}'s friends(${friendsNum})</h4>
 				<br>
 				<hr>
 				<c:choose>

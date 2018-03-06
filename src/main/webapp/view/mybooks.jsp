@@ -44,7 +44,9 @@
 					<th>shelves</th>
 					<th>date read</th>
 					<th>date added</th>
+					<c:if test="${myBooks == true}">
 					<th>Delete</th>
+					</c:if>
 				</tr>
 				
 				<c:forEach var="tempBook" items="${readerBooks}">
@@ -53,7 +55,7 @@
 				</c:url>
 					<tr>
 						<td ><img src="data:image/jpeg;base64,${tempBook.encodedBookPic}"/></td>
-						<td  class="cells"><a id="titleRef" href="${titleRef}">${tempBook.fullBookName}</a></td>
+						<td  class="cells"><a class="titleRef" href="${titleRef}">${tempBook.fullBookName}</a></td>
 						<td  class="cells">${tempBook.author}</td>
 						<td  class="cells">${tempBook.rating}</td>
 						<td  class="cells">${tempBook.readerRating}</td>						
@@ -83,7 +85,13 @@
 						</c:when>
 						</c:choose>
 						</td>						
-						<td  id="lastTd">${tempBook.dateAdded}</td>						
+						<td  id="lastTd">${tempBook.dateAdded}</td>
+						<c:url var="delete" value="deleteReaderBook">
+							<c:param name="readerBookId" value="${tempBook.id}"></c:param>
+						</c:url>
+						<c:if test="${myBooks == true}">
+						<td style="vertical-align:top;padding-top:20px;"><a class="titleRef" href="${delete}">Delete</a></td>
+						</c:if>				
 					</tr>
 				</c:forEach>
 				

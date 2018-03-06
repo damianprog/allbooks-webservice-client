@@ -71,7 +71,7 @@
 								<input type="submit" value="Submit" />
 							</form:form>
 						</sec:authorize> <sec:authorize access="!isFullyAuthenticated()">
-							<a href="/reader/loginPage">Sign In</a> to Rate this book!
+							<a href="/login">Sign In</a> to Rate this book!
 							</sec:authorize></td>
 					<td id="desc">
 						<h3 id="h3">${book.fullTitle}</h3>
@@ -130,7 +130,7 @@
 				</form:form>
 			</sec:authorize>
 			<sec:authorize access="!isFullyAuthenticated()">
-				<a href="/reader/loginPage">Sign In to post a review!</a>
+				<a href="/login">Sign In to post a review!</a>
 			</sec:authorize>
 			<hr>
 
@@ -143,9 +143,6 @@
 							<c:param name="readerLogin" value="${tempReview.readerLogin}" />
 							<c:param name="bookId" value="${tempReview.bookId}" />
 							<c:param name="readerRating" value="${tempReview.readerRating}" />
-							<c:param name="fullBookName"
-								value="${book.fullTitle}" />
-							<c:param name="authorName" value="${book.author}" />
 						</c:url>
 
 						<c:url var="profileLink" value="/profile/showProfile">
@@ -174,7 +171,7 @@
 										</form:form>
 									</sec:authorize>
 									<sec:authorize access="!isFullyAuthenticated()">
-										<form:form action="/reader/loginPage" method="GET"
+										<form:form action="/login" method="GET"
 											id="likeForm">
 											<input type="submit" value="Like" />
 										</form:form>

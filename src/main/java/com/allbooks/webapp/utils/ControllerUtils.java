@@ -1,4 +1,4 @@
-package com.allbooks.webapp.controller;
+package com.allbooks.webapp.utils;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;

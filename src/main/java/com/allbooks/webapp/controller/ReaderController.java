@@ -41,6 +41,7 @@ import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.entity.VerificationToken;
 import com.allbooks.webapp.service.ProfileService;
 import com.allbooks.webapp.service.ReaderService;
+import com.allbooks.webapp.utils.ControllerUtils;
 
 @Controller
 @RequestMapping("/reader")
@@ -175,6 +176,11 @@ public class ReaderController {
 		
 		Reader reader = profileService.getReaderById(readerId);
 		
+		if(reader == null) {
+			theModel.addAttribute("success",false);
+			return "registrationConfirm";
+		}
+		
 		if(reader.isEnabled()) {
 			theModel.addAttribute("alreadyDone",true);
 			return "registrationConfirm";
@@ -240,13 +246,16 @@ public class ReaderController {
 			params = (Map<String, String>) session.getAttribute("redirectParams");
 			session.removeAttribute("redirectParams");
 		}
-		int reviewId = Integer.valueOf(params.get("reviewId"));
+		
 		int bookId = Integer.valueOf(params.get("bookId"));
+		Book book = readerService.getBook(bookId);	
+		
+		int reviewId = Integer.valueOf(params.get("reviewId"));	
 		int readerRating = Integer.valueOf(params.get("readerRating"));
 		String readerLogin = params.get("readerLogin");
-		String bookName = readerService.getBookName(bookId);
-		String fullBookName = params.get("fullBookName");
-		String authorName = params.get("authorName");
+		String bookName = book.getMiniTitle();
+		String fullBookName = book.getFullTitle();
+		String authorName = book.getAuthor();
 
 		Review review = readerService.getOneReview(reviewId);
 		Comment comment = new Comment();
@@ -255,8 +264,6 @@ public class ReaderController {
 		List<Comment> reviewComments = readerService.getReviewComments(reviewId);
 
 		reviewComments.sort(Comparator.comparingInt(Comment::getId).reversed());
-
-		Book book = readerService.getBook(bookId);
 
 		String bookPicEncoded = ProfileController.getEncodedImage(book.getBookPhoto());
 
@@ -324,6 +331,7 @@ public class ReaderController {
 		review.setReaderLogin(reader.getUsername());
 		review.setReaderRating(readerService.getReaderRating(readerId, bookName));
 		review.setBookId(readerService.getBookId(bookName));
+		review.setBookTitle(bookName);
 
 		List<Review> reviewsList = reader.getReviews();
 
@@ -396,7 +404,7 @@ public class ReaderController {
 
 		int reviewId = Integer.valueOf(params.get("reviewId"));
 		readerService.dropLike(reviewId);
-		ra.addAttribute("params", params);
+		session.setAttribute("redirectParams",params);
 
 		return "redirect:/reader/reviewPage";
 
@@ -457,6 +465,14 @@ public class ReaderController {
 		return "redirect:/reader/showBook";
 	}
 
+	@GetMapping("/deleteReaderBook")
+	public String deleteReaderBook(@RequestParam("readerBookId") int id,Model theModel) {
+		
+		readerService.deleteReaderBookById(id);
+		
+		return "redirect:/reader/showMyBooks";
+	}
+	
 	@GetMapping("/accessDenied")
 	public String accessDenied(Model theModel) {
 		

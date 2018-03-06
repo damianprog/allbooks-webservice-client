@@ -68,11 +68,11 @@
 					<tr>
 					<td>
 						<img
-						src="/css/images/MarcusTelliusCicero.jpg">
+						src="/css/images/rowling.jpg">
 					</td>
 						<td id="quoteTd">
-						"A room without books is like a body without a soul."
-						<p>~ Marcus Tullius Cicero</p>
+						"It is our choices... that show what we truly are, far more than our abilities."
+						<p>~ J.K. Rowling</p>
 						</td>
 					</tr>
 				</table>
@@ -94,7 +94,7 @@
 				<td class="smallDesc">
 					<h3>What are your friends reading?</h3> Chances are your friends
 					are discussing their favorite (and least favorite) books on
-					Goodreads.
+					Allbooks.
 				</td>
 			</tr>
 			<tr>

@@ -26,19 +26,19 @@
 						Books</a></td>
 				
 				<td id="homeRef">
-					<a class="blackRef" href="/reader/main">Home</a>
+					<a class="blackRefNon" href="/reader/main">Home</a>
 				</td>
 				
 				<td class="pageRef"><sec:authorize
 						access="isFullyAuthenticated()">
 
-						<a class="blackRef" href="/reader/showMyBooks">My Books</a>
+						<a class="blackRefNon" href="/reader/showMyBooks">My Books</a>
 					</sec:authorize></td>
 
 				<sec:authorize access="hasAuthority('ADMIN')">
 					<td class="pageRef"><c:url var="addBook"
 							value="/admin/addBookPage">
-						</c:url> <a class="blackRef" href="${addBook}">Add Book</a></td>
+						</c:url> <a class="blackRefNon" href="${addBook}">Add Book</a></td>
 				</sec:authorize>
 				<sec:authorize access="isFullyAuthenticated()">
 					<td id="loginPart"><c:url var="showProfile"
@@ -66,7 +66,7 @@
 							<tr>
 								<td id="cbMain"><input type="checkbox" name="cb"
 									value="remember" /> Remember me</td>
-								<td id="cbMainForgot"><a href="/reader/login">Forgot
+								<td id="cbMainForgot"><a href="/profile/forgot">Forgot
 										it?</a></td>
 							</tr>
 						</table>

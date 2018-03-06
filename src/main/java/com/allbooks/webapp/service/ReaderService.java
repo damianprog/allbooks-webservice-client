@@ -1,7 +1,6 @@
 package com.allbooks.webapp.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Comment;
@@ -74,4 +73,8 @@ public interface ReaderService {
 	public void deleteTokenById(int tokenId);
 	
 	public boolean checkReaderLogin(String username);
+
+	public List<Review> getReaderReviews(String username);
+	
+	public void deleteReaderBookById(int id);
 }

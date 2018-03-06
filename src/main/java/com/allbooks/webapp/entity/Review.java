@@ -13,6 +13,8 @@ public class Review {
 
 	private String title;
 
+	private String bookTitle;
+
 	private int likes;
 
 	private String readerLogin;
@@ -29,6 +31,14 @@ public class Review {
 
 	@JsonIgnore
 	private byte[] profilePic;
+
+	public String getBookTitle() {
+		return bookTitle;
+	}
+
+	public void setBookTitle(String bookTitle) {
+		this.bookTitle = bookTitle;
+	}
 
 	public int getReaderIdentity() {
 		return readerIdentity;

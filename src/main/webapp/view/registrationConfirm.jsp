@@ -31,7 +31,7 @@
 					</p>
 					<p>or</p>
 					<p>
-						<a href="/reader/loginPage">Login Page</a>
+						<a href="/login">Login Page</a>
 					</p>
 				</c:when>
 				<c:when test="${success == false }">

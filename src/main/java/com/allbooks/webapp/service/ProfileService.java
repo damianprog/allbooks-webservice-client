@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.allbooks.webapp.entity.Details;
 import com.allbooks.webapp.entity.Friends;
+import com.allbooks.webapp.entity.PasswordToken;
 import com.allbooks.webapp.entity.Pending;
 import com.allbooks.webapp.entity.ProfilePics;
 import com.allbooks.webapp.entity.Reader;
@@ -44,4 +45,13 @@ public interface ProfileService {
 
 	public void deletePending(int pendingIdInt);
 
+	public Reader getReaderByEmail(String email);
+
+	public void createPasswordToken(Reader reader, String token);
+
+	public PasswordToken getPasswordTokenByReaderId(int readerId);
+	
+	public PasswordToken getPasswordTokenByCredentials(int readerId,String token);
+
+	public void deletePasswordToken(int readerId);
 }
