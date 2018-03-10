@@ -22,8 +22,7 @@
 		<table id="titleMain">
 			<tr>
 				<td id="titleImg"><img src="/css/images/bookshelf.png"></td>
-				<td id="allbooksName"><a id="allBooks" href="/reader/main">All
-						Books</a></td>
+				<td id="allbooksName"><a id="allBooks" href="/reader/main">AllBooks</a></td>
 				
 				<td id="homeRef">
 					<a class="blackRefNon" href="/reader/main">Home</a>

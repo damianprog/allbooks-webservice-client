@@ -24,7 +24,7 @@
 			<table>
 				<tr>
 					<td>
-						<h3>${readerLogin}'s Reviews > ${fullBookName}</h3>
+						<h3>${readerLogin}'s Reviews > ${book.fullTitle}</h3>
 					</td>
 				</tr>
 				<tr>
@@ -45,14 +45,14 @@
 													<form:option value="4" label="4" />
 													<form:option value="5" label="5" selected="selected" />
 												</form:select>
-												<input type="hidden" name="bookName" value="magnusChase">
+												<input type="hidden" name="bookName" value="${bookName}">
 												<input type="submit" value="Submit" />
 
 											</form:form>
 										</div>
 									</c:when>
 									<c:when test="${userRated == true}">
-								Your rate ${readerRating}
+								Your rate ${rating.rate}
 							</c:when>
 								</c:choose>
 							</sec:authorize>
@@ -62,26 +62,21 @@
 
 						</div>
 						<div id="reviewDesc">
-							<h4 id="h3">${fullBookName}</h4>
+							<h4 id="h3">${book.fullTitle}</h4>
 							by ${authorName}<br> ${readerLogin}'s
 							Review<br>
-							<p>${reviewText }</p>
+							<p>${review.text }</p>
 
 							<div id="reviewLikes">
-								Likes: ${reviewLikes}
+								Likes: ${review.likes}
 
 								<sec:authorize access="isFullyAuthenticated()">
 										<form:form action="/reader/dropLikeReview" method="GET"
 											id="likeForm">
-											<input type="hidden" name="reviewId" value="${reviewId}" />
+											<input type="hidden" name="reviewId" value="${review.id}" />
 											<input type="hidden" name="readerLogin"
 												value="${readerLogin}" />
-											<input type="hidden" name="bookId" value="${bookId}" />
-											<input type="hidden" name="readerRating"
-												value="${readerRating}" />
-											<input type="hidden" name="fullBookName"
-												value="${fullBookName}" />
-											<input type="hidden" name="authorName" value="${authorName}" />
+											<input type="hidden" name="bookId" value="${book.id}" />
 											<input type="submit" value="Like" />
 										</form:form>
 									</sec:authorize>
@@ -105,12 +100,10 @@
 			<sec:authorize access="isFullyAuthenticated()">
 					<form:form action="submitComment" modelAttribute="comment"
 						method="GET">
-						<input type="hidden" name="reviewId" value="${reviewId}" />
+						<input type="hidden" name="reviewId" value="${review.id}" />
 						<input type="hidden" name="readerLogin" value="${readerLogin}" />
 						<input type="hidden" name="bookId" value="${bookId}" />
-						<input type="hidden" name="bookName" value="${bookName}" />
-						<input type="hidden" name="readerRating" value="${readerRating}" />
-						<input type="hidden" name="fullBookName" value="${fullBookName}" />
+						<input type="hidden" name="bookName" value="${book.miniTitle}" />
 						<input type="hidden" name="authorName" value="${authorName}" />									
 					Comment<br>
 						<form:textarea id="reviewBox" path="text" required="required" />
@@ -132,7 +125,7 @@
 					<tr>
 						<td>
 							<h4 id="h4">${tempComment.readerLogin}</h4> rated it
-							${tempComment.readerRating}
+							${tempComment.rating.rate}
 						</td>
 					</tr>
 					<tr>

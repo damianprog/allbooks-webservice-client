@@ -1,6 +1,5 @@
 package com.allbooks.webapp.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -59,5 +58,10 @@ public class Rating {
 		this.bookId = bookId;
 	}
 
+	@Override
+	public String toString() {
+		return "Rating [id=" + id + ", rate=" + rate + ", readerIdentity=" + readerIdentity + ", reader=" + reader
+				+ ", bookId=" + bookId + "]";
+	}
 
 }

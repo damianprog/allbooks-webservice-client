@@ -13,10 +13,6 @@ public interface ProfileService {
 
 	public Details getDetails(int id);
 
-	public Reader getReaderById(int readerId);
-
-	public int getReaderId(String readerLogin);
-
 	public void saveFriends(Friends friends);
 
 	public Friends areTheyFriends(String reader1, String reader2);
@@ -33,11 +29,9 @@ public interface ProfileService {
 
 	public void saveDetails(Details details);
 
-	public void saveProfilePics(ProfilePics profilePics,int readerId);
+	public void saveProfilePics(ProfilePics profilePics, int readerId);
 
 	public ProfilePics getProfilePics(int id);
-
-	public void deleteReader(int readerId);
 
 	public void savePending(Pending pending);
 
@@ -45,13 +39,5 @@ public interface ProfileService {
 
 	public void deletePending(int pendingIdInt);
 
-	public Reader getReaderByEmail(String email);
-
-	public void createPasswordToken(Reader reader, String token);
-
-	public PasswordToken getPasswordTokenByReaderId(int readerId);
 	
-	public PasswordToken getPasswordTokenByCredentials(int readerId,String token);
-
-	public void deletePasswordToken(int readerId);
 }

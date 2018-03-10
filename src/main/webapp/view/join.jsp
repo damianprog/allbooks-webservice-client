@@ -41,18 +41,21 @@
 				<tr>
 					<td>Name</td>
 				</tr>
+				<tr><td><form:errors path="username" cssClass="error" /></td></tr>
 				<tr>
 					<td><form:input path="username" placeholder="Name" id="joinInputBox" required="required"/></td>
 				</tr>
 				<tr>
 					<td>Password</td>
 				</tr>
+				<tr><td><form:errors path="password" cssClass="error" /></td></tr>
 				<tr>
 					<td><form:password path="password" placeholder="Password" id="joinInputBox" required="required"/></td>
 				</tr>
 				<tr>
 					<td>Email</td>
 				</tr>
+				<tr><td><form:errors path="email" cssClass="error" /></td></tr>
 				<tr>
 					<td><form:input path="email" placeholder="you@yours.com" id="joinInputBox" required="required"/></td>
 				</tr>

@@ -1,4 +1,4 @@
-package com.allbooks.webapp.service;
+package com.allbooks.webapp.security;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.Role;
+import com.allbooks.webapp.service.ReaderService;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {

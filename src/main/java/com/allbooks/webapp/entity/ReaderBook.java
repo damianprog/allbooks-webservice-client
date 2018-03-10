@@ -1,5 +1,7 @@
 package com.allbooks.webapp.entity;
 
+import java.util.Arrays;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -22,8 +24,6 @@ public class ReaderBook {
 	private double rating;
 
 	private int readerRating;
-
-	private int readerIdentity;
 
 	private Reader reader;
 
@@ -63,14 +63,6 @@ public class ReaderBook {
 
 	public void setBookId(int bookId) {
 		this.bookId = bookId;
-	}
-
-	public int getReaderIdentity() {
-		return readerIdentity;
-	}
-
-	public void setReaderIdentity(int readerIdentity) {
-		this.readerIdentity = readerIdentity;
 	}
 
 	public Reader getReader() {
@@ -143,6 +135,14 @@ public class ReaderBook {
 
 	public void setReaderRating(int readerRating) {
 		this.readerRating = readerRating;
+	}
+
+	@Override
+	public String toString() {
+		return "ReaderBook [id=" + id + ", bookId=" + bookId + ", minBookName=" + minBookName + ", fullBookName="
+				+ fullBookName + ", bookPic=" + Arrays.toString(bookPic) + ", encodedBookPic=" + encodedBookPic
+				+ ", author=" + author + ", rating=" + rating + ", readerRating=" + readerRating + ", reader=" + reader
+				+ ", shelves=" + shelves + ", dateRead=" + dateRead + ", dateAdded=" + dateAdded + "]";
 	}
 
 }

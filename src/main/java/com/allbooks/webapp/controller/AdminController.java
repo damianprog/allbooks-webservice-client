@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.allbooks.webapp.entity.Book;
+import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.ProfileService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.utils.ControllerUtils;
@@ -33,6 +34,9 @@ public class AdminController {
 	@Autowired
 	ProfileService profileService;
 
+	@Autowired
+	BookService bookService;
+	
 	@Autowired
 	ReaderService readerService;
 
@@ -58,7 +62,7 @@ public class AdminController {
 		book.setBookPhoto(bookPhotoBytes);
 		book.setAuthorPhoto(authorPhotoBytes);
 
-		readerService.saveBook(book);
+		bookService.saveBook(book);
 
 		theModel.addAttribute("book", book);
 

@@ -1,22 +1,16 @@
 package com.allbooks.webapp.controller;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,22 +21,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 
 import com.allbooks.webapp.entity.Details;
 import com.allbooks.webapp.entity.Friends;
+import com.allbooks.webapp.entity.MailBuilder;
+import com.allbooks.webapp.entity.MailBuilder.TokenType;
 import com.allbooks.webapp.entity.PasswordToken;
 import com.allbooks.webapp.entity.Pending;
 import com.allbooks.webapp.entity.ProfilePics;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.Review;
+import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.ProfileService;
 import com.allbooks.webapp.service.ReaderService;
+import com.allbooks.webapp.service.TokenService;
 import com.allbooks.webapp.utils.ControllerUtils;
-import com.allbooks.webapp.utils.MailUtils;
-import com.allbooks.webapp.utils.MailUtils.TokenType;
+import com.allbooks.webapp.utils.SendMail;
 
 @Controller
 @RequestMapping("/profile")
@@ -55,33 +50,39 @@ public class ProfileController {
 	ReaderService readerService;
 
 	@Autowired
+	BookService bookService;
+	
+	@Autowired
 	ProfileService profileService;
 
 	@Autowired
-	MailUtils mailUtils;
+	TokenService tokenService;
+	
+	@Autowired
+	SendMail sendMail;
 
 	@GetMapping("/showProfile")
 	public String showProfile(@RequestParam(value = "readerId", required = false) Optional<Integer> readerId,
 			@RequestParam(value = "recipentId", required = false) Optional<Integer> recipentId, HttpSession session,
-			Model theModel, Principal principal) {
+			Model theModel, Principal principal){
 
 		int read, currentlyReading, wantToRead, readerIdInt, friendsNum;
 		read = currentlyReading = wantToRead = readerIdInt = friendsNum = 0;
 		Reader reader;
 		List<Pending> friendsInvites;
-		List<Reader> friends;
+		List<Reader> friends = new ArrayList<>();
 
 		boolean invite, booFriends, pending;
 		invite = booFriends = pending = false;
 
 		if (readerId.isPresent()) {
-			reader = profileService.getReaderById(readerId.get());
+			reader = readerService.getReaderById(readerId.get());
 		} else if (recipentId.isPresent()) {
-			reader = profileService.getReaderById(recipentId.get());
+			reader = readerService.getReaderById(recipentId.get());
 		} else
 			reader = readerService.getReaderByUsername(principal.getName());
 
-		List<ReaderBook> readerBooks = readerService.getReaderBooks(reader.getId());
+		List<ReaderBook> readerBooks = bookService.getReaderBooks(reader.getId());
 		List<ReaderBook> currentlyReadingList = new ArrayList<ReaderBook>();
 		Details details = reader.getDetails();
 		for (ReaderBook readerBook : readerBooks) {
@@ -94,7 +95,7 @@ public class ProfileController {
 
 			case "Currently Reading":
 				currentlyReading++;
-				readerBook.setEncodedBookPic(getEncodedImage(readerBook.getBookPic()));
+				readerBook.setEncodedBookPic(ControllerUtils.getEncodedImage(readerBook.getBookPic()));
 				currentlyReadingList.add(readerBook);
 				break;
 
@@ -132,19 +133,16 @@ public class ProfileController {
 		ProfilePics profilePics = reader.getProfilePics();
 
 		if (profilePics != null) {
-			String base64Encoded = getEncodedImage(profilePics.getPic());
+			String base64Encoded = ControllerUtils.getEncodedImage(profilePics.getPic());
 			theModel.addAttribute("profilePic", base64Encoded);
 		}
 
 		if (!reader.getFriends().isEmpty()) {
 			friendsNum = reader.getFriends().size();
 			friends = reader.getFriends();
-			System.out.println(reader.getFriends().toString());
 		} else {
 			friends = profileService.getReaderFriends(reader.getId());
-			if (friends.isEmpty())
-				friends = new ArrayList<>();
-			else
+			if(!friends.isEmpty())
 				friendsNum = friends.size();
 		}
 
@@ -170,20 +168,6 @@ public class ProfileController {
 			theModel.addAttribute("readerId", reader.getId());
 
 		return "profile";
-	}
-
-	public static String getEncodedImage(byte[] theEncodedBase64) {
-
-		String base64Encoded = null;
-
-		byte[] encodeBase64 = Base64.getEncoder().encode(theEncodedBase64);
-		try {
-			base64Encoded = new String(encodeBase64, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-
-		return base64Encoded;
 	}
 
 	@PostMapping("/profileUpload")
@@ -215,10 +199,10 @@ public class ProfileController {
 	public String updateState(@RequestParam("bookName") String bookName, @RequestParam("newState") String newState,
 			HttpSession session, Model theModel, Principal principal, RedirectAttributes ra) {
 
-		int bookId = readerService.getBookId(bookName);
+		int bookId = bookService.getBookId(bookName);
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 
-		readerService.saveNewState(newState, bookId, reader.getId());
+		bookService.updateReaderBook(newState, bookId, reader.getId());
 
 		ra.addAttribute("myBooks", true);
 
@@ -230,9 +214,9 @@ public class ProfileController {
 	public String updateDateRead(@RequestParam("bookName") String bookName, @RequestParam("dateRead") String dateRead,
 			HttpSession session, Model theModel, Principal principal, RedirectAttributes ra) {
 
-		int bookId = readerService.getBookId(bookName);
+		int bookId = bookService.getBookId(bookName);
 		Reader reader = readerService.getReaderByUsername(principal.getName());
-		readerService.saveReadDate(dateRead, bookId, reader.getId());
+		bookService.saveReadDate(dateRead, bookId, reader.getId());
 
 		ra.addAttribute("myBooks", true);
 
@@ -243,7 +227,7 @@ public class ProfileController {
 	@GetMapping("/deleteReader")
 	public String deleteReader(@RequestParam("readerId") int readerId, HttpSession session) {
 
-		profileService.deleteReader(readerId);
+		readerService.deleteReader(readerId);
 
 		return "redirect:/reader/start";
 	}
@@ -253,8 +237,8 @@ public class ProfileController {
 			@RequestParam("senderLogin") String senderLogin, HttpSession session, Principal principal,
 			RedirectAttributes ra) {
 
-		Integer recipentId = profileService.getReaderId(recipentLogin);
-		int senderId = profileService.getReaderId(senderLogin);
+		Integer recipentId = readerService.getReaderId(recipentLogin);
+		int senderId = readerService.getReaderId(senderLogin);
 
 		Pending pending = new Pending();
 		pending.setRecipentId(recipentId);
@@ -277,8 +261,8 @@ public class ProfileController {
 		int recipentIdInt = Integer.valueOf(recipentId);
 		int pendingIdInt = Integer.valueOf(pendingId);
 
-		Reader reader1 = profileService.getReaderById(senderIdInt);
-		Reader reader2 = profileService.getReaderById(recipentIdInt);
+		Reader reader1 = readerService.getReaderById(senderIdInt);
+		Reader reader2 = readerService.getReaderById(recipentIdInt);
 
 		if (acceptOrAbort.equals("accept")) {
 			Friends friends = new Friends(senderIdInt, recipentIdInt);
@@ -338,7 +322,7 @@ public class ProfileController {
 	public String changePasswordPage(@RequestParam("token") String token, @RequestParam("readerId") int readerId,
 			Model theModel) {
 
-		PasswordToken tokenObj = profileService.getPasswordTokenByCredentials(readerId,token);
+		PasswordToken tokenObj = tokenService.getPasswordTokenByCredentials(readerId,token);
 
 		if (tokenObj == null) 
 			theModel.addAttribute("invalidToken", true);
@@ -353,11 +337,11 @@ public class ProfileController {
 	 @PostMapping("/changePassword")
 	 public String changePassword(@RequestParam("password") String password,@RequestParam("readerId") int readerId,Model theModel) {
 		 
-		 Reader reader = profileService.getReaderById(readerId);
+		 Reader reader = readerService.getReaderById(readerId);
 		 reader.setPassword(bCryptPasswordEncoder.encode(password));
 		 
 		 readerService.updateReader(reader);
-		 profileService.deletePasswordToken(readerId);
+		 tokenService.deletePasswordToken(readerId);
 		 
 		 theModel.addAttribute("passwordChanged",true);
 		 
@@ -367,28 +351,30 @@ public class ProfileController {
 	@PostMapping("/forgotPassword")
 	public String sendPasswordToken(@RequestParam("email") String email, Model theModel) throws MessagingException {
 
-		Reader reader = profileService.getReaderByEmail(email + ".com");
+		Reader reader = readerService.getReaderByEmail(email + ".com");
 
 		if (reader == null) {
 			theModel.addAttribute("error", true);
 			return "forgot";
 		}
 
-		PasswordToken token = profileService.getPasswordTokenByReaderId(reader.getId());
+		PasswordToken token = tokenService.getPasswordTokenByReaderId(reader.getId());
 
 		if (token != null) {
 			theModel.addAttribute("tokenSent", true);
 			return "forgot";
 		}
 
-		mailUtils.setReader(reader);
-		mailUtils.setSubject("Change Password");
-		mailUtils.setTokenType(TokenType.CHANGE_PASSWORD);
-		mailUtils.setSubjectHeader("Change your password");
-		mailUtils.setSubjectMessage("Click on the link below to change your password");
-		mailUtils.setTemplateName("template");
+		MailBuilder mailBuilder = new MailBuilder();
+		
+		mailBuilder.setReader(reader);
+		mailBuilder.setSubject("Change Password");
+		mailBuilder.setTokenType(TokenType.CHANGE_PASSWORD);
+		mailBuilder.setSubjectHeader("Change your password");
+		mailBuilder.setSubjectMessage("Click on the link below to change your password");
+		mailBuilder.setTemplateName("template");
 
-		mailUtils.sendMessage();
+		sendMail.send(mailBuilder);
 
 		theModel.addAttribute("success", true);
 

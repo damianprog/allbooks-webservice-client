@@ -1,6 +1,7 @@
 package com.allbooks.webapp.entity;
 
 import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -21,9 +22,9 @@ public class Review {
 
 	private Reader reader;
 
-	private int readerRating;
-
 	private int readerIdentity;
+
+	private Rating rating;
 
 	private int bookId;
 
@@ -31,6 +32,14 @@ public class Review {
 
 	@JsonIgnore
 	private byte[] profilePic;
+
+	public Rating getRating() {
+		return rating;
+	}
+
+	public void setRating(Rating rating) {
+		this.rating = rating;
+	}
 
 	public String getBookTitle() {
 		return bookTitle;
@@ -113,14 +122,6 @@ public class Review {
 
 	public void setReaderLogin(String readerLogin) {
 		this.readerLogin = readerLogin;
-	}
-
-	public int getReaderRating() {
-		return readerRating;
-	}
-
-	public void setReaderRating(int readerRating) {
-		this.readerRating = readerRating;
 	}
 
 	public int getLikes() {

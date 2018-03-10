@@ -157,7 +157,7 @@
 							<c:param name="reviewId" value="${tempReview.id}" />
 							<c:param name="readerLogin" value="${tempReview.readerLogin}" />
 							<c:param name="bookId" value="${tempReview.bookId}" />
-							<c:param name="readerRating" value="${tempReview.readerRating}" />
+							<c:param name="readerRating" value="${tempReview.rating.rate}" />
 							<c:param name="fullBookName" value="${book.fullTitle}" />
 							<c:param name="authorName" value="${book.author}" />
 						</c:url>

@@ -1,4 +1,4 @@
-package com.allbooks.webapp;
+package com.allbooks.webapp.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -34,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .defaultSuccessUrl("/reader/main")
         .permitAll()
         .and()
-        .logout().logoutSuccessUrl("/reader/start")
+        .logout().logoutSuccessUrl("/reader/main")
         .and()
         .exceptionHandling().accessDeniedPage("/reader/accessDenied");
 	

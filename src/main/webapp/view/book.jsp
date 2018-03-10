@@ -27,47 +27,61 @@
 				<tr>
 					<td id="img"><img src="data:image/jpeg;base64,${bookPic}">
 						<br> <sec:authorize access="isFullyAuthenticated()">
-							<c:choose>
-								<c:when test="${userRated == false}">
-									<div id="rating">
+
+							<div id="rating">
+								<form:form action="rate" modelAttribute="rating" method="GET">
+									<c:choose>
+										<c:when test="${rating.id == 0}">
 										Rate this book
-										
-										<form:form action="rate" modelAttribute="rating" method="GET">
-											<form:select path="rate">
-												<form:option value="1" label="1" />
-												<form:option value="2" label="2" />
-												<form:option value="3" label="3" />
-												<form:option value="4" label="4" />
-												<form:option value="5" label="5" selected="selected" />
-											</form:select>
-											<input type="hidden" name="bookName" value="${book.miniTitle}">
-											<input type="submit" value="Submit" />
-										</form:form>
-									</div>
-								</c:when>
-								<c:when test="${userRated == true }">
-							
-									Your rate ${readerRating}
-						</c:when>
-							</c:choose>
-							<c:choose>
-								<c:when test="${update == true}">
-									<br>Current State:${readerBook.shelves}
+										<input type="hidden" name="update" value="false">
 										</c:when>
-								<c:otherwise>
-									<br>Add this book to your books
-									</c:otherwise>
-							</c:choose>
+										<c:otherwise>
+							
+									Your rate ${rating.rate}
+									<input type="hidden" name="update" value="true">
+										</c:otherwise>
+									</c:choose>
+									
+									<form:select path="rate">
+										<form:option value="1" label="1" />
+										<form:option value="2" label="2" />
+										<form:option value="3" label="3" />
+										<form:option value="4" label="4" />
+										<form:option value="5" label="5" selected="selected" />
+									</form:select>
+									<form:hidden path="id" />
+									<form:hidden path="bookId" />
+									<form:hidden path="readerIdentity" />
+									<input type="hidden" name="bookName" value="${book.miniTitle}">
+									<input type="submit" value="Submit" />
+								</form:form>
+							</div>
+
 							<form:form action="readState" modelAttribute="readerBook"
 								method="GET">
+								<c:choose>
+									<c:when test="${readerBook.id == 0}">
+										<br>Add this book to your books
+									<input type="hidden" name="update" value="false">
+									</c:when>
+									<c:otherwise>
+										<br>Current State:${readerBook.shelves}
+									<input type="hidden" name="update" value="true">
+									</c:otherwise>
+								</c:choose>
+
 								<form:select path="shelves">
 									<form:option value="Read" label="Read" />
 									<form:option value="Currently Reading"
 										label="Currently Reading" />
 									<form:option value="Want to Read" label="Want to Read" />
 								</form:select>
+								<form:hidden path="id" />
+								<form:hidden path="dateAdded" />
+								<form:hidden path="minBookName" />
+								<form:hidden path="fullBookName" />
+								<form:hidden path="rating" />
 								<input type="hidden" name="bookName" value="${book.miniTitle}">
-								<input type="hidden" name="update" value="${update}">
 								<input type="submit" value="Submit" />
 							</form:form>
 						</sec:authorize> <sec:authorize access="!isFullyAuthenticated()">
@@ -89,8 +103,8 @@
 					</a>
 						<hr>
 						<div id="details">
-							${book.coverType}, ${book.pages} pages<br> Published ${book.publishDate} by
-							${book.publishCompany}
+							${book.coverType}, ${book.pages} pages<br> Published
+							${book.publishDate} by ${book.publishCompany}
 						</div>
 					</td>
 					<td id="aboutAuthor">
@@ -101,9 +115,9 @@
 							<h4 id="h3">Quotes From ${book.miniTitle}</h4>
 							<hr>
 							<c:forEach var="tempQuote" items="${quotesSplit}">
-							<p>
-								<i>${tempQuote}</i>
-							</p>
+								<p>
+									<i>${tempQuote}</i>
+								</p>
 							</c:forEach>
 						</div>
 					</td>
@@ -117,17 +131,10 @@
 			<hr>
 
 			<sec:authorize access="isFullyAuthenticated()">
-				<form:form action="submitReview" modelAttribute="review"
-					method="GET">
-					Title of Review<br>
-					<form:input id="reviewTitle" path="title" required="required" />
-					<br>
-					Content<br>
-					<form:textarea id="reviewBox" path="text" required="required" />
-					<br>
-					<input type="hidden" name="bookName" value="${book.miniTitle}" />
-					<input type="submit" value="Submit">
-				</form:form>
+				<c:url var="reviewLink" value="/reader/postReviewPage">
+					<c:param name="bookId" value="${book.id}" />
+				</c:url>
+				<a href="${reviewLink}">Post a Review!</a>
 			</sec:authorize>
 			<sec:authorize access="!isFullyAuthenticated()">
 				<a href="/login">Sign In to post a review!</a>
@@ -140,9 +147,6 @@
 
 						<c:url var="reviewLink" value="/reader/reviewPage">
 							<c:param name="reviewId" value="${tempReview.id}" />
-							<c:param name="readerLogin" value="${tempReview.readerLogin}" />
-							<c:param name="bookId" value="${tempReview.bookId}" />
-							<c:param name="readerRating" value="${tempReview.readerRating}" />
 						</c:url>
 
 						<c:url var="profileLink" value="/profile/showProfile">
@@ -153,7 +157,7 @@
 							<td>
 								<h4 id="h4">
 									<a class="blackRef" href="${profileLink}">${tempReview.readerLogin}</a>
-								</h4> rated it ${tempReview.readerRating}
+								</h4> rated it ${tempReview.rating.rate}
 							</td>
 						</tr>
 						<tr>
@@ -161,21 +165,18 @@
 							</td>
 						</tr>
 						<tr>
-							<td id="spaceUnder">Likes: ${tempReview.likes} 
-									<sec:authorize access="isFullyAuthenticated()">
-										<form:form action="/reader/dropLike" method="GET"
-											id="likeForm">
-											<input type="hidden" name="reviewId" value="${tempReview.id}" />
-											<input type="hidden" name="bookName" value="${book.miniTitle}" />
-											<input type="submit" value="Like" />
-										</form:form>
-									</sec:authorize>
-									<sec:authorize access="!isFullyAuthenticated()">
-										<form:form action="/login" method="GET"
-											id="likeForm">
-											<input type="submit" value="Like" />
-										</form:form>
-									</sec:authorize>
+							<td id="spaceUnder">Likes: ${tempReview.likes} <sec:authorize
+									access="isFullyAuthenticated()">
+									<form:form action="/reader/dropLike" method="GET" id="likeForm">
+										<input type="hidden" name="reviewId" value="${tempReview.id}" />
+										<input type="hidden" name="bookName" value="${book.miniTitle}" />
+										<input type="submit" value="Like" />
+									</form:form>
+								</sec:authorize> <sec:authorize access="!isFullyAuthenticated()">
+									<form:form action="/login" method="GET" id="likeForm">
+										<input type="submit" value="Like" />
+									</form:form>
+								</sec:authorize>
 							</td>
 						</tr>
 					</c:forEach>

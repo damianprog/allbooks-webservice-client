@@ -24,6 +24,9 @@ public class ProfileServiceImpl implements ProfileService {
 	@Autowired
 	RestTemplate restTemplate;
 
+	@Autowired
+	ReaderService readerService;
+
 	@Value("${service.url.name}")
 	String serviceUrlName;
 
@@ -40,29 +43,6 @@ public class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
-	public Reader getReaderById(int readerId) {
-
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("readerId", String.valueOf(readerId));
-
-		Reader reader = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}", Reader.class, params);
-
-		return reader;
-	}
-
-	@Override
-	public int getReaderId(String readerLogin) {
-
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("readerLogin", String.valueOf(readerLogin));
-
-		Reader reader = restTemplate.getForObject(serviceUrlName + "/readers/logins/{readerLogin}", Reader.class,
-				params);
-
-		return reader.getId();
-	}
-
-	@Override
 	public void saveFriends(Friends friends) {
 		restTemplate.put("http://localhost:9000/friends", friends);
 	}
@@ -70,8 +50,8 @@ public class ProfileServiceImpl implements ProfileService {
 	@Override
 	public Friends areTheyFriends(String reader1, String reader2) {
 
-		int reader1Id = getReaderId(reader1);
-		int reader2Id = getReaderId(reader2);
+		int reader1Id = readerService.getReaderId(reader1);
+		int reader2Id = readerService.getReaderId(reader2);
 
 		List<Friends> friendsList = getAllReaderFriends(reader1Id);
 		Friends friendship = null;
@@ -197,15 +177,6 @@ public class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
-	public void deleteReader(int readerId) {
-
-		Map<String, Integer> params = new HashMap<String, Integer>();
-		params.put("readerId", readerId);
-
-		restTemplate.delete(serviceUrlName + "/readers/{readerId}", params);
-	}
-
-	@Override
 	public void savePending(Pending pending) {
 		restTemplate.postForObject(serviceUrlName + "/friends/pending", pending, Pending.class);
 	}
@@ -213,8 +184,8 @@ public class ProfileServiceImpl implements ProfileService {
 	@Override
 	public Pending getPending(String reader1, String reader2) {
 
-		int reader1Id = getReaderId(reader1);
-		int reader2Id = getReaderId(reader2);
+		int reader1Id = readerService.getReaderId(reader1);
+		int reader2Id = readerService.getReaderId(reader2);
 
 		Map<String, Integer> params = new HashMap<String, Integer>();
 		params.put("reader1", reader1Id);
@@ -233,58 +204,6 @@ public class ProfileServiceImpl implements ProfileService {
 
 		restTemplate.delete(serviceUrlName + "/pending/{pendingId}", params);
 
-	}
-
-	@Override
-	public Reader getReaderByEmail(String email) {
-
-		Map<String, String> params = new HashMap<>();
-		params.put("email", email);
-
-		Reader reader = restTemplate.getForObject(serviceUrlName + "/readers/emails/{email}", Reader.class, params);
-
-		return reader;
-	}
-
-	@Override
-	public void createPasswordToken(Reader reader, String token) {
-
-		PasswordToken passwordToken = new PasswordToken(token, reader);
-
-		restTemplate.postForObject(serviceUrlName + "/readers/passwordTokens", passwordToken, PasswordToken.class);
-
-	}
-
-	@Override
-	public PasswordToken getPasswordTokenByReaderId(int readerId) {
-
-		Map<String, Integer> params = new HashMap<>();
-		params.put("readerId", readerId);
-
-		PasswordToken passwordToken = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/passwordTokens",
-				PasswordToken.class, params);
-
-		return passwordToken;
-	}
-
-	@Override
-	public PasswordToken getPasswordTokenByCredentials(int readerId, String token) {
-
-		Map<String, String> params = new HashMap<>();
-		params.put("readerId", String.valueOf(readerId));
-		params.put("passwordToken", token);
-
-		return restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/passwordTokens/{passwordToken}",
-				PasswordToken.class, params);
-	}
-
-	@Override
-	public void deletePasswordToken(int readerId) {
-		Map<String, Integer> params = new HashMap<>();
-		params.put("readerId", readerId);
-
-		restTemplate.delete(serviceUrlName + "/readers/{readerId}/passwordTokens",params);
-		
 	}
 
 }

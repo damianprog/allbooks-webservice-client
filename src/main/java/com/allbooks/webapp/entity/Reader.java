@@ -3,22 +3,26 @@ package com.allbooks.webapp.entity;
 import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Email;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Reader {
 
 	private int id;
 
+	@Size(max = 20, min = 3, message = "Name must be between 3 and 20 chars")
 	private String username;
 
+	@Size(max = 20, min = 6, message = "Password must be between 6 and 20 chars")
 	private String password;
 
 	private boolean enabled;
 
+	@Email(message="Invalid Email")
 	private String email;
 
 	private Set<Role> roles;

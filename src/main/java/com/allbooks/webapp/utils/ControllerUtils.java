@@ -1,46 +1,36 @@
 package com.allbooks.webapp.utils;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.util.Base64;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import net.coobird.thumbnailator.Thumbnails;
-
 public class ControllerUtils {
 
-	public static byte[] convertMultipartImage(MultipartFile mf,int width,int height) throws IOException {
-		
-		File convFile = convert(mf);
+	public static byte[] convertMultipartImage(MultipartFile mf, int width, int height) throws IOException {
 
-		BufferedImage bimg = ImageIO.read(convFile);
+		File convFile = MultipartToFile.convert(mf);
 
-		BufferedImage resized = resize(bimg, width, height);
+		return ResizePhoto.resize(Files.readAllBytes(convFile.toPath()), width, height);
 
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ImageIO.write(resized, "jpg", baos);
-		byte[] bytes = baos.toByteArray();
-		
-		return bytes;
-		
-	}
-	
-	public static File convert(MultipartFile file) throws IOException {
-		File convFile = new File(file.getOriginalFilename());
-		convFile.createNewFile();
-		FileOutputStream fos = new FileOutputStream(convFile);
-		fos.write(file.getBytes());
-		fos.close();
-		return convFile;
 	}
 
-	public static BufferedImage resize(BufferedImage img, int newW, int newH) throws IOException {
-		return Thumbnails.of(img).size(newW, newH).asBufferedImage();
+	public static String getEncodedImage(byte[] theEncodedBase64) {
+
+		String base64Encoded = null;
+
+		byte[] encodeBase64 = Base64.getEncoder().encode(theEncodedBase64);
+
+		try {
+			base64Encoded = new String(encodeBase64, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		return base64Encoded;
 	}
-	
+
 }

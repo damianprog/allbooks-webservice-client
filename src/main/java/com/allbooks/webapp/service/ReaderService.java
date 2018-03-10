@@ -13,68 +13,22 @@ import com.allbooks.webapp.entity.VerificationToken;
 public interface ReaderService {
 
 	public boolean saveReader(Reader theReader);
-	
-	public Reader getReader(String login,String password);
-	
-	public int getBookId(String bookName);
 
-	public Rating checkIfRated(int id,String bookName);
+	public Reader getReader(String login, String password);
 
-	public void submitRating(Rating rating);
-
-	public double getOverallRating(String bookName);
-
-	public void submitReview(Review review,int readerId);
-
-	public List<Review> getBookReviews(String redirectBookName, String bookName);
-
-	public int getReaderRating(int readerId, String bookName);
-
-	public void dropLike(int reviewId);
-
-	public int[] howManyRatesAndReviews(String bookName);
-
-	public String getBookName(int bookId);
-
-	public Review getOneReview(int reviewId);
-
-	public void submitComment(Comment comment);
-
-	public List<Comment> getReviewComments(int reviewId);
-
-	public void saveReaderBook(ReaderBook readerBook);
-
-	public ReaderBook getReaderBook(String bookName,int readerId);
-
-	public void saveNewState(String shelves,int bookId,int readerId);
-
-	public List<ReaderBook> getReaderBooks(int id);
-
-	public Book getBook(int bookId);
-	
-	public Book getBookByName(String bookname);
-
-	public void saveReadDate(String dateRead, int bookId, int id);
-	
 	public Reader getReaderByUsername(String login);
-	
-	public void saveBook(Book book);
-	
+
 	public void updateReader(Reader reader);
 
-	public void updateReview(Review review);
-
-	public void deleteReviewById(int reviewId);
-	
-	public void createVerificationToken(Reader reader,String verificationToken);
-	
-	public VerificationToken getTokenByReaderId(int readerId);
-
-	public void deleteTokenById(int tokenId);
-	
 	public boolean checkReaderLogin(String username);
 
 	public List<Review> getReaderReviews(String username);
-	
-	public void deleteReaderBookById(int id);
+
+	public Reader getReaderById(int readerId);
+
+	public int getReaderId(String readerLogin);
+
+	public void deleteReader(int readerId);
+
+	public Reader getReaderByEmail(String email);
 }

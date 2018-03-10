@@ -12,6 +12,12 @@ body{
 	float:left;
 }
 
+.error {
+	color: red;
+	font-style: italic;
+	font-weight: bold;
+}
+
 #container 
 {
 	width:1000px;

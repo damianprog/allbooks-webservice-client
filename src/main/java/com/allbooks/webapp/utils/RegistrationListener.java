@@ -1,24 +1,21 @@
-package com.allbooks.webapp.service;
+package com.allbooks.webapp.utils;
 
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
-import org.thymeleaf.TemplateEngine;
 
+import com.allbooks.webapp.entity.MailBuilder;
+import com.allbooks.webapp.entity.MailBuilder.TokenType;
 import com.allbooks.webapp.entity.OnRegistrationCompleteEvent;
-import com.allbooks.webapp.utils.MailUtils;
-import com.allbooks.webapp.utils.MailUtils.TokenType;
 
 @Component
 public class RegistrationListener implements
 ApplicationListener<OnRegistrationCompleteEvent>{
 	
 	@Autowired
-	MailUtils mailUtils;
+	SendMail sendMail;
 	
 	@Override
 	public void onApplicationEvent(OnRegistrationCompleteEvent event) {
@@ -31,14 +28,16 @@ ApplicationListener<OnRegistrationCompleteEvent>{
 	
 	public void confirmRegistration(OnRegistrationCompleteEvent event) throws MessagingException {
 		
-		mailUtils.setReader(event.getReader());
-		mailUtils.setSubject("Registration Confirmation");
-		mailUtils.setTokenType(TokenType.REGISTRATION_CONFIRM);
-		mailUtils.setSubjectHeader("Thanks for joining us!");
-		mailUtils.setSubjectMessage("Click on the link below to confirm your account!");
-		mailUtils.setTemplateName("template");
+		MailBuilder mailBuilder = new MailBuilder();
 		
-		mailUtils.sendMessage();
+		mailBuilder.setReader(event.getReader());
+		mailBuilder.setSubject("Registration Confirmation");
+		mailBuilder.setTokenType(TokenType.REGISTRATION_CONFIRM);
+		mailBuilder.setSubjectHeader("Thanks for joining us!");
+		mailBuilder.setSubjectMessage("Click on the link below to confirm your account!");
+		mailBuilder.setTemplateName("template");
+		
+		sendMail.send(mailBuilder);
 		
 	}
 	
