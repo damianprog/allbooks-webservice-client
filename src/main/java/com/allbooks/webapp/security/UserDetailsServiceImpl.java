@@ -3,6 +3,8 @@ package com.allbooks.webapp.security;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,6 +22,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
 	ReaderService readerService;
+	
+	@Autowired 
+	private HttpSession httpSession;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -39,6 +44,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 					grantedAuthorities.add(new SimpleGrantedAuthority(role.getRole()));
 				}
 
+				httpSession.setAttribute("readerId", reader.getId());
+				
 				return new org.springframework.security.core.userdetails.User(reader.getUsername(),
 						reader.getPassword(), grantedAuthorities);
 			}

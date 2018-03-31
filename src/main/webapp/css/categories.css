@@ -1,0 +1,43 @@
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size: 17px;
+	color: black;
+}
+
+.blueLink {
+	text-decoration: none;
+	color: #00635D;
+}
+
+#container {
+	width: 1000px;
+	margin: 0 auto;
+}
+
+table.books td {
+	vertical-align: top;
+}
+
+#bookTitle {
+	display: inline;
+}
+
+#bookDesc {
+	height: 175px;
+}
+
+#categoryName {
+	float: left;
+	width:186px;
+}
+
+#pages {
+	float: left;
+	margin-left: 500px;
+	width:150px;
+}
+
+#pageNum {
+	padding-right: 10px;
+	display:inline;
+}

@@ -3,3 +3,6 @@
 *.jpg
 *.properties
 *.jpg
+src/main/resources/application.properties
+src/main/resources/application.properties
+target/classes/application.properties

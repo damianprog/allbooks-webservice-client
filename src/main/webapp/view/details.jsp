@@ -50,7 +50,7 @@
 				<tr >
 					<td class="bottomTd"><form:select path="gender"  class="inputBox">
 						<form:option value="Male">Male</form:option>
-						<form:option value="female">Female</form:option>
+						<form:option value="Female">Female</form:option>
 					</form:select>
 					</td>
 				</tr>

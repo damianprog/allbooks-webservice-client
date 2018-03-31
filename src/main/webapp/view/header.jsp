@@ -12,7 +12,8 @@
 <link href="https://fonts.googleapis.com/css?family=Roboto|Spectral+SC"
 	rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css?family=Lato:700" rel="stylesheet"> 
+<link href="https://fonts.googleapis.com/css?family=Lato:700"
+	rel="stylesheet">
 </head>
 
 <body>
@@ -23,25 +24,30 @@
 			<tr>
 				<td id="titleImg"><img src="/css/images/bookshelf.png"></td>
 				<td id="allbooksName"><a id="allBooks" href="/reader/main">AllBooks</a></td>
-				
-				<td id="homeRef">
-					<a class="blackRefNon" href="/reader/main">Home</a>
+
+				<td id="homeRef"><a class="blackRefNon" href="/reader/main">Home</a>
 				</td>
-				
+
 				<td class="pageRef"><sec:authorize
 						access="isFullyAuthenticated()">
-
-						<a class="blackRefNon" href="/reader/showMyBooks">My Books</a>
+						<c:url var="showMyBooks" value="/reader/showMyBooks">
+							<c:param name="readerId" value="${sessionScope.readerId}"></c:param>
+						</c:url>
+						<a class="blackRefNon" href="${showMyBooks}">My Books</a>
 					</sec:authorize></td>
 
-				<sec:authorize access="hasAuthority('ADMIN')">
-					<td class="pageRef"><c:url var="addBook"
-							value="/admin/addBookPage">
-						</c:url> <a class="blackRefNon" href="${addBook}">Add Book</a></td>
-				</sec:authorize>
+
+				<td class="pageRef"><sec:authorize
+						access="hasAuthority('ADMIN')">
+						<c:url var="addBook" value="/admin/addBookPage">
+						</c:url>
+						<a class="blackRefNon" href="${addBook}">Add Book</a>
+					</sec:authorize></td>
+
 				<sec:authorize access="isFullyAuthenticated()">
 					<td id="loginPart"><c:url var="showProfile"
 							value="/profile/showProfile">
+							<c:param name="readerId" value="${sessionScope.readerId}"></c:param>
 						</c:url> Reader:<a class="login" href="${showProfile}"><sec:authentication
 								property="principal.username" /></a></td>
 					<td><form:form method="POST" action="/logout">
@@ -52,24 +58,24 @@
 				<sec:authorize access="!isFullyAuthenticated()">
 
 					<form:form method="POST" action="/login">
-					<td>
-						<table id="mainLogin">
-							<tr>
-								<td><input type="text" placeholder="Login" id="inputBox"
-									required="required" name="username" /></td>
-								<td><input type="password" placeholder="Password"
-									id="inputBox" required="required" name="password" /></td>
-								<td><input class="signInHeader" type="submit"
-									value="Sign In" /></td>
-							</tr>
-							<tr>
-								<td id="cbMain"><input type="checkbox" name="cb"
-									value="remember" /> Remember me</td>
-								<td id="cbMainForgot"><a href="/profile/forgot">Forgot
-										it?</a></td>
-							</tr>
-						</table>
-					</td>
+						<td>
+							<table id="mainLogin">
+								<tr>
+									<td><input type="text" placeholder="Login" id="inputBox"
+										required="required" name="username" /></td>
+									<td><input type="password" placeholder="Password"
+										id="inputBox" required="required" name="password" /></td>
+									<td><input class="signInHeader" type="submit"
+										value="Sign In" /></td>
+								</tr>
+								<tr>
+									<td id="cbMain"><input type="checkbox" name="cb"
+										value="remember" /> Remember me</td>
+									<td id="cbMainForgot"><a href="/profile/forgot">Forgot
+											it?</a></td>
+								</tr>
+							</table>
+						</td>
 					</form:form>
 				</sec:authorize>
 			</tr>
@@ -77,6 +83,9 @@
 
 
 	</div>
+	
+	<div style="clear:both;"></div>
+	
 </body>
 
 </html>

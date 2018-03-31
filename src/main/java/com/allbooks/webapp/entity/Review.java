@@ -1,5 +1,6 @@
 package com.allbooks.webapp.entity;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -132,4 +133,14 @@ public class Review {
 		this.likes = likes;
 	}
 
+	@Override
+	public String toString() {
+		return "Review [id=" + id + ", text=" + text + ", title=" + title + ", bookTitle=" + bookTitle + ", likes="
+				+ likes + ", readerLogin=" + readerLogin + ", reader=" + reader + ", readerIdentity=" + readerIdentity
+				+ ", rating=" + rating + ", bookId=" + bookId + ", comments=" + comments + ", profilePic="
+				+ Arrays.toString(profilePic) + "]";
+	}
+
+	
+	
 }

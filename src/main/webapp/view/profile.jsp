@@ -39,7 +39,7 @@
 								<td>
 									<form method="POST" action="/profile/profileUpload"
 										enctype="multipart/form-data">
-										<input type="file" name="file" /> <br /> <input
+										<input type="file" name="file" required="true" /> <br /> <input
 											type="submit" value="Submit" />
 									</form>
 								</td>
@@ -106,7 +106,7 @@
 			<div style="clear: both">
 				<div class="underFirstTable">
 					<c:url var="myBooks" value="/reader/showMyBooks">
-						<c:param name="readerId" value="${readerId}" />
+						<c:param name="readerId" value="${reader.id}" />
 					</c:url>
 					<h4 id="topDesc">
 						<a class="blackRef" href="${myBooks}">${reader.username}'s
@@ -129,7 +129,7 @@
 				<table class="currentlyReadingBooks">
 					<c:forEach var="tempBook" items="${currentlyReadingList}">
 						<c:url var="bookSite" value="/reader/showBook">
-							<c:param name="bookName" value="${tempBook.minBookName}" />
+							<c:param name="bookName" value="${tempBook.book.miniTitle}" />
 						</c:url>
 						<tr>
 							<td><a href="${bookSite}"> <img
@@ -137,8 +137,8 @@
 							</a></td>
 							<td>${reader.username} is currently reading<br>
 								<h4 id="topDesc">
-									<a class="blackRef" href="${bookSite}">${tempBook.fullBookName}</a>
-								</h4> <br> by ${tempBook.author}<br> bookshelves:
+									<a class="blackRef" href="${bookSite}">${tempBook.book.fullTitle}</a>
+								</h4> <br> by ${tempBook.book.author}<br> bookshelves:
 								${tempBook.shelves}
 							</td>
 						</tr>
@@ -216,7 +216,7 @@
 				<hr>
 				<c:choose>
 					<c:when test="${empty friends}">
-			Your friends list is empty
+			 Friends list is empty
 		</c:when>
 					<c:otherwise>
 						<table>

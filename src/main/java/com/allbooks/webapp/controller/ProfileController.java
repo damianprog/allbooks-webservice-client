@@ -5,7 +5,6 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
@@ -24,169 +23,124 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.allbooks.webapp.entity.Details;
 import com.allbooks.webapp.entity.Friends;
-import com.allbooks.webapp.entity.MailBuilder;
-import com.allbooks.webapp.entity.MailBuilder.TokenType;
 import com.allbooks.webapp.entity.PasswordToken;
 import com.allbooks.webapp.entity.Pending;
 import com.allbooks.webapp.entity.ProfilePics;
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.Review;
+import com.allbooks.webapp.photos.component.Base64Encoder;
+import com.allbooks.webapp.photos.component.MultipartImageConverter;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.ProfileService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.TokenService;
-import com.allbooks.webapp.utils.ControllerUtils;
+import com.allbooks.webapp.utils.ReaderBooksHandler;
 import com.allbooks.webapp.utils.SendMail;
+import com.allbooks.webapp.utils.entity.MailBuilder;
+import com.allbooks.webapp.utils.entity.MailBuilder.TokenType;
+import com.allbooks.webapp.utils.service.PhotoServiceImpl;
+import com.allbooks.webapp.utils.entity.ReaderBooksState;
 
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
-	
+
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
-	
+
 	@Autowired
 	ReaderService readerService;
 
 	@Autowired
 	BookService bookService;
-	
+
 	@Autowired
 	ProfileService profileService;
 
 	@Autowired
 	TokenService tokenService;
-	
+
 	@Autowired
 	SendMail sendMail;
+	
+	@Autowired
+	ReaderBooksHandler readerBooksHandler;
 
+	@Autowired
+	PhotoServiceImpl photoService;
+	
 	@GetMapping("/showProfile")
-	public String showProfile(@RequestParam(value = "readerId", required = false) Optional<Integer> readerId,
-			@RequestParam(value = "recipentId", required = false) Optional<Integer> recipentId, HttpSession session,
-			Model theModel, Principal principal){
+	public String showProfile(@RequestParam(value = "readerId", required = false) Integer readerId, HttpSession session,
+			Model theModel, Principal principal) {
 
-		int read, currentlyReading, wantToRead, readerIdInt, friendsNum;
-		read = currentlyReading = wantToRead = readerIdInt = friendsNum = 0;
-		Reader reader;
-		List<Pending> friendsInvites;
 		List<Reader> friends = new ArrayList<>();
 
-		boolean invite, booFriends, pending;
-		invite = booFriends = pending = false;
+		boolean invite = false;
 
-		if (readerId.isPresent()) {
-			reader = readerService.getReaderById(readerId.get());
-		} else if (recipentId.isPresent()) {
-			reader = readerService.getReaderById(recipentId.get());
-		} else
-			reader = readerService.getReaderByUsername(principal.getName());
+		Reader reader = readerService.getReaderById(readerId);
 
-		List<ReaderBook> readerBooks = bookService.getReaderBooks(reader.getId());
-		List<ReaderBook> currentlyReadingList = new ArrayList<ReaderBook>();
-		Details details = reader.getDetails();
-		for (ReaderBook readerBook : readerBooks) {
-
-			switch (readerBook.getShelves()) {
-
-			case "Read":
-				read++;
-				break;
-
-			case "Currently Reading":
-				currentlyReading++;
-				readerBook.setEncodedBookPic(ControllerUtils.getEncodedImage(readerBook.getBookPic()));
-				currentlyReadingList.add(readerBook);
-				break;
-
-			case "Want To Read":
-				wantToRead++;
-				break;
-
-			}
-
-		}
+		ReaderBooksState readerBooksState = readerBooksHandler
+				.getReaderBooksState(bookService.getReaderBooks(reader.getId()));
 
 		if (principal != null) {
 
-			if ((!principal.getName().equals(reader.getUsername()))) {
-				Friends checkFriends = profileService.areTheyFriends(principal.getName(), reader.getUsername());
-				Pending pendingObject = profileService.getPending(reader.getUsername(), principal.getName());
-				if (checkFriends != null)
-					booFriends = true;
-				else {
-					if (pendingObject != null)
-						pending = true;
+			if (!principal.getName().equals(reader.getUsername())) {
 
-				}
+				theModel.addAttribute("booFriends",
+						profileService.areTheyFriends(principal.getName(), reader.getUsername()));
+				theModel.addAttribute("pending",
+						profileService.checkPending(reader.getUsername(), principal.getName()));
+
 				invite = true;
 			}
 
-			else {
-				friendsInvites = profileService.getFriendsInvites(reader.getId());
-				theModel.addAttribute("friendsInvites", friendsInvites);
-			}
+			else
+				theModel.addAttribute("friendsInvites", profileService.getFriendsInvites(reader.getId()));
 
 			theModel.addAttribute("principalName", principal.getName());
 		}
 
-		ProfilePics profilePics = reader.getProfilePics();
+		if (reader.getProfilePics() != null)
+			theModel.addAttribute("profilePic", photoService.getEncodedImage(reader.getProfilePics().getPic()));
 
-		if (profilePics != null) {
-			String base64Encoded = ControllerUtils.getEncodedImage(profilePics.getPic());
-			theModel.addAttribute("profilePic", base64Encoded);
-		}
-
-		if (!reader.getFriends().isEmpty()) {
-			friendsNum = reader.getFriends().size();
-			friends = reader.getFriends();
-		} else {
-			friends = profileService.getReaderFriends(reader.getId());
-			if(!friends.isEmpty())
-				friendsNum = friends.size();
-		}
+		friends = profileService.getReaderFriends(reader.getId());
 
 		List<Review> reviews = readerService.getReaderReviews(reader.getUsername());
 		reviews.sort(Comparator.comparingInt(Review::getId).reversed());
 		theModel.addAttribute("readerReviews", reviews);
 
-		theModel.addAttribute("details", details);
-		theModel.addAttribute("read", read);
-		theModel.addAttribute("currentlyReading", currentlyReading);
-		theModel.addAttribute("currentlyReadingList", currentlyReadingList);
-		theModel.addAttribute("wantToRead", wantToRead);
+		theModel.addAttribute("details", reader.getDetails());
+		theModel.addAttribute("read", readerBooksState.getReaderBooksQuantities().get("read"));
+		theModel.addAttribute("currentlyReading", readerBooksState.getCurrentlyReadingBooks().size());
+		theModel.addAttribute("currentlyReadingList", readerBooksState.getCurrentlyReadingBooks());
+		theModel.addAttribute("wantToRead", readerBooksState.getReaderBooksQuantities().get("wantToRead"));
 		theModel.addAttribute("reader", reader);
 		theModel.addAttribute("invite", invite);
-		theModel.addAttribute("booFriends", booFriends);
-		theModel.addAttribute("pending", pending);
-		theModel.addAttribute("friendsNum", friendsNum);
+		theModel.addAttribute("friendsNum", friends.size());
 		theModel.addAttribute("friends", friends);
-
-		if (readerIdInt != 0) {
-			theModel.addAttribute("readerId", readerIdInt);
-		} else
-			theModel.addAttribute("readerId", reader.getId());
 
 		return "profile";
 	}
 
 	@PostMapping("/profileUpload")
 	public String profileUpload(HttpSession session, Model theModel, @RequestParam("file") MultipartFile multipartfile,
-			Principal principal) throws IOException {
-
-		if (multipartfile.isEmpty()) {
-			return "redirect:/profile/showProfile";
-		}
+			Principal principal, RedirectAttributes ra) throws IOException {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 
-		byte[] bytes = ControllerUtils.convertMultipartImage(multipartfile, 200, 250);
+		ra.addAttribute("readerId", reader.getId());
+
+		if (multipartfile.isEmpty())
+			return "redirect:/profile/showProfile";
+		
+
+		byte[] bytes = photoService.convertMultipartImage(multipartfile, 200, 250);
 
 		ProfilePics profilePics = reader.getProfilePics();
 
-		if (profilePics == null) {
+		if (profilePics == null) 
 			profilePics = new ProfilePics(bytes);
-		} else
+		 else
 			profilePics.setPic(bytes);
 
 		reader.setProfilePics(profilePics);
@@ -202,9 +156,9 @@ public class ProfileController {
 		int bookId = bookService.getBookId(bookName);
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 
-		bookService.updateReaderBook(newState, bookId, reader.getId());
+		bookService.updateReaderBookShelves(newState, bookId, reader.getId());
 
-		ra.addAttribute("myBooks", true);
+		ra.addAttribute("readerId", reader.getId());
 
 		return "redirect:/reader/showMyBooks";
 
@@ -248,21 +202,18 @@ public class ProfileController {
 
 		profileService.savePending(pending);
 
-		ra.addAttribute("recipentId", recipentId);
+		ra.addAttribute("readerId", recipentId);
 		return "redirect:/profile/showProfile";
 	}
 
 	@GetMapping("/acceptOrAbort") // need to change property friendsId
 	public String acceptOrAbort(@RequestParam("acceptOrAbort") String acceptOrAbort,
 			@RequestParam("recipentId") String recipentId, @RequestParam("senderId") String senderId,
-			@RequestParam("pendingId") String pendingId, Model theModel, HttpSession session) {
+			@RequestParam("pendingId") String pendingId, Model theModel, HttpSession session, RedirectAttributes ra) {
 
 		int senderIdInt = Integer.valueOf(senderId);
 		int recipentIdInt = Integer.valueOf(recipentId);
 		int pendingIdInt = Integer.valueOf(pendingId);
-
-		Reader reader1 = readerService.getReaderById(senderIdInt);
-		Reader reader2 = readerService.getReaderById(recipentIdInt);
 
 		if (acceptOrAbort.equals("accept")) {
 			Friends friends = new Friends(senderIdInt, recipentIdInt);
@@ -273,17 +224,19 @@ public class ProfileController {
 			profileService.deletePending(pendingIdInt);
 		}
 
+		ra.addAttribute("readerId", recipentIdInt);
 		return "redirect:/profile/showProfile";
 	}
 
 	@GetMapping("/deleteFriends")
 	public String deleteFriends(@RequestParam("reader2Id") int reader2Id, Model theModel, HttpSession session,
-			Principal principal) {
+			Principal principal, RedirectAttributes ra) {
 
 		Reader loggedReader = readerService.getReaderByUsername(principal.getName());
 
 		profileService.deleteFriends(loggedReader.getId(), reader2Id);
 
+		ra.addAttribute("readerId", loggedReader.getId());
 		return "redirect:/profile/showProfile";
 	}
 
@@ -308,13 +261,14 @@ public class ProfileController {
 
 	@PostMapping("/saveDetails")
 	public String saveDetails(HttpSession session, Model theModel, @ModelAttribute("details") Details details,
-			Principal principal) {
+			Principal principal, RedirectAttributes ra) {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 		reader.setDetails(details);
 
 		readerService.updateReader(reader);
 
+		ra.addAttribute("readerId", reader.getId());
 		return "redirect:/profile/showProfile";
 	}
 
@@ -322,31 +276,32 @@ public class ProfileController {
 	public String changePasswordPage(@RequestParam("token") String token, @RequestParam("readerId") int readerId,
 			Model theModel) {
 
-		PasswordToken tokenObj = tokenService.getPasswordTokenByCredentials(readerId,token);
+		PasswordToken tokenObj = tokenService.getPasswordTokenByCredentials(readerId, token);
 
-		if (tokenObj == null) 
+		if (tokenObj == null)
 			theModel.addAttribute("invalidToken", true);
-			else {
-				theModel.addAttribute("changing", true);
-				theModel.addAttribute("readerId", readerId);
-			}
-		
+		else {
+			theModel.addAttribute("changing", true);
+			theModel.addAttribute("readerId", readerId);
+		}
+
 		return "forgot";
 	}
 
-	 @PostMapping("/changePassword")
-	 public String changePassword(@RequestParam("password") String password,@RequestParam("readerId") int readerId,Model theModel) {
-		 
-		 Reader reader = readerService.getReaderById(readerId);
-		 reader.setPassword(bCryptPasswordEncoder.encode(password));
-		 
-		 readerService.updateReader(reader);
-		 tokenService.deletePasswordToken(readerId);
-		 
-		 theModel.addAttribute("passwordChanged",true);
-		 
-		 return "saved";
-	 }
+	@PostMapping("/changePassword")
+	public String changePassword(@RequestParam("password") String password, @RequestParam("readerId") int readerId,
+			Model theModel) {
+
+		Reader reader = readerService.getReaderById(readerId);
+		reader.setPassword(bCryptPasswordEncoder.encode(password));
+
+		readerService.updateReader(reader);
+		tokenService.deletePasswordToken(readerId);
+
+		theModel.addAttribute("passwordChanged", true);
+
+		return "saved";
+	}
 
 	@PostMapping("/forgotPassword")
 	public String sendPasswordToken(@RequestParam("email") String email, Model theModel) throws MessagingException {
@@ -366,7 +321,7 @@ public class ProfileController {
 		}
 
 		MailBuilder mailBuilder = new MailBuilder();
-		
+
 		mailBuilder.setReader(reader);
 		mailBuilder.setSubject("Change Password");
 		mailBuilder.setTokenType(TokenType.CHANGE_PASSWORD);

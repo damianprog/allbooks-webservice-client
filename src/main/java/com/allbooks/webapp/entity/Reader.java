@@ -6,7 +6,6 @@ import java.util.Set;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -22,7 +21,7 @@ public class Reader {
 
 	private boolean enabled;
 
-	@Email(message="Invalid Email")
+	@Email(message = "Invalid Email")
 	private String email;
 
 	private Set<Role> roles;

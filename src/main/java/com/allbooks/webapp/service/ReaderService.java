@@ -2,13 +2,8 @@ package com.allbooks.webapp.service;
 
 import java.util.List;
 
-import com.allbooks.webapp.entity.Book;
-import com.allbooks.webapp.entity.Comment;
-import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.Review;
-import com.allbooks.webapp.entity.VerificationToken;
 
 public interface ReaderService {
 

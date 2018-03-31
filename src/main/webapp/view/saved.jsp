@@ -42,10 +42,6 @@
 				<h3>Login or password is not correct</h3>
 				<p><a href="/login">Go back to Login page</a></p>
 			</c:when>
-			<c:when test="${accessDenied == true}">
-				<h3>You don't have access to this page.</h3>
-				<p><a href="/reader/main">Allbooks Home</a></p>
-			</c:when>
 			<c:when test="${passwordChanged == true}">
 					<br>
 					<span style="color: blue">Your Allbooks account password has been changed successfully!</span>

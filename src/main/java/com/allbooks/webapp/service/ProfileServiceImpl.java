@@ -48,7 +48,7 @@ public class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
-	public Friends areTheyFriends(String reader1, String reader2) {
+	public boolean areTheyFriends(String reader1, String reader2) {
 
 		int reader1Id = readerService.getReaderId(reader1);
 		int reader2Id = readerService.getReaderId(reader2);
@@ -62,7 +62,10 @@ public class ProfileServiceImpl implements ProfileService {
 			}
 		}
 
-		return friendship;
+		if(friendship != null)
+			return true;
+		else
+			return false;
 	}
 
 	@Override
@@ -204,6 +207,17 @@ public class ProfileServiceImpl implements ProfileService {
 
 		restTemplate.delete(serviceUrlName + "/pending/{pendingId}", params);
 
+	}
+
+	@Override
+	public boolean checkPending(String name, String username) {
+		
+		Pending pending = getPending(name,username);
+		
+		if(pending == null)
+			return false;
+		else
+			return true;
 	}
 
 }

@@ -33,16 +33,16 @@
 									<c:choose>
 										<c:when test="${rating.id == 0}">
 										Rate this book
-										<input type="hidden" name="update" value="false">
+										<input type="hidden" name="updateRating" value="false">
 										</c:when>
 										<c:otherwise>
 							
 									Your rate ${rating.rate}
-									<input type="hidden" name="update" value="true">
+									<input type="hidden" name="updateRating" value="true">
 										</c:otherwise>
 									</c:choose>
-									
-									<form:select path="rate">
+
+									<form:select class="rounded" path="rate">
 										<form:option value="1" label="1" />
 										<form:option value="2" label="2" />
 										<form:option value="3" label="3" />
@@ -53,7 +53,7 @@
 									<form:hidden path="bookId" />
 									<form:hidden path="readerIdentity" />
 									<input type="hidden" name="bookName" value="${book.miniTitle}">
-									<input type="submit" value="Submit" />
+									<input class="submit" type="submit" value="Submit" />
 								</form:form>
 							</div>
 
@@ -66,23 +66,21 @@
 									</c:when>
 									<c:otherwise>
 										<br>Current State:${readerBook.shelves}
-									<input type="hidden" name="update" value="true">
+										<form:hidden path="id" />
+										<form:hidden path="dateAdded" />
+										<input type="hidden" name="update" value="true">
 									</c:otherwise>
 								</c:choose>
 
-								<form:select path="shelves">
+								<form:select class="rounded" path="shelves">
 									<form:option value="Read" label="Read" />
 									<form:option value="Currently Reading"
 										label="Currently Reading" />
 									<form:option value="Want to Read" label="Want to Read" />
 								</form:select>
-								<form:hidden path="id" />
-								<form:hidden path="dateAdded" />
-								<form:hidden path="minBookName" />
-								<form:hidden path="fullBookName" />
-								<form:hidden path="rating" />
+
 								<input type="hidden" name="bookName" value="${book.miniTitle}">
-								<input type="submit" value="Submit" />
+								<input class="submit" type="submit" value="Submit" />
 							</form:form>
 						</sec:authorize> <sec:authorize access="!isFullyAuthenticated()">
 							<a href="/login">Sign In</a> to Rate this book!
@@ -94,12 +92,12 @@
 							<tr>
 								<td id="pInstead">Rating: ${overallRating}</td>
 								<td id="ratingDetails">Rating Details ${rates} Ratings
-									${reviews} Reviews</td>
+									${quantity.ratings} Reviews ${quantity.reviews}</td>
 							</tr>
 						</table>${book.description}
 						<hr> BUY A COPY<br> <a target="blank"
 						href="${book.buyBook}">
-							<button type="button">Amazon</button>
+							<button style="background-color:#ff9900;border-radius: 5px;	" type="button">Amazon</button>
 					</a>
 						<hr>
 						<div id="details">
@@ -170,11 +168,11 @@
 									<form:form action="/reader/dropLike" method="GET" id="likeForm">
 										<input type="hidden" name="reviewId" value="${tempReview.id}" />
 										<input type="hidden" name="bookName" value="${book.miniTitle}" />
-										<input type="submit" value="Like" />
+										<input id="like" type="submit" value="Like" />
 									</form:form>
 								</sec:authorize> <sec:authorize access="!isFullyAuthenticated()">
 									<form:form action="/login" method="GET" id="likeForm">
-										<input type="submit" value="Like" />
+										<input  type="submit" value="Like" />
 									</form:form>
 								</sec:authorize>
 							</td>

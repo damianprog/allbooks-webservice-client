@@ -8,36 +8,55 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Book {
 
 	private int id;
-	
+
 	private byte[] bookPhoto;
 
 	private String miniTitle;
-	
+
 	private String fullTitle;
 
 	private String author;
-	
+
 	private String aboutAuthor;
-	
+
 	private byte[] authorPhoto;
-	
+
 	private String reviewAuthor;
-	
+
 	private String description;
-	
+
 	private String bookQuotes;
-	
+
 	private String coverType;
-	
+
 	private int pages;
-	
+
 	private String publishDate;
-	
+
 	private String publishCompany;
-	
+
 	private String buyBook;
 
-	
+	private String category;
+
+	private String encodedBookPic;
+
+	public String getEncodedBookPic() {
+		return encodedBookPic;
+	}
+
+	public void setEncodedBookPic(String encodedBookPic) {
+		this.encodedBookPic = encodedBookPic;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
 	public String getMiniTitle() {
 		return miniTitle;
 	}
@@ -159,6 +178,15 @@ public class Book {
 
 	public void setFullTitle(String fullTitle) {
 		this.fullTitle = fullTitle;
+	}
+
+	@Override
+	public String toString() {
+		return "Book [id=" + id + ", miniTitle=" + miniTitle + ", fullTitle=" + fullTitle + ", author=" + author
+				+ ", aboutAuthor=" + aboutAuthor + ", reviewAuthor=" + reviewAuthor + ", description=" + description
+				+ ", bookQuotes=" + bookQuotes + ", coverType=" + coverType + ", pages=" + pages + ", publishDate="
+				+ publishDate + ", publishCompany=" + publishCompany + ", buyBook=" + buyBook + ", category=" + category
+				+ "]";
 	}
 
 }

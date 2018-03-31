@@ -9,21 +9,15 @@ public class ReaderBook {
 
 	private int id;
 
-	private int bookId;
-
-	private String minBookName;
-
-	private String fullBookName;
+	private Book book;
 
 	private byte[] bookPic;
 
 	private String encodedBookPic;
 
-	private String author;
+	private double overallRating;
 
-	private double rating;
-
-	private int readerRating;
+	private Rating readerRating;
 
 	private Reader reader;
 
@@ -32,6 +26,14 @@ public class ReaderBook {
 	private String dateRead;
 
 	private String dateAdded;
+
+	public Book getBook() {
+		return book;
+	}
+
+	public void setBook(Book book) {
+		this.book = book;
+	}
 
 	public String getEncodedBookPic() {
 		return encodedBookPic;
@@ -55,14 +57,6 @@ public class ReaderBook {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public int getBookId() {
-		return bookId;
-	}
-
-	public void setBookId(int bookId) {
-		this.bookId = bookId;
 	}
 
 	public Reader getReader() {
@@ -97,52 +91,27 @@ public class ReaderBook {
 		this.dateAdded = dateAdded;
 	}
 
-	public String getMinBookName() {
-		return minBookName;
+	public double getOverallRating() {
+		return overallRating;
 	}
 
-	public void setMinBookName(String minBookName) {
-		this.minBookName = minBookName;
+	public void setOverallRating(double overallRating) {
+		this.overallRating = overallRating;
 	}
 
-	public String getFullBookName() {
-		return fullBookName;
-	}
-
-	public void setFullBookName(String fullBookName) {
-		this.fullBookName = fullBookName;
-	}
-
-	public String getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
-	public double getRating() {
-		return rating;
-	}
-
-	public void setRating(double rating) {
-		this.rating = rating;
-	}
-
-	public int getReaderRating() {
+	public Rating getReaderRating() {
 		return readerRating;
 	}
 
-	public void setReaderRating(int readerRating) {
+	public void setReaderRating(Rating readerRating) {
 		this.readerRating = readerRating;
 	}
 
 	@Override
 	public String toString() {
-		return "ReaderBook [id=" + id + ", bookId=" + bookId + ", minBookName=" + minBookName + ", fullBookName="
-				+ fullBookName + ", bookPic=" + Arrays.toString(bookPic) + ", encodedBookPic=" + encodedBookPic
-				+ ", author=" + author + ", rating=" + rating + ", readerRating=" + readerRating + ", reader=" + reader
-				+ ", shelves=" + shelves + ", dateRead=" + dateRead + ", dateAdded=" + dateAdded + "]";
+		return "ReaderBook [id=" + id + ", book=" + book + ", bookPic=" + Arrays.toString(bookPic) + ", encodedBookPic="
+				+ encodedBookPic + ", overallRating=" + overallRating + ", readerRating=" + readerRating + ", reader="
+				+ reader + ", shelves=" + shelves + ", dateRead=" + dateRead + ", dateAdded=" + dateAdded + "]";
 	}
 
 }

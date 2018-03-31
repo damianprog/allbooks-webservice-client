@@ -1,12 +1,15 @@
 package com.allbooks.webapp.service;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -17,43 +20,46 @@ import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.Review;
+import com.allbooks.webapp.exceptions.entity.AccessForbidden;
 import com.allbooks.webapp.utils.AverageRating;
+import com.allbooks.webapp.utils.entity.HelperPage;
+import com.allbooks.webapp.utils.webservice.UtilsWebservice;
+import com.allbooks.webapp.webservice.BookWebservice;
 
 @Service
 public class BookServiceImpl implements BookService {
 
 	@Autowired
-	RestTemplate restTemplate;
-
-	@Value("${service.url.name}")
-	private String serviceUrlName;
+	BookWebservice bookWebservice;
 
 	@Autowired
 	ReaderService readerService;
-	
-	@Override
-	public int getBookId(String bookName) {
 
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("title", bookName);
-		Book book = restTemplate.getForObject(serviceUrlName + "/books/title/{title}", Book.class, params);
+	@Autowired
+	private UtilsWebservice utilsWebservice;
 
-		int bookId = book.getId();
-
-		return bookId;
+	public BookServiceImpl(BookWebservice bookWebservice, ReaderService readerService,UtilsWebservice utilsWebservice) {
+		this.bookWebservice = bookWebservice;
+		this.readerService = readerService;
+		this.utilsWebservice = utilsWebservice;
 	}
 
 	@Override
-	public Rating getReaderRatingObject(int id, String bookName) {
+	public int getBookId(String bookName) {
 
-		int bookId = getBookId(bookName);
+		return utilsWebservice.getBookId(bookName);
 
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("readerId", String.valueOf(id));
-		params.put("bookId", String.valueOf(bookId));
+	}
 
-		Rating rating = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/books/{bookId}/ratings",
-				Rating.class, params);
+	@Override
+	public Rating getReaderRatingObject(String bookName, String username) {
+
+		Reader reader = readerService.getReaderByUsername(username);
+
+		Rating rating = bookWebservice.getReaderRatingObject(utilsWebservice.getBookId(bookName), reader.getId());
+
+		if (rating == null)
+			rating = new Rating();
 
 		return rating;
 	}
@@ -61,21 +67,14 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public void submitRating(Rating rating) {
 
-		restTemplate.put(serviceUrlName + "/ratings", rating);
+		bookWebservice.submitRating(rating);
 
 	}
 
 	@Override
 	public double getOverallRating(String bookName) {
 
-		int bookId = getBookId(bookName);
-
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("bookId", String.valueOf(bookId));
-
-		ResponseEntity<Rating[]> responseEntity = restTemplate.getForEntity(serviceUrlName + "/books/{bookId}/ratings",
-				Rating[].class, params);
-		Rating[] ratings = responseEntity.getBody();
+		Rating[] ratings = bookWebservice.getBookRatings(utilsWebservice.getBookId(bookName));
 
 		return AverageRating.getAverageRating(ratings);
 	}
@@ -83,29 +82,29 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public void submitReview(Review review) {
 
-		restTemplate.postForEntity(serviceUrlName + "/reviews", review, Review.class);
+		bookWebservice.submitReview(review);
 
 	}
 
 	@Override
 	public List<Review> getBookReviews(String bookName) {
 
-		int bookId = getBookId(bookName);
+		Review[] reviews = bookWebservice.getBookReviews(utilsWebservice.getBookId(bookName));
 
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("bookId", String.valueOf(bookId));
+		List<Review> reviewList = Arrays.asList(reviews);
 
-		ResponseEntity<Review[]> responseEntity = restTemplate.getForEntity(serviceUrlName + "/books/{bookId}/reviews",
-				Review[].class, params);
-		List<Review> reviewList = Arrays.asList(responseEntity.getBody());
+		if (reviewList != null)
+			reviewList.sort(Comparator.comparingInt(Review::getId).reversed());
 
 		return reviewList;
 	}
 
 	@Override
-	public int getReaderRating(int readerId, String bookName) {
+	public int getReaderRating(String username, String bookName) {
 
-		Rating rating = getReaderRatingObject(readerId, bookName);
+		Reader reader = readerService.getReaderByUsername(username);
+
+		Rating rating = bookWebservice.getReaderRatingObject(utilsWebservice.getBookId(bookName), reader.getId());
 
 		if (rating == null)
 			return 0;
@@ -116,146 +115,96 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public void dropLike(int reviewId) {
 
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("reviewId", String.valueOf(reviewId));
+		Review review = bookWebservice.getReviewById(reviewId);
 
-		Review review = restTemplate.getForObject(serviceUrlName + "/reviews/{reviewId}", Review.class, params);
+		review.setLikes(review.getLikes() + 1);
 
-		int reviewLikes = review.getLikes();
-		reviewLikes++;
-		review.setLikes(reviewLikes);
-
-		restTemplate.put(serviceUrlName + "/reviews", review);
+		bookWebservice.updateReview(review);
 	}
 
 	@Override
-	public int[] howManyRatesAndReviews(String bookName) {
+	public Map<String, Integer> ratingsAndReviewsQuantity(String bookName) {
 
-		int ratingsQuantity = 0;
-		int reviewsQuantity = 0;
+		int bookId = utilsWebservice.getBookId(bookName);
 
-		int[] ratesAndReviews = new int[2];
+		Rating[] ratings = bookWebservice.getBookRatings(bookId);
 
-		int bookId = getBookId(bookName);
+		Review[] reviews = bookWebservice.getBookReviews(bookId);
 
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("bookId", String.valueOf(bookId));
+		Map<String, Integer> map = new HashMap<>();
+		map.put("ratings", ratings.length);
+		map.put("reviews", reviews.length);
 
-		ResponseEntity<Rating[]> responseEntity = restTemplate.getForEntity(serviceUrlName + "/books/{bookId}/ratings",
-				Rating[].class, params);
-		Rating[] ratings = responseEntity.getBody();
-
-		ResponseEntity<Review[]> responseEntity2 = restTemplate.getForEntity(serviceUrlName + "/books/{bookId}/reviews",
-				Review[].class, params);
-		Review[] reviews = responseEntity2.getBody();
-
-		for (Rating rating : ratings) {
-			ratingsQuantity++;
-		}
-
-		for (Review review : reviews) {
-			reviewsQuantity++;
-		}
-
-		ratesAndReviews[0] = ratingsQuantity;
-		ratesAndReviews[1] = reviewsQuantity;
-
-		return ratesAndReviews;
+		return map;
 	}
 
 	@Override
 	public String getBookName(int bookId) {
 
-		Map<String, String> params = new HashMap<>();
-		params.put("bookId", String.valueOf(bookId));
-
-		Book book = restTemplate.getForObject(serviceUrlName + "/books/{bookId}", Book.class, params);
-		String bookName = book.getMiniTitle();
-
-		return bookName;
+		return utilsWebservice.getBookName(bookId);
 	}
 
 	@Override
-	public Review getOneReview(int reviewId) {
+	public Review getReviewById(int reviewId) {
 
-		Map<String, String> params = new HashMap<>();
-		params.put("reviewId", String.valueOf(reviewId));
+		return bookWebservice.getReviewById(reviewId);
 
-		Review review = restTemplate.getForObject(serviceUrlName + "/reviews/{reviewId}", Review.class, params);
-
-		return review;
 	}
 
 	@Override
 	public void submitComment(Comment comment) {
-		restTemplate.postForObject(serviceUrlName + "/comments", comment, Comment.class);
+		bookWebservice.submitComment(comment);
 	}
 
 	@Override
 	public List<Comment> getReviewComments(int reviewId) {
 
-		Map<String, String> params = new HashMap<>();
-		params.put("reviewId", String.valueOf(reviewId));
+		List<Comment> commentsList = Arrays.asList(bookWebservice.getReviewComments(reviewId));
 
-		ResponseEntity<Comment[]> responseEntity = restTemplate
-				.getForEntity(serviceUrlName + "/reviews/{reviewId}/comments", Comment[].class, params);
-
-		List<Comment> commentsList = Arrays.asList(responseEntity.getBody());
-
+		commentsList.sort(Comparator.comparingInt(Comment::getId).reversed());
+		
 		return commentsList;
 	}
 
 	@Override
 	public void saveReaderBook(ReaderBook readerBook) {
 
-		restTemplate.put("http://localhost:9000/readerbooks", readerBook);
+		bookWebservice.saveReaderBook(readerBook);
 
 	}
 
 	@Override
-	public ReaderBook getReaderBook(String bookName, int readerId) {
+	public ReaderBook getReaderBook(int bookId, String username) {
 
-		int bookId = getBookId(bookName);
+		Reader reader = readerService.getReaderByUsername(username);
 
-		Map<String, String> params = new HashMap<>();
-		params.put("readerId", String.valueOf(readerId));
-		params.put("bookId", String.valueOf(bookId));
+		ReaderBook readerBook = bookWebservice.getReaderBook(bookId, reader.getId());
 
-		ReaderBook readerBook = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/readerbooks/{bookId}",
-				ReaderBook.class, params);
+		if (readerBook == null)
+			readerBook = new ReaderBook();
 
 		return readerBook;
 
 	}
 
 	@Override
-	public void updateReaderBook(String shelves, int bookId, int readerId) {
-
-		Map<String, String> params = new HashMap<>();
-		params.put("readerId", String.valueOf(readerId));
-		params.put("bookId", String.valueOf(bookId));
+	public void updateReaderBookShelves(String shelves, int bookId, int readerId) {
 
 		Reader reader = readerService.getReaderById(readerId);
-		
-		ReaderBook readerBook = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/readerbooks/{bookId}",
-				ReaderBook.class, params);
+
+		ReaderBook readerBook = bookWebservice.getReaderBook(bookId, readerId);
+
 		readerBook.setShelves(shelves);
 		readerBook.setReader(reader);
 
-		restTemplate.put("http://localhost:9000/readerbooks", readerBook);
+		bookWebservice.updateReaderBook(readerBook);
 
 	}
 
 	@Override
 	public List<ReaderBook> getReaderBooks(int id) {
 
-		Map<String, String> params = new HashMap<>();
-		params.put("readerId", String.valueOf(id));
-
-		ResponseEntity<ReaderBook[]> responseEntity = restTemplate
-				.getForEntity(serviceUrlName + "/readers/{readerId}/readerbooks", ReaderBook[].class, params);
-
-		List<ReaderBook> readerBooksList = Arrays.asList(responseEntity.getBody());
+		List<ReaderBook> readerBooksList = Arrays.asList(bookWebservice.getReaderBooks(id));
 
 		return readerBooksList;
 
@@ -264,63 +213,63 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public Book getBook(int bookId) {
 
-		Map<String, String> params = new HashMap<>();
-		params.put("bookId", String.valueOf(bookId));
-
-		Book book = restTemplate.getForObject(serviceUrlName + "/books/{bookId}", Book.class, params);
-
-		return book;
+		return bookWebservice.getBook(bookId);
 	}
 
 	@Override
 	public void saveReadDate(String dateRead, int bookId, int id) {
 
-		String bookName = getBookName(bookId);
+		String bookName = utilsWebservice.getBookName(bookId);
 		Reader reader = readerService.getReaderById(id);
-		ReaderBook readerBook = getReaderBook(bookName, id);
+		ReaderBook readerBook = bookWebservice.getReaderBook(bookId, id);
 		readerBook.setDateRead(dateRead);
 		readerBook.setReader(reader);
 
-		restTemplate.put(serviceUrlName + "/readerbooks", readerBook);
+		bookWebservice.updateReaderBook(readerBook);
 	}
 
 	@Override
 	public Book getBookByName(String bookname) {
-		Map<String, String> params = new HashMap<>();
-		params.put("title", bookname);
 
-		Book book = restTemplate.getForObject(serviceUrlName + "/books/title/{title}", Book.class, params);
-
-		return book;
+		return bookWebservice.getBookByName(bookname);
 	}
 
 	@Override
 	public void saveBook(Book book) {
-		restTemplate.postForObject(serviceUrlName + "/books", book, Book.class);
+		bookWebservice.saveBook(book);
 	}
 
 	@Override
 	public void updateReview(Review review) {
-		restTemplate.put(serviceUrlName + "/reviews", review);
+
+		bookWebservice.updateReview(review);
 
 	}
 
 	@Override
 	public void deleteReviewById(int reviewId) {
 
-		Map<String, Integer> params = new HashMap<>();
-		params.put("reviewId", reviewId);
-
-		restTemplate.delete(serviceUrlName + "/reviews/{reviewId}", params);
+		bookWebservice.deleteReviewById(reviewId);
 	}
 
 	@Override
-	public void deleteReaderBookById(int id) {
+	public void deleteReaderBookById(int bookId, String username) {
+		
+		Reader reader = readerService.getReaderByUsername(username);
 
-		Map<String, Integer> params = new HashMap<>();
-		params.put("readerBookId", id);
+		bookWebservice.deleteReaderBookByReaderIdAndBookId(reader.getId(), bookId);
+	}
 
-		restTemplate.delete(serviceUrlName + "/readerbooks/{readerBookId}", params);
+	@Override
+	public ReaderBook getReaderBookById(int readerBookId) {
+
+		return bookWebservice.getReaderBookById(readerBookId);
+	}
+
+	@Override
+	public Page<Book> getBooksByCategory(String category, int page) {
+
+		return bookWebservice.getBooksByCategory(category, page);
 	}
 
 }

@@ -24,21 +24,22 @@
 
 		<h2>Add Book</h2>
 		<hr />
-		<form:form action="addBook" modelAttribute="book" method="POST" enctype="multipart/form-data">
+		<form:form action="addBook" modelAttribute="book" method="POST"
+			enctype="multipart/form-data">
 			<table>
 				<tr>
 					<td class="addingName">Book Photo (JPG extension, please)</td>
 				</tr>
 				<tr>
 					<td class="bottomTd"><input type="file" name="bookPhotoTemp"
-							class="inputBox" required="required" /></td>
+						class="inputBox" required="required" /></td>
 				</tr>
 				<tr>
 					<td class="addingName">Author Photo (JPG extension, please)</td>
 				</tr>
 				<tr>
 					<td class="bottomTd"><input type="file" name="authorPhotoTemp"
-							class="inputBox" required="required" /></td>
+						class="inputBox" required="required" /></td>
 				</tr>
 				<tr>
 					<td class="addingName">Full Title</td>
@@ -81,7 +82,7 @@
 						marks separated by right slash)</td>
 				</tr>
 				<tr>
-					<!-- separate it in controller when showing book -->
+
 					<td class="bottomTd"><form:textarea path="bookQuotes"
 							class="smallerArea" required="required" /></td>
 				</tr>
@@ -120,6 +121,30 @@
 				<tr>
 					<td class="bottomTd"><form:input path="buyBook"
 							class="inputBox" required="required" /></td>
+				</tr>
+				<tr>
+					<td class="addingName">Category</td>
+				</tr>
+				<tr>
+					<td class="bottomTd"><form:select path="category"
+							class="inputBox">
+							<option value="art">Art</option>
+							<option value="biography">Biography</option>
+							<option value="business">Business</option>
+							<option value="children">Children's</option>
+							<option value="christian">Christian</option>
+							<option value="classics">Classics</option>
+							<option value="comics">Comics</option>
+							<option value="cookbooks">Cookbooks</option>
+							<option value="ebooks">Ebooks</option>
+							<option value="fantasy">Fantasy</option>
+							<option value="fiction">Fiction</option>
+							<option value="graphicNovels">Graphic Novels</option>
+							<option value="historicalFiction">Historical Fiction</option>
+							<option value="history">History</option>
+							<option value="horror">Horror</option>
+							<option value="memoir">Memoir</option>
+						</form:select></td>
 				</tr>
 				<tr>
 					<td class="addingName">Description</td>

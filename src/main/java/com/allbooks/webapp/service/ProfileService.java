@@ -15,7 +15,7 @@ public interface ProfileService {
 
 	public void saveFriends(Friends friends);
 
-	public Friends areTheyFriends(String reader1, String reader2);
+	public boolean areTheyFriends(String reader1, String reader2);
 
 	public List<Pending> getFriendsInvites(int id);
 
@@ -36,6 +36,8 @@ public interface ProfileService {
 	public void savePending(Pending pending);
 
 	public Pending getPending(String name, String username);
+	
+	public boolean checkPending(String name, String username);
 
 	public void deletePending(int pendingIdInt);
 

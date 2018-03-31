@@ -19,6 +19,21 @@ body{
 	float:left;
 }
 
+.rounded{
+	border-radius: 5px;
+}
+
+#like{
+	background-color:#3b5998;
+	border-radius: 5px;
+	color:white;
+}
+
+.submit{
+	background-color: #fdd05f;
+	border-radius: 5px;
+}
+
 #desc{
 	 vertical-align: text-top;
 	 width:455px;

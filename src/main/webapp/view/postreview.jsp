@@ -21,7 +21,8 @@
 		<jsp:include page='/view/header.jsp' />
 
 		<div>
-			<form:form action="/reader/postReview" modelAttribute="rating" method="POST">
+			<form:form action="/reader/postReview" modelAttribute="rating"
+				method="POST">
 				<table>
 					<tr>
 						<td>
@@ -57,42 +58,46 @@
 								My Rating ${rating.rate}
 								<input type="hidden" name="updateRating" value="true">
 								</c:otherwise>
-							</c:choose> <form:select path="rate">
+							</c:choose> <form:select class="rounded" path="rate">
 								<form:option value="1" label="1" />
 								<form:option value="2" label="2" />
 								<form:option value="3" label="3" />
 								<form:option value="4" label="4" />
 								<form:option value="5" label="5" selected="selected" />
-						</form:select></td>
-						<form:hidden path="id" />
+
+							</form:select></td>
 						<form:hidden path="bookId" />
 						<form:hidden path="readerIdentity" />
+						<form:hidden path="id" />
 
 
 					</tr>
 					<tr>
-						<td><c:choose>
-								<c:when test="${readerBook.id == 0}">
-									<br>Add this book to your books
+						<td><form:form modelAttribute="readerBook">
+								<c:choose>
+									<c:when test="${readerBook.id == 0}">
+										<br>Add this book to your books
 									<input type="hidden" name="updateReaderBook" value="false">
-								</c:when>
-								<c:otherwise>
-									<br>Current State:${readerBook.shelves}
+									</c:when>
+									<c:otherwise>
+										<br>Current State:${readerBook.shelves}
 									<input type="hidden" name="updateReaderBook" value="true">
-								</c:otherwise>
-							</c:choose>
-							<form:form modelAttribute="readerBook" method="POST">
-							<form:hidden path="id" />
+
+									</c:otherwise>
+								</c:choose>
+
+
 								<form:hidden path="dateAdded" />
-								<form:hidden path="minBookName" />
-								<form:hidden path="fullBookName" />
-								<form:hidden path="author" />
-								<form:hidden path="rating" /> <form:select path="shelves">
-								<form:option value="Read" label="Read" />
-								<form:option value="Currently Reading" label="Currently Reading" />
-								<form:option value="Want to Read" label="Want to Read" />
-						</form:select> <input type="hidden" name="postReview" value="false">
-						</form:form></td>
+								<form:select class="rounded" path="shelves">
+									<form:option value="Read" label="Read" />
+									<form:option value="Currently Reading"
+										label="Currently Reading" />
+									<form:option value="Want to Read" label="Want to Read" />
+								</form:select>
+								<input type="hidden" name="postReview" value="false">
+							</form:form> <input type="hidden" name="readerBookId"
+							value="${readerBook.id}" /></td>
+
 					</tr>
 					<tr>
 						<td><hr></td>
@@ -103,11 +108,11 @@
 					<tr>
 						<td>Title of Review<br> <input id="reviewTitle"
 							name="title" required="required" /> <br> Content<br> <textarea
-								id="reviewBox" name="text" required="required">
-							</textarea> <br> 
+								id="reviewBox" name="text" required="required"></textarea> <br>
 						</td>
 					</tr>
 				</table>
+
 				<input type="submit" value="Submit">
 			</form:form>
 		</div>

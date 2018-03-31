@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import com.allbooks.webapp.entity.MailBuilder;
-import com.allbooks.webapp.entity.MailBuilder.TokenType;
-import com.allbooks.webapp.entity.OnRegistrationCompleteEvent;
+import com.allbooks.webapp.utils.entity.MailBuilder;
+import com.allbooks.webapp.utils.entity.OnRegistrationCompleteEvent;
+import com.allbooks.webapp.utils.entity.MailBuilder.TokenType;
 
 @Component
 public class RegistrationListener implements

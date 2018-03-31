@@ -1,11 +1,9 @@
 package com.allbooks.webapp.service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,14 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.allbooks.webapp.entity.Book;
-import com.allbooks.webapp.entity.Comment;
-import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.ReaderRole;
 import com.allbooks.webapp.entity.Review;
-import com.allbooks.webapp.entity.VerificationToken;
 
 @Service
 public class ReaderServiceImpl implements ReaderService {

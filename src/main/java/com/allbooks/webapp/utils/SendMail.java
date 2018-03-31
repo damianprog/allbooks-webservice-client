@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import com.allbooks.webapp.entity.MailBuilder;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.service.TokenService;
+import com.allbooks.webapp.utils.entity.MailBuilder;
 
 @Service
 public class SendMail {
