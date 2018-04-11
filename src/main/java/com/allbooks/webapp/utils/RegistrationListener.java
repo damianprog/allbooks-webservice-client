@@ -6,16 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import com.allbooks.webapp.utils.entity.MailBuilder;
 import com.allbooks.webapp.utils.entity.OnRegistrationCompleteEvent;
-import com.allbooks.webapp.utils.entity.MailBuilder.TokenType;
+import com.allbooks.webapp.utils.service.EmailService;
 
 @Component
 public class RegistrationListener implements
 ApplicationListener<OnRegistrationCompleteEvent>{
 	
 	@Autowired
-	SendMail sendMail;
+	EmailService emailService;
 	
 	@Override
 	public void onApplicationEvent(OnRegistrationCompleteEvent event) {
@@ -28,16 +27,7 @@ ApplicationListener<OnRegistrationCompleteEvent>{
 	
 	public void confirmRegistration(OnRegistrationCompleteEvent event) throws MessagingException {
 		
-		MailBuilder mailBuilder = new MailBuilder();
-		
-		mailBuilder.setReader(event.getReader());
-		mailBuilder.setSubject("Registration Confirmation");
-		mailBuilder.setTokenType(TokenType.REGISTRATION_CONFIRM);
-		mailBuilder.setSubjectHeader("Thanks for joining us!");
-		mailBuilder.setSubjectMessage("Click on the link below to confirm your account!");
-		mailBuilder.setTemplateName("template");
-		
-		sendMail.send(mailBuilder);
+		emailService.sendRegistrationConfirmation(event.getReader());
 		
 	}
 	

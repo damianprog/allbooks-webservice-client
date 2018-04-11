@@ -6,7 +6,7 @@ import com.allbooks.webapp.entity.Details;
 import com.allbooks.webapp.entity.Friends;
 import com.allbooks.webapp.entity.PasswordToken;
 import com.allbooks.webapp.entity.Pending;
-import com.allbooks.webapp.entity.ProfilePics;
+import com.allbooks.webapp.entity.ProfilePhoto;
 import com.allbooks.webapp.entity.Reader;
 
 public interface ProfileService {
@@ -29,9 +29,9 @@ public interface ProfileService {
 
 	public void saveDetails(Details details);
 
-	public void saveProfilePics(ProfilePics profilePics, int readerId);
+	public void saveProfilePics(ProfilePhoto profilePics, int readerId);
 
-	public ProfilePics getProfilePics(int id);
+	public ProfilePhoto getProfilePicsByReaderId(int id);
 
 	public void savePending(Pending pending);
 

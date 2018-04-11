@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.allbooks.webapp.entity.Book;
+import com.allbooks.webapp.entity.Reader;
 
 public interface PhotoService {
 
@@ -19,5 +20,7 @@ public interface PhotoService {
 	public File convertMultipartToFile(MultipartFile file) throws IOException;
 
 	public byte[] resize(byte[] bookPicBytes, int width, int height) throws IOException;
+	
+	public Reader createProfilePhotoForReader(MultipartFile multipartFile,Reader reader) throws IOException;
 
 }

@@ -1,4 +1,4 @@
-package com.allbooks.webapp.utils.save;
+package com.allbooks.webapp.utils.service;
 
 import java.io.IOException;
 import java.util.Map;
@@ -16,7 +16,6 @@ import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.utils.LocalDateGetter;
 import com.allbooks.webapp.utils.entity.OnRegistrationCompleteEvent;
-import com.allbooks.webapp.utils.service.PhotoServiceImpl;
 
 @Service
 public class SaveServiceImpl implements SaveService {

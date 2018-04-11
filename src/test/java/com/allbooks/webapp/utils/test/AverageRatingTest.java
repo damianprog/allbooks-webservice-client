@@ -2,6 +2,7 @@ package com.allbooks.webapp.utils.test;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.allbooks.webapp.entity.Rating;
@@ -9,6 +10,13 @@ import com.allbooks.webapp.utils.AverageRating;
 
 public class AverageRatingTest {
 
+	AverageRating averageRating;
+
+	@Before
+	public void initFields() {
+		averageRating = new AverageRating();
+	}
+	
 	@Test
 	public void test() {
 		
@@ -21,7 +29,7 @@ public class AverageRatingTest {
 			
 		}
 		
-		assertEquals(3,AverageRating.getAverageRating(ratings));
+		assertEquals(3,averageRating.getAverageRating(ratings));
 		
 	}
 	

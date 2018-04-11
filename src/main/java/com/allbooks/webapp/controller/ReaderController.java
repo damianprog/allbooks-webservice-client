@@ -36,8 +36,8 @@ import com.allbooks.webapp.service.TokenService;
 import com.allbooks.webapp.utils.ReaderBooksHandler;
 import com.allbooks.webapp.utils.RegistrationConfirmation;
 import com.allbooks.webapp.utils.SubmitComment;
-import com.allbooks.webapp.utils.save.SaveService;
 import com.allbooks.webapp.utils.service.PhotoServiceImpl;
+import com.allbooks.webapp.utils.service.SaveService;
 
 @Controller
 @RequestMapping("/reader")
@@ -169,6 +169,8 @@ public class ReaderController {
 		if (bindingResult.hasErrors())
 			return "join";
 
+		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$ " + reader.getId());
+		
 		theModel.addAttribute("success", saveService.saveReader(reader));
 
 		return "saved";
@@ -236,7 +238,7 @@ public class ReaderController {
 			@ModelAttribute("readerBook") ReaderBook readerBook, HttpSession session, Principal principal,
 			RedirectAttributes ra) throws IOException {
 
-		saveService.saveReaderBook(readerBook,params ,principal.getName());
+		saveService.saveReaderBook(readerBook, params, principal.getName());
 
 		ra.addAttribute("bookName", params.get("bookName"));
 

@@ -3,7 +3,7 @@ package com.allbooks.webapp.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProfilePics {
+public class ProfilePhoto {
 
 	private int id;
 
@@ -11,11 +11,11 @@ public class ProfilePics {
 	private byte[] pic;
 	
 
-	public ProfilePics(byte[] pic) {
+	public ProfilePhoto(byte[] pic) {
 		this.pic = pic;
 	}
 
-	public ProfilePics() {
+	public ProfilePhoto() {
 	}
 
 	public int getId() {

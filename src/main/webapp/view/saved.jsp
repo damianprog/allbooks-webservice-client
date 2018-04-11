@@ -29,6 +29,7 @@
 		<c:choose>
 			<c:when test="${success == true }">
 				<h3>You've been successfully Registered</h3>
+				<p>The authentication link has been sent to given email</p>
 				<p><a href="/reader/main">Allbooks Home</a></p>
 				<p>or</p>
 				<p><a href="/login">Login Page</a></p>

@@ -26,7 +26,7 @@ public class Reader {
 
 	private Set<Role> roles;
 
-	private ProfilePics profilePics;
+	private ProfilePhoto profilePhoto;
 
 	private List<Reader> friends;
 
@@ -54,12 +54,12 @@ public class Reader {
 		this.friends = friends;
 	}
 
-	public ProfilePics getProfilePics() {
-		return profilePics;
+	public ProfilePhoto getProfilePhoto() {
+		return profilePhoto;
 	}
 
-	public void setProfilePics(ProfilePics profilePics) {
-		this.profilePics = profilePics;
+	public void setProfilePhoto(ProfilePhoto profilePhoto) {
+		this.profilePhoto = profilePhoto;
 	}
 
 	public List<ReaderBook> getReaderBooks() {

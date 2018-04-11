@@ -17,7 +17,7 @@ public class MultipartImageConverter {
 	@Autowired
 	ResizePhoto resizePhoto;
 	
-	public byte[] convertMultipartImage(MultipartFile mf, int width, int height) throws IOException {
+	public byte[] convert(MultipartFile mf, int width, int height) throws IOException {
 
 		File convFile = multipartToFile.convert(mf);
 

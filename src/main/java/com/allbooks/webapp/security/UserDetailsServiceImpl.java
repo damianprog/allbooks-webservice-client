@@ -22,8 +22,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
 	ReaderService readerService;
-	
-	@Autowired 
+
+	@Autowired
 	private HttpSession httpSession;
 
 	@Override
@@ -44,8 +44,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 					grantedAuthorities.add(new SimpleGrantedAuthority(role.getRole()));
 				}
 
-				httpSession.setAttribute("readerId", reader.getId());
-				
+				httpSession.setAttribute("readerSession", reader);
+
 				return new org.springframework.security.core.userdetails.User(reader.getUsername(),
 						reader.getPassword(), grantedAuthorities);
 			}

@@ -1,10 +1,13 @@
 package com.allbooks.webapp.utils;
 
+import org.springframework.stereotype.Component;
+
 import com.allbooks.webapp.entity.Rating;
 
+@Component
 public class AverageRating {
 
-	public static int getAverageRating(Rating[] ratings) {
+	public int getAverageRating(Rating[] ratings) {
 		
 		int sum = 0;
 		int avg = 0;

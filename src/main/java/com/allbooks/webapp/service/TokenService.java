@@ -12,12 +12,12 @@ public interface TokenService {
 
 	public PasswordToken getPasswordTokenByCredentials(int readerId, String token);
 
-	public void deletePasswordToken(int readerId);
+	public void deletePasswordTokenByReaderId(int readerId);
 
 	public void createVerificationToken(Reader reader, String verificationToken);
 
-	public VerificationToken getTokenByReaderId(int readerId);
+	public VerificationToken getVerificationTokenByReaderId(int readerId);
 
-	public void deleteVerificationTokenTokenById(int tokenId);
+	public void deleteVerificationTokenById(int tokenId);
 
 }

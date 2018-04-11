@@ -9,10 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.allbooks.webapp.entity.Book;
+import com.allbooks.webapp.entity.ProfilePhoto;
+import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.photos.component.Base64Encoder;
 import com.allbooks.webapp.photos.component.BookPicsEncoder;
 import com.allbooks.webapp.photos.component.MultipartImageConverter;
 import com.allbooks.webapp.photos.component.MultipartToFile;
+import com.allbooks.webapp.photos.component.ProfilePhotoCreator;
 import com.allbooks.webapp.photos.component.ResizePhoto;
 
 @Service
@@ -33,6 +36,9 @@ public class PhotoServiceImpl implements PhotoService {
 	@Autowired
 	ResizePhoto resizePhoto;
 
+	@Autowired
+	ProfilePhotoCreator profilePhotoCreator;
+	
 	@Override
 	public String getEncodedImage(byte[] theEncodedBase64) {
 
@@ -48,7 +54,7 @@ public class PhotoServiceImpl implements PhotoService {
 	@Override
 	public byte[] convertMultipartImage(MultipartFile mf, int width, int height) throws IOException {
 
-		return multipartImageConverter.convertMultipartImage(mf, width, height);
+		return multipartImageConverter.convert(mf, width, height);
 
 	}
 
@@ -62,6 +68,11 @@ public class PhotoServiceImpl implements PhotoService {
 	public byte[] resize(byte[] bookPicBytes, int width, int height) throws IOException {
 
 		return resizePhoto.resize(bookPicBytes, width, height);
+	}
+
+	@Override
+	public Reader createProfilePhotoForReader(MultipartFile multipartFile,Reader reader) throws IOException {
+		return profilePhotoCreator.createPhotoForReader(multipartFile, reader);
 	}
 
 }

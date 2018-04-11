@@ -9,7 +9,7 @@ public interface ReaderService {
 
 	public boolean saveReader(Reader theReader);
 
-	public Reader getReader(String login, String password);
+	public Reader getReaderByUsernameAndPassword(String username, String password);
 
 	public Reader getReaderByUsername(String login);
 
@@ -17,7 +17,7 @@ public interface ReaderService {
 
 	public boolean checkReaderLogin(String username);
 
-	public List<Review> getReaderReviews(String username);
+	public List<Review> getReviewsByUsername(String username);
 
 	public Reader getReaderById(int readerId);
 

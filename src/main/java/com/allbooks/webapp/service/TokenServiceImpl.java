@@ -1,65 +1,43 @@
 package com.allbooks.webapp.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.allbooks.webapp.entity.PasswordToken;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.VerificationToken;
+import com.allbooks.webapp.webservice.TokenWebservice;
 
 @Service
 public class TokenServiceImpl implements TokenService {
 
 	@Autowired
-	RestTemplate restTemplate;
-
-	@Value("${service.url.name}")
-	String serviceUrlName;
+	TokenWebservice tokenWebservice;
 
 	@Override
 	public void createPasswordToken(Reader reader, String token) {
 
 		PasswordToken passwordToken = new PasswordToken(token, reader);
-
-		restTemplate.postForObject(serviceUrlName + "/readers/passwordTokens", passwordToken, PasswordToken.class);
+		tokenWebservice.savePasswordToken(passwordToken);
 
 	}
 
 	@Override
 	public PasswordToken getPasswordTokenByReaderId(int readerId) {
 
-		Map<String, Integer> params = new HashMap<>();
-		params.put("readerId", readerId);
-
-		PasswordToken passwordToken = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/passwordTokens",
-				PasswordToken.class, params);
-
-		return passwordToken;
+		return tokenWebservice.getPasswordTokenByReaderId(readerId);
 	}
 
 	@Override
 	public PasswordToken getPasswordTokenByCredentials(int readerId, String token) {
 
-		Map<String, String> params = new HashMap<>();
-		params.put("readerId", String.valueOf(readerId));
-		params.put("passwordToken", token);
-
-		return restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/passwordTokens/{passwordToken}",
-				PasswordToken.class, params);
+		return tokenWebservice.getPasswordTokenByCredentials(readerId, token);
 	}
 
 	@Override
-	public void deletePasswordToken(int readerId) {
-		Map<String, Integer> params = new HashMap<>();
-		params.put("readerId", readerId);
+	public void deletePasswordTokenByReaderId(int readerId) {
 
-		restTemplate.delete(serviceUrlName + "/readers/{readerId}/passwordTokens", params);
-
+		tokenWebservice.deletePasswordTokenByReaderId(readerId);
 	}
 
 	@Override
@@ -67,29 +45,20 @@ public class TokenServiceImpl implements TokenService {
 
 		VerificationToken tokenObj = new VerificationToken(token, reader);
 
-		restTemplate.postForObject(serviceUrlName + "/readers/verificationTokens", tokenObj, VerificationToken.class);
+		tokenWebservice.saveVerificationToken(tokenObj);
 
 	}
 
 	@Override
-	public VerificationToken getTokenByReaderId(int readerId) {
+	public VerificationToken getVerificationTokenByReaderId(int readerId) {
 
-		Map<String, Integer> params = new HashMap<>();
-		params.put("readerId", readerId);
-
-		VerificationToken verificationToken = restTemplate.getForObject(
-				serviceUrlName + "/readers/{readerId}/verificationTokens", VerificationToken.class, params);
-
-		return verificationToken;
+		return tokenWebservice.getVerificationTokenByReaderId(readerId);
 	}
 
 	@Override
-	public void deleteVerificationTokenTokenById(int tokenId) {
+	public void deleteVerificationTokenById(int tokenId) {
 
-		Map<String, Integer> params = new HashMap<>();
-		params.put("tokenId", tokenId);
-
-		restTemplate.delete(serviceUrlName + "/verificationTokens/{tokenId}", params);
+		tokenWebservice.deleteVerificationTokenTokenById(tokenId);
 	}
 
 }

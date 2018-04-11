@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.allbooks.webapp.entity.Book;
-import com.allbooks.webapp.photos.component.MultipartImageConverter;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.ProfileService;
 import com.allbooks.webapp.service.ReaderService;
@@ -28,19 +27,17 @@ public class AdminController {
 
 	@Autowired
 	BookService bookService;
-	
+
 	@Autowired
 	ReaderService readerService;
-	
+
 	@Autowired
 	PhotoServiceImpl photoService;
 
 	@GetMapping("/addBookPage")
 	public String addBook(Model theModel) {
 
-		Book book = new Book();
-
-		theModel.addAttribute("book", book);
+		theModel.addAttribute("book", new Book());
 
 		return "addbook";
 	}

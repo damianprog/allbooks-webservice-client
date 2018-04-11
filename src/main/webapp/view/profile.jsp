@@ -56,10 +56,12 @@
 							<a class="blackRefNon" href="/profile/showEdit">(edit
 								profile)</a>
 						</c:when>
-						<c:when test="${invite == true}">
+						<c:when test="${not empty invite}">
 							<c:url var="friendUrl" value="/profile/inviteFriend">
+								<c:param name="recipentId" value="${reader.id}" />
+								<c:param name="senderId" value="${readerSession.id}" />
 								<c:param name="recipentLogin" value="${reader.username}" />
-								<c:param name="senderLogin" value="${principalName}" />
+								<c:param name="senderLogin" value="${readerSession.username}" />
 							</c:url>
 							<c:choose>
 								<c:when test="${pending == false}">
@@ -230,8 +232,10 @@
 											<c:when test="${reader.username == principalName }">
 												<form:form action="/profile/deleteFriends" method="GET"
 													id="deleteForm">
-													<input type="hidden" name="reader2Id"
+													<input type="hidden" name="friendId"
 														value="${tempFriends.id}">
+														<input type="hidden" name="loggedReaderId"
+														value="${readerSession.id}">
 													<input type="submit" value="Delete" />
 												</form:form>
 											</c:when>

@@ -6,13 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Comment;
@@ -20,9 +16,8 @@ import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.Review;
-import com.allbooks.webapp.exceptions.entity.AccessForbidden;
 import com.allbooks.webapp.utils.AverageRating;
-import com.allbooks.webapp.utils.entity.HelperPage;
+import com.allbooks.webapp.utils.Sorter;
 import com.allbooks.webapp.utils.webservice.UtilsWebservice;
 import com.allbooks.webapp.webservice.BookWebservice;
 
@@ -38,11 +33,11 @@ public class BookServiceImpl implements BookService {
 	@Autowired
 	private UtilsWebservice utilsWebservice;
 
-	public BookServiceImpl(BookWebservice bookWebservice, ReaderService readerService,UtilsWebservice utilsWebservice) {
-		this.bookWebservice = bookWebservice;
-		this.readerService = readerService;
-		this.utilsWebservice = utilsWebservice;
-	}
+	@Autowired
+	Sorter sorter;
+	
+	@Autowired
+	AverageRating averageRating;
 
 	@Override
 	public int getBookId(String bookName) {
@@ -76,7 +71,7 @@ public class BookServiceImpl implements BookService {
 
 		Rating[] ratings = bookWebservice.getBookRatings(utilsWebservice.getBookId(bookName));
 
-		return AverageRating.getAverageRating(ratings);
+		return averageRating.getAverageRating(ratings);
 	}
 
 	@Override
@@ -89,12 +84,10 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public List<Review> getBookReviews(String bookName) {
 
-		Review[] reviews = bookWebservice.getBookReviews(utilsWebservice.getBookId(bookName));
-
-		List<Review> reviewList = Arrays.asList(reviews);
+		List<Review> reviewList = Arrays.asList(bookWebservice.getBookReviews(utilsWebservice.getBookId(bookName)));
 
 		if (reviewList != null)
-			reviewList.sort(Comparator.comparingInt(Review::getId).reversed());
+			sorter.sortReviewsDescending(reviewList);
 
 		return reviewList;
 	}
@@ -162,7 +155,7 @@ public class BookServiceImpl implements BookService {
 		List<Comment> commentsList = Arrays.asList(bookWebservice.getReviewComments(reviewId));
 
 		commentsList.sort(Comparator.comparingInt(Comment::getId).reversed());
-		
+
 		return commentsList;
 	}
 
@@ -254,7 +247,7 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public void deleteReaderBookById(int bookId, String username) {
-		
+
 		Reader reader = readerService.getReaderByUsername(username);
 
 		bookWebservice.deleteReaderBookByReaderIdAndBookId(reader.getId(), bookId);

@@ -19,12 +19,12 @@ public class TokenVerification {
 
 	public boolean verifyToken(Reader reader, String token) {
 
-		VerificationToken tokenObj = tokenService.getTokenByReaderId(reader.getId());
+		VerificationToken tokenObj = tokenService.getVerificationTokenByReaderId(reader.getId());
 
 		if (token.equals(tokenObj.getToken())) {
 			reader.setEnabled(true);
 			readerService.updateReader(reader);
-			tokenService.deleteVerificationTokenTokenById(tokenObj.getId());
+			tokenService.deleteVerificationTokenById(tokenObj.getId());
 
 			return true;
 		} else

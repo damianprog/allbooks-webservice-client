@@ -1,50 +1,40 @@
 package com.allbooks.webapp.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.allbooks.webapp.entity.Details;
 import com.allbooks.webapp.entity.Friends;
-import com.allbooks.webapp.entity.PasswordToken;
 import com.allbooks.webapp.entity.Pending;
-import com.allbooks.webapp.entity.ProfilePics;
+import com.allbooks.webapp.entity.ProfilePhoto;
 import com.allbooks.webapp.entity.Reader;
+import com.allbooks.webapp.webservice.ProfileWebservice;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
 
 	@Autowired
-	RestTemplate restTemplate;
-
-	@Autowired
 	ReaderService readerService;
 
-	@Value("${service.url.name}")
-	String serviceUrlName;
+	@Autowired
+	ProfileWebservice profileWebservice;
 
 	@Override
 	public Details getDetails(int readerId) {
 
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("readerId", String.valueOf(readerId));
-
-		Details details = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/details", Details.class,
-				params);
-
-		return details;
+		return profileWebservice.getDetails(readerId);
 	}
 
 	@Override
 	public void saveFriends(Friends friends) {
-		restTemplate.put("http://localhost:9000/friends", friends);
+		profileWebservice.saveFriends(friends);
 	}
 
 	@Override
@@ -62,7 +52,7 @@ public class ProfileServiceImpl implements ProfileService {
 			}
 		}
 
-		if(friendship != null)
+		if (friendship != null)
 			return true;
 		else
 			return false;
@@ -71,81 +61,46 @@ public class ProfileServiceImpl implements ProfileService {
 	@Override
 	public List<Pending> getFriendsInvites(int readerId) {
 
-		Map<String, Integer> params = new HashMap<String, Integer>();
-		params.put("readerId", readerId);
-
-		ResponseEntity<Pending[]> response = restTemplate
-				.getForEntity(serviceUrlName + "/readers/{readerId}/friends/pending", Pending[].class, params);
-
-		Pending[] pendingArray = response.getBody();
-
-		List<Pending> readerPendings = new ArrayList<>();
-
-		for (Pending p : pendingArray) {
-			readerPendings.add(p);
-		}
-
-		return readerPendings;
+		return Arrays.asList(profileWebservice.getReaderPendings(readerId));
 	}
 
 	@Override
 	public Friends getFriendsById(int friendsIdInt) {
 
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("id", String.valueOf(friendsIdInt));
-
-		Friends friends = restTemplate.getForObject(serviceUrlName + "/friends/{id}", Friends.class, params);
-
-		return friends;
+		return profileWebservice.getFriendsById(friendsIdInt);
 	}
 
 	@Override
 	public void deleteFriends(int reader1, int reader2) {
 
-		Map<String, Integer> params = new HashMap<>();
-		params.put("reader1Id", reader1);
-		params.put("reader2Id", reader2);
-
-		restTemplate.delete(serviceUrlName + "/readers/{reader1Id}/friends/{reader2Id}", params);
+		profileWebservice.deleteFriends(reader1, reader2);
 
 	}
 
 	@Override
 	public List<Friends> getAllReaderFriends(int reader1) {
-		Map<String, Integer> params = new HashMap<String, Integer>();
-		params.put("readerId", reader1);
 
-		ResponseEntity<Friends[]> response = restTemplate.getForEntity(serviceUrlName + "/readers/{readerId}/friends",
-				Friends[].class, params);
-		Friends[] friendsArray = response.getBody();
+		return Arrays.asList(profileWebservice.getAllReaderFriends(reader1));
 
-		List<Friends> friendsList = new ArrayList<>();
-
-		for (Friends f : friendsArray)
-			friendsList.add(f);
-
-		return friendsList;
 	}
 
 	public List<Reader> getReaderFriends(int readerId) {
 
-		Map<String, Integer> params = new HashMap<String, Integer>();
-		params.put("readerId", readerId);
+		// TODO refactor it
 
-		ResponseEntity<Friends[]> response = restTemplate.getForEntity(serviceUrlName + "/readers/{readerId}/friends",
-				Friends[].class, params);
-		Friends[] friendsArray = response.getBody();
+		Friends[] friendsArray = profileWebservice.getAllReaderFriends(readerId);
 
+		int readersFriendId=0;
+		
 		List<Reader> friends = new ArrayList<>();
 
 		for (Friends f : friendsArray) {
 			if (f.getReader1() == readerId)
-				params.put("readerId", f.getReader2());
-
+				readersFriendId = f.getReader2();
 			else if (f.getReader2() == readerId)
-				params.put("readerId", f.getReader1());
+				readersFriendId = f.getReader1();
 
-			Reader reader = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}", Reader.class, params);
+			Reader reader = readerService.getReaderById(readersFriendId);
 			friends.add(reader);
 
 			reader.getUsername();
@@ -156,32 +111,25 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Override
 	public void saveDetails(Details details) {
-		System.out.println("DETAILS FROM SAVE DETAILS" + details.toString());
-		restTemplate.put(serviceUrlName + "/details", details);
+		profileWebservice.saveDetails(details);
 
 	}
 
 	@Override
-	public void saveProfilePics(ProfilePics profilePics, int readerId) {
-		restTemplate.postForObject(serviceUrlName + "/profilepics", profilePics, ProfilePics.class);
+	public void saveProfilePics(ProfilePhoto profilePics, int readerId) {
+		profileWebservice.saveProfilePics(profilePics, readerId);
 
 	}
 
 	@Override
-	public ProfilePics getProfilePics(int readerId) {
+	public ProfilePhoto getProfilePicsByReaderId(int readerId) {
 
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("readerId", String.valueOf(readerId));
-
-		ProfilePics profilePics = restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/profilepics",
-				ProfilePics.class, params);
-
-		return profilePics;
+		return profileWebservice.getProfilePicsByReaderId(readerId);
 	}
 
 	@Override
 	public void savePending(Pending pending) {
-		restTemplate.postForObject(serviceUrlName + "/friends/pending", pending, Pending.class);
+		profileWebservice.savePending(pending);
 	}
 
 	@Override
@@ -190,31 +138,22 @@ public class ProfileServiceImpl implements ProfileService {
 		int reader1Id = readerService.getReaderId(reader1);
 		int reader2Id = readerService.getReaderId(reader2);
 
-		Map<String, Integer> params = new HashMap<String, Integer>();
-		params.put("reader1", reader1Id);
-		params.put("reader2", reader2Id);
+		return profileWebservice.getReadersPending(reader1Id, reader2Id);
 
-		Pending pending = restTemplate.getForObject(serviceUrlName + "/readers/{reader1}/friends/{reader2}/pending",
-				Pending.class, params);
-
-		return pending;
 	}
 
 	@Override
 	public void deletePending(int pendingIdInt) {
-		Map<String, Integer> params = new HashMap<String, Integer>();
-		params.put("pendingId", pendingIdInt);
-
-		restTemplate.delete(serviceUrlName + "/pending/{pendingId}", params);
+		profileWebservice.deletePending(pendingIdInt);
 
 	}
 
 	@Override
 	public boolean checkPending(String name, String username) {
-		
-		Pending pending = getPending(name,username);
-		
-		if(pending == null)
+
+		Pending pending = getPending(name, username);
+
+		if (pending == null)
 			return false;
 		else
 			return true;
