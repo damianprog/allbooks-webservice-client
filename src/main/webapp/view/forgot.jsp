@@ -61,7 +61,7 @@
 
 				<c:choose>
 					<c:when test="${!empty changing}">
-						<form:form method="POST" action="/profile/changePassword">
+						<form:form method="POST" action="/readerAccount/changePassword">
 
 							<table>
 								<tr>
@@ -84,7 +84,7 @@
 					</c:when>
 					<c:otherwise>
 
-						<form:form method="POST" action="/profile/forgotPassword">
+						<form:form method="POST" action="/readerAccount/forgotPassword">
 
 							<table>
 								<tr>

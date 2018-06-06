@@ -8,33 +8,35 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
-import com.allbooks.webapp.photos.component.Base64Encoder;
 import com.allbooks.webapp.service.BookService;
+import com.allbooks.webapp.service.ReaderBookService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.utils.entity.ReaderBooksState;
 import com.allbooks.webapp.utils.service.PhotoServiceImpl;
 
 @Service
 public class ReaderBooksHandler {
-
-	@Autowired
-	ReaderService readerService;
 	
 	@Autowired
-	BookService bookService;
+	private PhotoServiceImpl photoService;
 	
 	@Autowired
-	PhotoServiceImpl photoService;
+	private BookService bookService;
 	
-	public ReaderBooksState getReaderBooksState(List<ReaderBook> readerBooks) {
-
+	@Autowired
+	private ReaderBookService readerBookService;
+	
+	public ReaderBooksState getReaderBooksState(int readerId) {
+		
 		int read, wantToRead;
 		read = wantToRead = 0;
 
+		List<ReaderBook> readerBooks = readerBookService.getReaderBooks(readerId);
+		
 		List<ReaderBook> currentlyReadingList = new ArrayList<ReaderBook>();
 
+		
 		for (ReaderBook readerBook : readerBooks) {
 
 			switch (readerBook.getShelves()) {
@@ -62,19 +64,6 @@ public class ReaderBooksHandler {
 
 		return new ReaderBooksState(readerBooksQuantities, currentlyReadingList);
 
-	}
-	
-	public List<ReaderBook> prepareReaderBooksForMyBooks(int readerId){
-	
-		List<ReaderBook> readerBooks = bookService.getReaderBooks(readerId);
-
-		for (ReaderBook tempReaderBook : readerBooks) {
-			tempReaderBook.setOverallRating(bookService.getOverallRating(tempReaderBook.getBook().getMiniTitle()));
-			tempReaderBook.setEncodedBookPic(photoService.getEncodedImage(tempReaderBook.getBookPic()));
-		}
-		
-		
-		return readerBooks;
 	}
 
 }

@@ -30,13 +30,12 @@ public class ReaderWebserviceImpl implements ReaderWebservice {
 
 	@Override
 	public Reader getReaderByUsernameAndPassword(String login, String password) {
-		
+
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("readerLogin", login);
 
-		return restTemplate.getForObject(serviceUrlName + "/readers/logins/{readerLogin}", Reader.class,
-				params);
-		
+		return restTemplate.getForObject(serviceUrlName + "/readers/logins/{readerLogin}", Reader.class, params);
+
 	}
 
 	@Override
@@ -53,17 +52,6 @@ public class ReaderWebserviceImpl implements ReaderWebservice {
 	public void updateReader(Reader reader) {
 		restTemplate.put(serviceUrlName + "/readers", reader);
 
-	}
-
-	@Override
-	public Review[] getReviewsByUsername(String username) {
-		Map<String, String> params = new HashMap<>();
-		params.put("username", username);
-
-		ResponseEntity<Review[]> reviews = restTemplate
-				.getForEntity(serviceUrlName + "/readers/{username}/books/reviews", Review[].class, params);
-
-		return reviews.getBody();
 	}
 
 	@Override
@@ -94,7 +82,7 @@ public class ReaderWebserviceImpl implements ReaderWebservice {
 	@Override
 	public void saveReaderRole(ReaderRole readerRole) {
 		restTemplate.postForObject(serviceUrlName + "/readerrole", readerRole, ReaderRole.class);
-		
+
 	}
 
 }

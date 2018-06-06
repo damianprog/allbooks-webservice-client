@@ -42,14 +42,14 @@
 						</tr>
 						<tr>
 							<td><input name="username" type="text" placeholder="Name"
-								id="joinInputBox" required="required" /></td>
+								class="joinInputBox" required="required" /></td>
 						</tr>
 						<tr>
 							<td>Password</td>
 						</tr>
 						<tr>
 							<td><input name="password" type="password"
-								placeholder="Password" id="joinInputBox" required="required" /></td>
+								placeholder="Password" class="joinInputBox" required="required" /></td>
 						</tr>
 
 						<tr>

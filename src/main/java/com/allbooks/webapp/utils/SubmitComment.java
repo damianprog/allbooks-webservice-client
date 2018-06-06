@@ -11,18 +11,22 @@ import com.allbooks.webapp.entity.Comment;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.Review;
-import com.allbooks.webapp.service.BookService;
+import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
+import com.allbooks.webapp.service.ReviewService;
 
 @Component
 public class SubmitComment {
 
 	@Autowired
-	ReaderService readerService;
+	private ReaderService readerService;
 
 	@Autowired
-	BookService bookService;
-
+	private ReviewService reviewService;
+	
+	@Autowired
+	private RatingService ratingService;
+	
 	public void submit(Comment comment, Map<String, String> params) {
 
 		Reader reader = readerService.getReaderByUsername(params.get("readerLogin"));
@@ -31,12 +35,14 @@ public class SubmitComment {
 		comment.setReaderId(readerId);
 		comment.setReaderLogin(reader.getUsername());
 
-		Rating rating = bookService.getReaderRatingObject(params.get("bookName"), reader.getUsername());
+		int bookId = Integer.parseInt(params.get("bookId"));
+		
+		Rating rating = ratingService.getReaderRatingObject(readerId,bookId);
 
 		if (rating.getId() != 0)
 			comment.setRating(rating);
 
-		Review review = bookService.getReviewById(Integer.valueOf(params.get("reviewId")));
+		Review review = reviewService.getReviewById(Integer.valueOf(params.get("reviewId")));
 		List<Comment> comments = review.getComments();
 
 		if (comments == null)
@@ -45,7 +51,7 @@ public class SubmitComment {
 		comments.add(comment);
 		review.setComments(comments);
 
-		bookService.updateReview(review);
+		reviewService.updateReview(review);
 
 	}
 

@@ -2,6 +2,8 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+
 
 <!DOCTYPE html>
 
@@ -15,6 +17,7 @@
 <link type="text/css" rel="stylesheet" href="/css/book.css" />
 <link href="https://fonts.googleapis.com/css?family=Roboto|Spectral+SC"
 	rel="stylesheet">
+<script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
 </head>
 
 <body>
@@ -29,20 +32,23 @@
 						<br> <sec:authorize access="isFullyAuthenticated()">
 
 							<div id="rating">
-								<form:form action="rate" modelAttribute="rating" method="GET">
+								<form:form action="/bookActions/rate" modelAttribute="rating"
+									method="PUT">
 									<c:choose>
 										<c:when test="${rating.id == 0}">
 										Rate this book
 										<input type="hidden" name="updateRating" value="false">
 										</c:when>
 										<c:otherwise>
-							
-									Your rate ${rating.rate}
-									<input type="hidden" name="updateRating" value="true">
+											<input type="hidden" id="ratingJson" name="ratingJson"
+												value='${ratingJson}'>
+
+											<div id="yourRate">Your rate ${rating.rate}</div>
+											<input type="hidden" name="updateRating" value="true">
 										</c:otherwise>
 									</c:choose>
 
-									<form:select class="rounded" path="rate">
+									<form:select id="selectRate" class="rounded" path="rate">
 										<form:option value="1" label="1" />
 										<form:option value="2" label="2" />
 										<form:option value="3" label="3" />
@@ -50,25 +56,24 @@
 										<form:option value="5" label="5" selected="selected" />
 									</form:select>
 									<form:hidden path="id" />
-									<form:hidden path="bookId" />
-									<form:hidden path="readerIdentity" />
-									<input type="hidden" name="bookName" value="${book.miniTitle}">
+									<form:hidden path="readerId" />
+									<input type="hidden" name="bookId" value="${book.id}">
 									<input class="submit" type="submit" value="Submit" />
 								</form:form>
 							</div>
 
-							<form:form action="readState" modelAttribute="readerBook"
-								method="GET">
+							<form:form action="/bookActions/saveReaderBook"
+								modelAttribute="readerBook" method="POST">
 								<c:choose>
 									<c:when test="${readerBook.id == 0}">
 										<br>Add this book to your books
-									<input type="hidden" name="update" value="false">
+									<input type="hidden" name="isItUpdateReaderBook" value="false">
 									</c:when>
 									<c:otherwise>
 										<br>Current State:${readerBook.shelves}
 										<form:hidden path="id" />
 										<form:hidden path="dateAdded" />
-										<input type="hidden" name="update" value="true">
+										<input type="hidden" name="isItUpdateReaderBook" value="true">
 									</c:otherwise>
 								</c:choose>
 
@@ -79,7 +84,7 @@
 									<form:option value="Want to Read" label="Want to Read" />
 								</form:select>
 
-								<input type="hidden" name="bookName" value="${book.miniTitle}">
+								<input type="hidden" name="bookId" value="${book.id}">
 								<input class="submit" type="submit" value="Submit" />
 							</form:form>
 						</sec:authorize> <sec:authorize access="!isFullyAuthenticated()">
@@ -94,10 +99,16 @@
 								<td id="ratingDetails">Rating Details ${rates} Ratings
 									${quantity.ratings} Reviews ${quantity.reviews}</td>
 							</tr>
-						</table>${book.description}
+						</table>
+						<div id="bookDescription">${book.description}</div> <br /> <c:choose>
+							<c:when test="${book.description.length() > 540}">
+								<a class="moreDesc" href="#" data-value="bookDescription">More...</a>
+							</c:when>
+						</c:choose>
 						<hr> BUY A COPY<br> <a target="blank"
 						href="${book.buyBook}">
-							<button style="background-color:#ff9900;border-radius: 5px;	" type="button">Amazon</button>
+							<button style="background-color: #ff9900; border-radius: 5px;"
+								type="button">Amazon</button>
 					</a>
 						<hr>
 						<div id="details">
@@ -108,7 +119,11 @@
 					<td id="aboutAuthor">
 						<h4 id="h3">About ${book.author}</h4>
 						<hr>
-						<div>${book.aboutAuthor}</div>
+						<div id="authorDescription">${book.aboutAuthor}</div> <br /> <c:choose>
+							<c:when test="${book.aboutAuthor.length() > 290}">
+								<a class="moreDesc" href="#" data-value="authorDescription">More...</a>
+							</c:when>
+						</c:choose>
 						<div id="quotesFromBook">
 							<h4 id="h3">Quotes From ${book.miniTitle}</h4>
 							<hr>
@@ -129,7 +144,7 @@
 			<hr>
 
 			<sec:authorize access="isFullyAuthenticated()">
-				<c:url var="reviewLink" value="/reader/postReviewPage">
+				<c:url var="reviewLink" value="/bookActions/postReviewPage">
 					<c:param name="bookId" value="${book.id}" />
 				</c:url>
 				<a href="${reviewLink}">Post a Review!</a>
@@ -148,13 +163,13 @@
 						</c:url>
 
 						<c:url var="profileLink" value="/profile/showProfile">
-							<c:param name="readerId" value="${tempReview.readerIdentity}" />
+							<c:param name="readerId" value="${tempReview.reader.id}" />
 						</c:url>
 
 						<tr>
 							<td>
 								<h4 id="h4">
-									<a class="blackRef" href="${profileLink}">${tempReview.readerLogin}</a>
+									<a class="blackRef" href="${profileLink}">${tempReview.reader.username}</a>
 								</h4> rated it ${tempReview.rating.rate}
 							</td>
 						</tr>
@@ -165,14 +180,15 @@
 						<tr>
 							<td id="spaceUnder">Likes: ${tempReview.likes} <sec:authorize
 									access="isFullyAuthenticated()">
-									<form:form action="/reader/dropLike" method="GET" id="likeForm">
+									<form:form action="/bookActions/dropLike" method="GET"
+										id="likeForm">
 										<input type="hidden" name="reviewId" value="${tempReview.id}" />
-										<input type="hidden" name="bookName" value="${book.miniTitle}" />
+										<input type="hidden" name="bookId" value="${book.id}" />
 										<input id="like" type="submit" value="Like" />
 									</form:form>
 								</sec:authorize> <sec:authorize access="!isFullyAuthenticated()">
 									<form:form action="/login" method="GET" id="likeForm">
-										<input  type="submit" value="Like" />
+										<input type="submit" value="Like" />
 									</form:form>
 								</sec:authorize>
 							</td>
@@ -184,6 +200,10 @@
 		</div>
 
 	</div>
+
+
+	<script src="/js/showmore.js"></script>
+
 </body>
 
 </html>

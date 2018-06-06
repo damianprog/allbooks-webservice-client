@@ -1,6 +1,5 @@
 package com.allbooks.webapp.entity;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,19 +14,13 @@ public class Review {
 
 	private String title;
 
-	private String bookTitle;
-
 	private int likes;
-
-	private String readerLogin;
 
 	private Reader reader;
 
-	private int readerIdentity;
-
 	private Rating rating;
 
-	private int bookId;
+	private Book book;
 
 	private List<Comment> comments;
 
@@ -40,22 +33,6 @@ public class Review {
 
 	public void setRating(Rating rating) {
 		this.rating = rating;
-	}
-
-	public String getBookTitle() {
-		return bookTitle;
-	}
-
-	public void setBookTitle(String bookTitle) {
-		this.bookTitle = bookTitle;
-	}
-
-	public int getReaderIdentity() {
-		return readerIdentity;
-	}
-
-	public void setReaderIdentity(int readerIdentity) {
-		this.readerIdentity = readerIdentity;
 	}
 
 	public Reader getReader() {
@@ -101,28 +78,12 @@ public class Review {
 		this.text = text;
 	}
 
-	public int getBookId() {
-		return bookId;
-	}
-
-	public void setBookId(int bookId) {
-		this.bookId = bookId;
-	}
-
 	public String getTitle() {
 		return title;
 	}
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public String getReaderLogin() {
-		return readerLogin;
-	}
-
-	public void setReaderLogin(String readerLogin) {
-		this.readerLogin = readerLogin;
 	}
 
 	public int getLikes() {
@@ -133,14 +94,12 @@ public class Review {
 		this.likes = likes;
 	}
 
-	@Override
-	public String toString() {
-		return "Review [id=" + id + ", text=" + text + ", title=" + title + ", bookTitle=" + bookTitle + ", likes="
-				+ likes + ", readerLogin=" + readerLogin + ", reader=" + reader + ", readerIdentity=" + readerIdentity
-				+ ", rating=" + rating + ", bookId=" + bookId + ", comments=" + comments + ", profilePic="
-				+ Arrays.toString(profilePic) + "]";
+	public Book getBook() {
+		return book;
 	}
 
-	
-	
+	public void setBook(Book book) {
+		this.book = book;
+	}
+
 }

@@ -9,29 +9,19 @@ public class Rating {
 
 	private int rate;
 
-	private int readerIdentity;
-
-	private Reader reader;
+	private int readerId;
 
 	private int bookId;
 
 	public Rating() {
 	}
 
-	public int getReaderIdentity() {
-		return readerIdentity;
+	public int getReaderId() {
+		return readerId;
 	}
 
-	public void setReaderIdentity(int readerIdentity) {
-		this.readerIdentity = readerIdentity;
-	}
-
-	public Reader getReader() {
-		return reader;
-	}
-
-	public void setReader(Reader reader) {
-		this.reader = reader;
+	public void setReaderId(int readerId) {
+		this.readerId = readerId;
 	}
 
 	public int getId() {
@@ -60,8 +50,7 @@ public class Rating {
 
 	@Override
 	public String toString() {
-		return "Rating [id=" + id + ", rate=" + rate + ", readerIdentity=" + readerIdentity + ", reader=" + reader
-				+ ", bookId=" + bookId + "]";
+		return "Rating [id=" + id + ", rate=" + rate + ", readerId=" + readerId + ", bookId=" + bookId + "]";
 	}
 
 }

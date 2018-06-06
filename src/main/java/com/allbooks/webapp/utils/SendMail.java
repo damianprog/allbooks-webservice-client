@@ -46,11 +46,11 @@ public class SendMail {
 
 		case REGISTRATION_CONFIRM:
 			tokenService.createVerificationToken(reader, token);
-			methodMapping = "/reader/registrationConfirm";
+			methodMapping = "/readerAccount/registrationConfirm";
 			break;
 		case CHANGE_PASSWORD:
 			tokenService.createPasswordToken(reader, token);
-			methodMapping = "/profile/changePasswordPage";
+			methodMapping = "/readerAccount/changePasswordPage";
 			break;
 		}
 

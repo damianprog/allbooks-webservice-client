@@ -21,7 +21,7 @@ import com.allbooks.webapp.service.ReaderService;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
-	ReaderService readerService;
+	private ReaderService readerService;
 
 	@Autowired
 	private HttpSession httpSession;
@@ -44,8 +44,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 					grantedAuthorities.add(new SimpleGrantedAuthority(role.getRole()));
 				}
 
-				httpSession.setAttribute("readerSession", reader);
-
+				httpSession.setAttribute("readerId", reader.getId());
+				httpSession.setAttribute("IS_USER_LOGGED", true);				
+				
 				return new org.springframework.security.core.userdetails.User(reader.getUsername(),
 						reader.getPassword(), grantedAuthorities);
 			}

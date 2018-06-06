@@ -27,6 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 		.antMatchers("**/main/").permitAll()
 		.antMatchers("/admin/**").hasAuthority("ADMIN")
+		.antMatchers("/bookPageActions/**").hasAuthority("READER")
 		.and()
         .formLogin()
         .loginPage("/login")
@@ -36,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .logout().logoutSuccessUrl("/reader/main")
         .and()
-        .exceptionHandling().accessDeniedPage("/reader/accessDenied");
+        .exceptionHandling().accessDeniedPage("/readerAccount/accessDenied");
 	
 
 		http.csrf().disable();

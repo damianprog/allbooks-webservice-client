@@ -43,21 +43,21 @@
 				</tr>
 				<tr><td><form:errors path="username" cssClass="error" /></td></tr>
 				<tr>
-					<td><form:input path="username" placeholder="Name" id="joinInputBox" required="required"/></td>
+					<td><form:input path="username" placeholder="Name" class="joinInputBox" required="required"/></td>
 				</tr>
 				<tr>
 					<td>Password</td>
 				</tr>
 				<tr><td><form:errors path="password" cssClass="error" /></td></tr>
 				<tr>
-					<td><form:password path="password" placeholder="Password" id="joinInputBox" required="required"/></td>
+					<td><form:password path="password" placeholder="Password" class="joinInputBox" required="required"/></td>
 				</tr>
 				<tr>
 					<td>Email</td>
 				</tr>
 				<tr><td><form:errors path="email" cssClass="error" /></td></tr>
 				<tr>
-					<td><form:input path="email" placeholder="you@yours.com" id="joinInputBox" required="required"/></td>
+					<td><form:input path="email" placeholder="you@yours.com" class="joinInputBox" required="required"/></td>
 				</tr>
 				<tr>
 					<td id="joinSubmitTd"><input class="signUp" type="submit" value="Sign up"/></td>

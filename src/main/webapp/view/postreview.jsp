@@ -21,13 +21,13 @@
 		<jsp:include page='/view/header.jsp' />
 
 		<div>
-			<form:form action="/reader/postReview" modelAttribute="rating"
+			<form:form action="/bookActions/postReview" modelAttribute="rating"
 				method="POST">
 				<table>
 					<tr>
 						<td>
 							<h3>${book.fullTitle}>Review</h3> <input type="hidden"
-							name="bookName" value="${book.miniTitle}">
+							name="bookId" value="${book.id}">
 						</td>
 					</tr>
 					<tr>
@@ -51,12 +51,12 @@
 					<tr>
 						<td><c:choose>
 								<c:when test="${rating.id == 0}">
-										My Rating <input type="hidden" name="updateRating"
+										My Rating <input type="hidden" name="isItUpdateRating"
 										value="false">
 								</c:when>
 								<c:otherwise>
 								My Rating ${rating.rate}
-								<input type="hidden" name="updateRating" value="true">
+								<input type="hidden" name="isItUpdateRating" value="true">
 								</c:otherwise>
 							</c:choose> <form:select class="rounded" path="rate">
 								<form:option value="1" label="1" />
@@ -67,7 +67,6 @@
 
 							</form:select></td>
 						<form:hidden path="bookId" />
-						<form:hidden path="readerIdentity" />
 						<form:hidden path="id" />
 
 
@@ -77,11 +76,11 @@
 								<c:choose>
 									<c:when test="${readerBook.id == 0}">
 										<br>Add this book to your books
-									<input type="hidden" name="updateReaderBook" value="false">
+									<input type="hidden" name="isItUpdateReaderBook" value="false">
 									</c:when>
 									<c:otherwise>
 										<br>Current State:${readerBook.shelves}
-									<input type="hidden" name="updateReaderBook" value="true">
+									<input type="hidden" name="isItUpdateReaderBook" value="true">
 
 									</c:otherwise>
 								</c:choose>

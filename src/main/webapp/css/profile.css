@@ -60,6 +60,11 @@ word-wrap: break-word;
 padding-bottom:10px;
 }
 
+#profileAbout{
+	height:118px;
+	overflow: hidden;
+}
+
 .picTable{
 	width:200px;
 }

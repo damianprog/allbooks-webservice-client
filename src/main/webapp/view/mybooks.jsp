@@ -74,7 +74,7 @@
 							<td class="cells">${tempBook.readerRating.rate}</td>
 							<td class="cells">${tempBook.shelves}<br> <c:choose>
 									<c:when test="${myBooks == true}">
-										<form method="GET" action="/profile/updateState">
+										<form method="GET" action="/myBooks/updateState">
 											<select name="newState">
 												<option value="Read">Read</option>
 												<option value="Currently Reading">Currently Reading</option>
@@ -88,7 +88,7 @@
 							</td>
 							<td class="cells">${tempBook.dateRead}<c:choose>
 									<c:when test="${myBooks == true}">
-										<form method="GET" action="/profile/updateDateRead">
+										<form method="GET" action="/myBooks/updateDateRead">
 											<input id="dateReadChooser" name="dateRead" type="date"
 												value="${tempBook.dateRead}"> <input type="hidden"
 												name="bookName" value="${tempBook.book.miniTitle}">
@@ -98,7 +98,7 @@
 								</c:choose>
 							</td>
 							<td id="lastTd">${tempBook.dateAdded}</td>
-							<c:url var="delete" value="deleteReaderBook">
+							<c:url var="delete" value="/myBooks/deleteReaderBook">
 								<c:param name="bookId" value="${tempBook.book.id}"></c:param>
 							</c:url>
 							<c:if test="${myBooks == true}">

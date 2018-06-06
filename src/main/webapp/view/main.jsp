@@ -14,6 +14,7 @@
 <link type="text/css" rel="stylesheet" href="/css/style.css" />
 <link href="https://fonts.googleapis.com/css?family=Roboto|Spectral+SC"
 	rel="stylesheet">
+	
 </head>
 
 <body>
@@ -289,13 +290,13 @@
 				<td id="browse">
 					<h3>New Releases in Fantasy</h3> <c:url var="magnusChase"
 						value="showBook">
-						<c:param name="bookName" value="The Ship of the Dead" />
+						<c:param name="bookId" value="5" />
 					</c:url> <c:url var="rulesOfMagic" value="showBook">
-						<c:param name="bookName" value="The Rules of Magic" />
+						<c:param name="bookId" value="6" />
 					</c:url> <c:url var="bookOfDust" value="showBook">
-						<c:param name="bookName" value="La Belle Sauvage" />
+						<c:param name="bookId" value="7" />
 					</c:url> <c:url var="crookedSaints" value="showBook">
-						<c:param name="bookName" value="All the Crooked Saints" />
+						<c:param name="bookId" value="8" />
 					</c:url> <a href="${magnusChase }"><img class="minBrowse"
 						src="/css/images/mmagnusChase.jpg" /></a> <a href="${rulesOfMagic }"><img
 						class="minBrowse" src="/css/images/mrulesOfMagic.jpg" /></a> <a

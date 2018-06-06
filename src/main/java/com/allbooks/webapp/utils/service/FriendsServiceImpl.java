@@ -50,8 +50,8 @@ public class FriendsServiceImpl implements FriendsService {
 	}
 
 	@Override
-	public void deleteFriends(Map<String, Integer> params) {
-		profileService.deleteFriends(params.get("loggedReaderId"), params.get("friendId"));
+	public void deleteFriends(int readerId,int friendId) {
+		profileService.deleteFriends(readerId, friendId);
 		
 	}
 

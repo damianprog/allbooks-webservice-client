@@ -31,7 +31,7 @@
 				<td class="pageRef"><sec:authorize
 						access="isFullyAuthenticated()">
 						<c:url var="showMyBooks" value="/reader/showMyBooks">
-							<c:param name="readerId" value="${sessionScope.readerSession.id}"></c:param>
+							<c:param name="readerId" value="${sessionScope.readerId}"></c:param>
 						</c:url>
 						<a class="blackRefNon" href="${showMyBooks}">My Books</a>
 					</sec:authorize></td>
@@ -47,7 +47,7 @@
 				<sec:authorize access="isFullyAuthenticated()">
 					<td id="loginPart"><c:url var="showProfile"
 							value="/profile/showProfile">
-							<c:param name="readerId" value="${sessionScope.readerSession.id}"></c:param>
+							<c:param name="readerId" value="${sessionScope.readerId}"></c:param>
 						</c:url> Reader:<a class="login" href="${showProfile}"><sec:authentication
 								property="principal.username" /></a></td>
 					<td><form:form method="POST" action="/logout">
@@ -71,7 +71,7 @@
 								<tr>
 									<td id="cbMain"><input type="checkbox" name="cb"
 										value="remember" /> Remember me</td>
-									<td id="cbMainForgot"><a href="/profile/forgot">Forgot
+									<td id="cbMainForgot"><a href="/readerAccount/forgot">Forgot
 											it?</a></td>
 								</tr>
 							</table>

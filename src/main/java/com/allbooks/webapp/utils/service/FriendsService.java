@@ -10,5 +10,5 @@ public interface FriendsService {
 	
 	public void acceptOrAbort(Map<String,String> params);
 	
-	public void deleteFriends(Map<String,Integer> params);
+	public void deleteFriends(int readerId,int friendId);
 }

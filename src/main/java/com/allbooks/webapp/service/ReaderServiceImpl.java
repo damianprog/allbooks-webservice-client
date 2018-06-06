@@ -81,15 +81,6 @@ public class ReaderServiceImpl implements ReaderService {
 	}
 
 	@Override
-	public List<Review> getReviewsByUsername(String username) {
-
-		List<Review> reviews = Arrays.asList(readerWebservice.getReviewsByUsername(username));
-		reviews.sort(Comparator.comparingInt(Review::getId).reversed());
-		
-		return reviews;
-	}
-
-	@Override
 	public Reader getReaderById(int readerId) {
 
 		return readerWebservice.getReaderById(readerId);

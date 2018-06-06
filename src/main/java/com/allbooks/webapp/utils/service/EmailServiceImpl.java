@@ -14,10 +14,10 @@ import com.allbooks.webapp.utils.entity.MailBuilder.TokenType;
 public class EmailServiceImpl implements EmailService {
 
 	@Autowired
-	SendMail sendMail;
+	private SendMail sendMail;
 
 	@Autowired
-	MailBuilder mailBuilder;
+	private MailBuilder mailBuilder;
 
 	@Override
 	public void sendRegistrationConfirmation(Reader reader) throws MessagingException {

@@ -71,7 +71,7 @@
 								Likes: ${review.likes}
 
 								<sec:authorize access="isFullyAuthenticated()">
-										<form:form action="/reader/dropLikeReview" method="GET"
+										<form:form action="/bookActions/dropLikeReview" method="GET"
 											id="likeForm">
 											<input type="hidden" name="reviewId" value="${review.id}" />
 											<input type="hidden" name="readerLogin"
@@ -98,8 +98,8 @@
 			<hr>
 
 			<sec:authorize access="isFullyAuthenticated()">
-					<form:form action="submitComment" modelAttribute="comment"
-						method="GET">
+					<form:form action="/bookActions/postComment" modelAttribute="comment"
+						method="POST">
 						<input type="hidden" name="reviewId" value="${review.id}" />
 						<input type="hidden" name="readerLogin" value="${readerLogin}" />
 						<input type="hidden" name="bookId" value="${bookId}" />

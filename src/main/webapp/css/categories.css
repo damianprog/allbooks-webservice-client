@@ -39,5 +39,6 @@ table.books td {
 
 #pageNum {
 	padding-right: 10px;
+	padding-bottom:40px;
 	display:inline;
 }

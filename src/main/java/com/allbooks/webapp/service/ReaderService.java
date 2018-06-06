@@ -17,8 +17,6 @@ public interface ReaderService {
 
 	public boolean checkReaderLogin(String username);
 
-	public List<Review> getReviewsByUsername(String username);
-
 	public Reader getReaderById(int readerId);
 
 	public int getReaderId(String readerLogin);

@@ -1,5 +1,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 
 <!DOCTYPE html>
 
@@ -9,6 +11,7 @@
 <link type="text/css" rel="stylesheet" href="/css/profile.css" />
 <link href="https://fonts.googleapis.com/css?family=Roboto|Spectral+SC"
 	rel="stylesheet">
+<script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
 </head>
 
 <body>
@@ -51,17 +54,21 @@
 			<div id="firstTableDiv">
 				<div id="loginEdit">
 					<h2>${reader.username}</h2>
+
+					<sec:authentication var="principal" property="principal" />
+
 					<c:choose>
 						<c:when test="${reader.username == principalName}">
 							<a class="blackRefNon" href="/profile/showEdit">(edit
 								profile)</a>
 						</c:when>
+
 						<c:when test="${not empty invite}">
 							<c:url var="friendUrl" value="/profile/inviteFriend">
 								<c:param name="recipentId" value="${reader.id}" />
-								<c:param name="senderId" value="${readerSession.id}" />
+								<c:param name="senderId" value="${sessionScope.readerId}" />
 								<c:param name="recipentLogin" value="${reader.username}" />
-								<c:param name="senderLogin" value="${readerSession.username}" />
+								<c:param name="senderLogin" value="${principal.username}" />
 							</c:url>
 							<c:choose>
 								<c:when test="${pending == false}">
@@ -100,7 +107,15 @@
 					</tr>
 					<tr>
 						<td>About Me</td>
-						<td class="tableTd">${details.about}</td>
+						<td class="tableTd">
+							<div id="profileAbout">${details.about}</div>
+							<br /> <c:choose>
+								<c:when test="${details.about.length() > 258}">
+									<a class="moreDesc" href="#" data-value="profileAbout">Show
+										more</a>
+								</c:when>
+							</c:choose>
+						</td>
 					</tr>
 				</table>
 			</div>
@@ -126,7 +141,7 @@
 
 			</div>
 			<div class="underFirstTable">
-				<h4 id="topDesc">${reader.username} is currently reading</h4>
+				<h4 id="topDesc">${reader.username}is currently reading</h4>
 				<hr>
 				<table class="currentlyReadingBooks">
 					<c:forEach var="tempBook" items="${currentlyReadingList}">
@@ -137,7 +152,7 @@
 							<td><a href="${bookSite}"> <img
 									src="data:image/jpeg;base64,${tempBook.encodedBookPic}" />
 							</a></td>
-							<td>${reader.username} is currently reading<br>
+							<td>${reader.username}is currently reading<br>
 								<h4 id="topDesc">
 									<a class="blackRef" href="${bookSite}">${tempBook.book.fullTitle}</a>
 								</h4> <br> by ${tempBook.book.author}<br> bookshelves:
@@ -148,35 +163,39 @@
 				</table>
 			</div>
 			<div class="underFirstTable">
-				<h4>${reader.username}'s recent reviews</h4>
+				<h4>${reader.username}'srecent reviews</h4>
 				<hr>
 				<c:choose>
-				<c:when test="${!empty readerReviews}">
-				<table>
-					<c:forEach var="tempReview" items="${readerReviews}" begin="0"
-						end="2">
-						<c:url var="reviewLink" value="/reader/reviewPage">
-							<c:param name="reviewId" value="${tempReview.id}" />
-							<c:param name="readerLogin" value="${tempReview.readerLogin}" />
-							<c:param name="bookId" value="${tempReview.bookId}" />
-							<c:param name="readerRating" value="${tempReview.rating.rate}" />
-							<c:param name="fullBookName" value="${book.fullTitle}" />
-							<c:param name="authorName" value="${book.author}" />
-						</c:url>
-						<c:url var="bookPage" value="/reader/showBook">
-							<c:param name="bookName" value="${tempReview.bookTitle}" />
-						</c:url>
-						<tr>
-							<td>
-								<h4>
-									<a class="blackRef" href="${bookPage}"> ${tempReview.bookTitle}</a>
-								</h4> <a class="blackRef" href="${reviewLink}"> ${tempReview.title}</a>
-							</td>
-						</tr>
-					</c:forEach>
-				</table>
-				</c:when>
-				<c:otherwise>${reader.username} has no any recent reviews</c:otherwise>
+					<c:when test="${!empty readerReviews}">
+						<table>
+							<c:forEach var="tempReview" items="${readerReviews}" begin="0"
+								end="2">
+								<c:url var="reviewLink" value="/reader/reviewPage">
+									<c:param name="reviewId" value="${tempReview.id}" />
+									<c:param name="readerLogin"
+										value="${tempReview.reader.username}" />
+									<c:param name="bookId" value="${tempReview.book.id}" />
+									<c:param name="readerRating" value="${tempReview.rating.rate}" />
+									<c:param name="fullBookName"
+										value="${tempReview.book.fullTitle}" />
+									<c:param name="authorName" value="${tempReview.book.author}" />
+								</c:url>
+								<c:url var="bookPage" value="/reader/showBook">
+									<c:param name="bookName" value="${tempReview.book.miniTitle}" />
+								</c:url>
+								<tr>
+									<td>
+										<h4>
+											<a class="blackRef" href="${bookPage}">
+												${tempReview.book.miniTitle}</a>
+										</h4> <a class="blackRef" href="${reviewLink}">
+											${tempReview.title}</a>
+									</td>
+								</tr>
+							</c:forEach>
+						</table>
+					</c:when>
+					<c:otherwise>${reader.username} has no any recent reviews</c:otherwise>
 				</c:choose>
 			</div>
 		</div>
@@ -213,7 +232,7 @@
 				</c:when>
 			</c:choose>
 			<div id="friendsList">
-				<h4 id="topDesc">${reader.username}'s friends(${friendsNum})</h4>
+				<h4 id="topDesc">${reader.username}'sfriends(${friendsNum})</h4>
 				<br>
 				<hr>
 				<c:choose>
@@ -234,8 +253,7 @@
 													id="deleteForm">
 													<input type="hidden" name="friendId"
 														value="${tempFriends.id}">
-														<input type="hidden" name="loggedReaderId"
-														value="${readerSession.id}">
+													<input type="hidden" name="readerId" value="${reader.id}">
 													<input type="submit" value="Delete" />
 												</form:form>
 											</c:when>
@@ -249,6 +267,7 @@
 			</div>
 		</div>
 	</div>
+	<script src="/js/showmore.js"></script>
 </body>
 
 </html>

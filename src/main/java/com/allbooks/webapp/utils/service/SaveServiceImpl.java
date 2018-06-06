@@ -3,17 +3,24 @@ package com.allbooks.webapp.utils.service;
 import java.io.IOException;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Rating;
+import com.allbooks.webapp.entity.RatingData;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
+import com.allbooks.webapp.entity.ReaderBookData;
 import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.service.BookService;
+import com.allbooks.webapp.service.RatingService;
+import com.allbooks.webapp.service.ReaderBookService;
 import com.allbooks.webapp.service.ReaderService;
+import com.allbooks.webapp.service.ReviewService;
 import com.allbooks.webapp.utils.LocalDateGetter;
 import com.allbooks.webapp.utils.entity.OnRegistrationCompleteEvent;
 
@@ -21,84 +28,98 @@ import com.allbooks.webapp.utils.entity.OnRegistrationCompleteEvent;
 public class SaveServiceImpl implements SaveService {
 
 	@Autowired
-	BookService bookService;
+	private BookService bookService;
 
 	@Autowired
-	ReaderService readerService;
+	private ReaderBookService readerBookService;
 
 	@Autowired
-	ApplicationEventPublisher eventPublisher;
+	private ReaderService readerService;
 
 	@Autowired
-	PhotoServiceImpl photoService;
-	
+	private ReviewService reviewService;
+
 	@Autowired
-	LocalDateGetter localDateGetter;
+	private RatingService ratingService;
+
+	@Autowired
+	private ApplicationEventPublisher eventPublisher;
+
+	@Autowired
+	private PhotoServiceImpl photoService;
+
+	@Autowired
+	private LocalDateGetter localDateGetter;
+
+	@Autowired
+	private HttpSession session;
 
 	@Override
-	public void saveRating(Rating rating, Map<String,String> params, String username) {
+	public void saveRating(RatingData ratingData) {
 
-		Reader reader = readerService.getReaderByUsername(username);
-		rating.setReader(reader);
+		int readerId = (int) session.getAttribute("readerId");
 
-		if (Boolean.valueOf(params.get("updateRating")))
-			bookService.submitRating(rating);
+		Rating rating = ratingData.getRating();
+
+		if (ratingData.isItUpdate())
+			ratingService.submitRating(rating);
 		else {
-			rating.setBookId(bookService.getBookId(params.get("bookName")));
-			rating.setReaderIdentity(reader.getId());
-			bookService.submitRating(rating);
+			rating.setBookId(ratingData.getBookId());
+			rating.setReaderId(readerId);
+			ratingService.submitRating(rating);
 		}
 
 	}
 
 	@Override
-	public void saveReaderBook(ReaderBook readerBook,Map<String,String> params ,String username)
-			throws IOException {
-		Reader reader = readerService.getReaderByUsername(username);
-		Rating rating = bookService.getReaderRatingObject(params.get("bookName"), username);
-		Book book = bookService.getBook(bookService.getBookId(params.get("bookName")));
+	public void saveReaderBook(ReaderBookData readerBookData) throws IOException {
+
+		int readerId = (int) session.getAttribute("readerId");
+
+		ReaderBook readerBook = readerBookData.getReaderBook();
+
+		Reader reader = readerService.getReaderById(readerId);
+		Rating rating = ratingService.getReaderRatingObject(readerId, readerBookData.getBookId());
+		Book book = bookService.getBook(readerBookData.getBookId());
 
 		byte[] bookPic = photoService.resize(book.getBookPhoto(), 125, 190);
 
 		readerBook.setBookPic(bookPic);
 
-		if (Boolean.valueOf(params.get("updateReaderBook")) == false) {
-			
+		if (!readerBookData.isItUpdate()) {
+
 			String date = localDateGetter.getLocalDateStamp();
 
-			readerBook.setBook(book);
-
 			readerBook.setDateAdded(date);
-			readerBook.setReader(reader);
 		}
 
-		if (rating.getId() != 0)
-			readerBook.setReaderRating(rating);
+		// if (rating.getId() != 0)
+		readerBook.setReaderRating(rating);
 
 		readerBook.setBook(book);
 		readerBook.setReader(reader);
-		bookService.saveReaderBook(readerBook);
+		readerBookService.saveReaderBook(readerBook);
 
 	}
 
 	@Override
-	public void saveReview(Map<String,String> params, String username) {
+	public void saveReview(Map<String, String> params, String username) {
 		Reader reader = readerService.getReaderByUsername(username);
 		int readerId = reader.getId();
 
 		Review review = new Review();
 		review.setTitle(params.get("title"));
 		review.setText(params.get("text"));
-		
-		String bookName = params.get("bookName");
-		
-		review.setReaderIdentity(readerId);
-		review.setReaderLogin(reader.getUsername());
-		review.setRating(bookService.getReaderRatingObject(bookName, reader.getUsername()));
-		review.setBookId(bookService.getBookId(bookName));
-		review.setBookTitle(bookName);
 
-		bookService.submitReview(review);
+		int bookId = Integer.parseInt(params.get("bookId"));
+
+		Book book = bookService.getBook(bookId);
+
+		review.setBook(book);
+		review.setReader(reader);
+		review.setRating(ratingService.getReaderRatingObject(readerId, bookId));
+
+		reviewService.submitReview(review);
 
 	}
 

@@ -32,8 +32,6 @@ public class Reader {
 
 	private Details details;
 
-	private List<Review> reviews;
-
 	private List<Rating> ratings;
 
 	private List<ReaderBook> readerBooks;
@@ -76,14 +74,6 @@ public class Reader {
 
 	public void setRatings(List<Rating> ratings) {
 		this.ratings = ratings;
-	}
-
-	public List<Review> getReviews() {
-		return reviews;
-	}
-
-	public void setReviews(List<Review> reviews) {
-		this.reviews = reviews;
 	}
 
 	public Details getDetails() {
