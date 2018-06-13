@@ -73,7 +73,7 @@
 							<c:choose>
 								<c:when test="${pending == false}">
 									<c:choose>
-										<c:when test="${(booFriends == false)}">
+										<c:when test="${(areTheyFriends == false)}">
 											<a class="blackRef" href="${friendUrl}">Send friend's
 												request</a>
 										</c:when>
@@ -83,8 +83,16 @@
 									</c:choose>
 								</c:when>
 								<c:otherwise>
-								Friends request has been sent
-							</c:otherwise>
+									<c:choose>
+										<c:when test="${isItSenderProfile == true}">
+										Sent you Friends request!
+									</c:when>
+										<c:otherwise>
+										Friends request has been sent
+									</c:otherwise>
+									</c:choose>
+
+								</c:otherwise>
 							</c:choose>
 						</c:when>
 					</c:choose>
@@ -108,11 +116,9 @@
 					<tr>
 						<td>About Me</td>
 						<td class="tableTd">
-							<div id="profileAbout">${details.about}</div>
-							<br /> <c:choose>
+							<div id="profileAbout">${details.about}</div> <br /> <c:choose>
 								<c:when test="${details.about.length() > 258}">
-									<a class="moreDesc" href="#" data-value="profileAbout">Show
-										more</a>
+									<a class="moreDesc" href="#" data-value="profileAbout">More...</a>
 								</c:when>
 							</c:choose>
 						</td>
@@ -122,7 +128,7 @@
 
 			<div style="clear: both">
 				<div class="underFirstTable">
-					<c:url var="myBooks" value="/reader/showMyBooks">
+					<c:url var="myBooks" value="/myBooks/showMyBooks">
 						<c:param name="readerId" value="${reader.id}" />
 					</c:url>
 					<h4 id="topDesc">
@@ -141,7 +147,7 @@
 
 			</div>
 			<div class="underFirstTable">
-				<h4 id="topDesc">${reader.username}is currently reading</h4>
+				<h4 id="topDesc">${reader.username}iscurrently reading</h4>
 				<hr>
 				<table class="currentlyReadingBooks">
 					<c:forEach var="tempBook" items="${currentlyReadingList}">
@@ -152,7 +158,7 @@
 							<td><a href="${bookSite}"> <img
 									src="data:image/jpeg;base64,${tempBook.encodedBookPic}" />
 							</a></td>
-							<td>${reader.username}is currently reading<br>
+							<td>${reader.username}iscurrently reading<br>
 								<h4 id="topDesc">
 									<a class="blackRef" href="${bookSite}">${tempBook.book.fullTitle}</a>
 								</h4> <br> by ${tempBook.book.author}<br> bookshelves:
@@ -163,7 +169,7 @@
 				</table>
 			</div>
 			<div class="underFirstTable">
-				<h4>${reader.username}'srecent reviews</h4>
+				<h4>${reader.username}'srecentreviews</h4>
 				<hr>
 				<c:choose>
 					<c:when test="${!empty readerReviews}">
@@ -181,7 +187,7 @@
 									<c:param name="authorName" value="${tempReview.book.author}" />
 								</c:url>
 								<c:url var="bookPage" value="/reader/showBook">
-									<c:param name="bookName" value="${tempReview.book.miniTitle}" />
+									<c:param name="bookId" value="${tempReview.book.id}" />
 								</c:url>
 								<tr>
 									<td>
@@ -210,20 +216,20 @@
 			You have no friends requests
 			</c:when>
 							<c:otherwise>
-								<c:forEach var="tempFriends" items="${friendsInvites}">
+								<c:forEach var="tempPending" items="${friendsInvites}">
 									<c:url var="senderProfile" value="/profile/showProfile">
-										<c:param name="readerId" value="${tempFriends.senderId}" />
+										<c:param name="readerId" value="${tempPending.sender.id}" />
 									</c:url>
-									<a href="${senderProfile}">${tempFriends.senderLogin}</a> Has sent you a friends request!
+									<a href="${senderProfile}">${tempPending.sender.username}</a> Has sent you a friends request!
 				<form method="GET" action="/profile/acceptOrAbort">
 										<select name="acceptOrAbort">
 											<option value="accept">Accept</option>
 											<option value="abort">Abort</option>
 										</select> <input type="hidden" name="recipentId" value="${reader.id}">
 										<input type="hidden" name="senderId"
-											value="${tempFriends.senderId}"> <input type="hidden"
-											name="pendingId" value="${tempFriends.id}"> <input
-											type="submit" value="Submit" />
+											value="${tempPending.sender.id}"> <input
+											type="hidden" name="pendingId" value="${tempPending.id}">
+										<input type="submit" value="Submit" />
 									</form>
 								</c:forEach>
 							</c:otherwise>
@@ -267,7 +273,7 @@
 			</div>
 		</div>
 	</div>
-	<script src="/js/showmore.js"></script>
+	<script src="/js/profileShowMore.js"></script>
 </body>
 
 </html>

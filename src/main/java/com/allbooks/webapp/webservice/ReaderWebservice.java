@@ -6,7 +6,7 @@ import com.allbooks.webapp.entity.Review;
 
 public interface ReaderWebservice {
 
-	public void saveReader(Reader theReader);
+	public Reader saveReader(Reader theReader);
 
 	public Reader getReaderByUsernameAndPassword(String login, String password);
 

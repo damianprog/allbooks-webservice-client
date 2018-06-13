@@ -7,7 +7,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-import com.allbooks.webapp.utils.entity.MailBuilder;
+import com.allbooks.webapp.utils.entity.MailData;
 
 @SpringBootApplication
 public class Application{
@@ -23,8 +23,8 @@ public class Application{
 	}
     
     @Bean
-    public MailBuilder mailBuilder() {
-    	return new MailBuilder();
+    public MailData mailData() {
+    	return new MailData();
     }
 
 }

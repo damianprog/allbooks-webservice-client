@@ -32,22 +32,24 @@
 				</c:when>
 
 				<c:otherwise>
-					<c:when test="${success == true }">
-						<h3>You've been successfully Authenticated!</h3>
-						<p>
-							<a href="/reader/main">Allbooks Home</a>
-						</p>
-						<p>or</p>
-						<p>
-							<a href="/login">Login Page</a>
-						</p>
-					</c:when>
-					<c:when test="${success == false }">
-						<h3>The token is invalid</h3>
-						<p>
-							<a href="/reader/main">Go back to Home page</a>
-						</p>
-					</c:when>
+					<c:choose>
+						<c:when test="${success == true }">
+							<h3>You've been successfully Authenticated!</h3>
+							<p>
+								<a href="/reader/main">Allbooks Home</a>
+							</p>
+							<p>or</p>
+							<p>
+								<a href="/login">Login Page</a>
+							</p>
+						</c:when>
+						<c:when test="${success == false }">
+							<h3>The token is invalid</h3>
+							<p>
+								<a href="/reader/main">Go back to Home page</a>
+							</p>
+						</c:when>
+					</c:choose>
 				</c:otherwise>
 
 

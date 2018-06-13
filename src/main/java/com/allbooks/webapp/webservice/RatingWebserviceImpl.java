@@ -34,9 +34,9 @@ public class RatingWebserviceImpl implements RatingWebservice {
 	}
 
 	@Override
-	public void submitRating(Rating rating) {
+	public Rating submitRating(Rating rating) {
 
-		restTemplate.put(serviceUrlName + "/ratings", rating);
+		return restTemplate.postForObject(serviceUrlName + "/ratings", rating,Rating.class);
 
 	}
 

@@ -27,30 +27,9 @@ public class ReaderBookServiceImpl implements ReaderBookService{
 	}
 
 	@Override
-	public ReaderBook getReaderBook(int bookId, String username) {
+	public ReaderBook getReaderBook(int bookId, int readerId) {
 
-		Reader reader = readerService.getReaderByUsername(username);
-
-		ReaderBook readerBook = readerBookWebservice.getReaderBook(bookId, reader.getId());
-
-		if (readerBook == null)
-			readerBook = new ReaderBook();
-
-		return readerBook;
-
-	}
-
-	@Override
-	public void updateReaderBookShelves(String shelves, int bookId, int readerId) {
-
-		Reader reader = readerService.getReaderById(readerId);
-
-		ReaderBook readerBook = readerBookWebservice.getReaderBook(bookId, readerId);
-
-		readerBook.setShelves(shelves);
-		readerBook.setReader(reader);
-
-		readerBookWebservice.updateReaderBook(readerBook);
+		return readerBookWebservice.getReaderBook(bookId, readerId);
 
 	}
 

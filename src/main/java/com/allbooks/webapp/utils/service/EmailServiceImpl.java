@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.utils.SendMail;
-import com.allbooks.webapp.utils.entity.MailBuilder;
-import com.allbooks.webapp.utils.entity.MailBuilder.TokenType;
+import com.allbooks.webapp.utils.entity.MailData;
+import com.allbooks.webapp.utils.entity.MailData.TokenType;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -17,33 +17,33 @@ public class EmailServiceImpl implements EmailService {
 	private SendMail sendMail;
 
 	@Autowired
-	private MailBuilder mailBuilder;
+	private MailData mailData;
 
 	@Override
 	public void sendRegistrationConfirmation(Reader reader) throws MessagingException {
 
-		mailBuilder.setReader(reader);
-		mailBuilder.setSubject("Registration Confirmation");
-		mailBuilder.setTokenType(TokenType.REGISTRATION_CONFIRM);
-		mailBuilder.setSubjectHeader("Thanks for joining us!");
-		mailBuilder.setSubjectMessage("Click on the link below to confirm your account!");
-		mailBuilder.setTemplateName("template");
+		mailData.setReader(reader);
+		mailData.setSubject("Registration Confirmation");
+		mailData.setTokenType(TokenType.REGISTRATION_CONFIRM);
+		mailData.setSubjectHeader("Thanks for joining us!");
+		mailData.setSubjectMessage("Click on the link below to confirm your account!");
+		mailData.setTemplateName("template");
 
-		sendMail.send(mailBuilder);
+		sendMail.send(mailData);
 
 	}
 
 	@Override
 	public void sendPasswordChanging(Reader reader) throws MessagingException {
 		
-		mailBuilder.setReader(reader);
-		mailBuilder.setSubject("Change Password");
-		mailBuilder.setTokenType(TokenType.CHANGE_PASSWORD);
-		mailBuilder.setSubjectHeader("Change your password");
-		mailBuilder.setSubjectMessage("Click on the link below to change your password");
-		mailBuilder.setTemplateName("template");
+		mailData.setReader(reader);
+		mailData.setSubject("Change Password");
+		mailData.setTokenType(TokenType.CHANGE_PASSWORD);
+		mailData.setSubjectHeader("Change your password");
+		mailData.setSubjectMessage("Click on the link below to change your password");
+		mailData.setTemplateName("template");
 
-		sendMail.send(mailBuilder);
+		sendMail.send(mailData);
 
 	}
 

@@ -9,21 +9,13 @@ public class Comment {
 
 	private String text;
 
-	private String readerLogin;
-
-	private int readerId;
-
-	private int reviewId;
-
 	private Rating rating;
 
-	public int getReviewId() {
-		return reviewId;
-	}
+	private Reader reader;
 
-	public void setReviewId(int reviewId) {
-		this.reviewId = reviewId;
-	}
+	private Review review;
+
+	private Book book;
 
 	public int getId() {
 		return id;
@@ -41,28 +33,36 @@ public class Comment {
 		this.text = text;
 	}
 
-	public String getReaderLogin() {
-		return readerLogin;
-	}
-
-	public void setReaderLogin(String readerLogin) {
-		this.readerLogin = readerLogin;
-	}
-
-	public int getReaderId() {
-		return readerId;
-	}
-
-	public void setReaderId(int readerId) {
-		this.readerId = readerId;
-	}
-
 	public Rating getRating() {
 		return rating;
 	}
 
 	public void setRating(Rating rating) {
 		this.rating = rating;
+	}
+
+	public Reader getReader() {
+		return reader;
+	}
+
+	public void setReader(Reader reader) {
+		this.reader = reader;
+	}
+
+	public Review getReview() {
+		return review;
+	}
+
+	public void setReview(Review review) {
+		this.review = review;
+	}
+
+	public Book getBook() {
+		return book;
+	}
+
+	public void setBook(Book book) {
+		this.book = book;
 	}
 
 }

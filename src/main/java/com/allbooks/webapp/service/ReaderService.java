@@ -1,13 +1,10 @@
 package com.allbooks.webapp.service;
 
-import java.util.List;
-
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.Review;
 
 public interface ReaderService {
 
-	public boolean saveReader(Reader theReader);
+	public void saveReader(Reader reader);
 
 	public Reader getReaderByUsernameAndPassword(String username, String password);
 

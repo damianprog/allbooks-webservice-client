@@ -21,39 +21,47 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.allbooks.webapp.entity.Details;
 import com.allbooks.webapp.entity.Pending;
 import com.allbooks.webapp.entity.Reader;
+import com.allbooks.webapp.service.FriendsService;
+import com.allbooks.webapp.service.PendingService;
 import com.allbooks.webapp.service.ProfileService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
-import com.allbooks.webapp.utils.LoggedUserModelProfileCreator;
-import com.allbooks.webapp.utils.ReaderBooksHandler;
-import com.allbooks.webapp.utils.entity.ReaderBooksState;
-import com.allbooks.webapp.utils.service.FriendsService;
+import com.allbooks.webapp.utils.CurrentlyReadingBooksGetter;
+import com.allbooks.webapp.utils.LoggedReaderModelProfileCreator;
+import com.allbooks.webapp.utils.service.FriendsUtilsService;
 import com.allbooks.webapp.utils.service.PhotoServiceImpl;
+import com.allbooks.webapp.utils.service.ReaderBooksServiceImpl;
 
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
-	
+
 	@Autowired
 	private ReaderService readerService;
 
 	@Autowired
 	private ReviewService reviewService;
-	
+
 	@Autowired
 	private ProfileService profileService;
 
 	@Autowired
-	private ReaderBooksHandler readerBooksHandler;
+	private FriendsUtilsService friendsUtilsService;
+
+	@Autowired
+	private ReaderBooksServiceImpl readerBooksServiceImpl;
 
 	@Autowired
 	private PhotoServiceImpl photoService;
 
 	@Autowired
-	private LoggedUserModelProfileCreator loggedUserModelProfileCreator;
+	private LoggedReaderModelProfileCreator loggedUserModelProfileCreator;
 
 	@Autowired
 	private FriendsService friendsService;
+
+	@Autowired
+	private PendingService pendingService;
 
 	@GetMapping("/showProfile")
 	public String showProfile(@RequestParam(value = "readerId", required = false) Integer readerId, HttpSession session,
@@ -61,19 +69,19 @@ public class ProfileController {
 
 		Reader reader = readerService.getReaderById(readerId);
 
-		ReaderBooksState readerBooksState = readerBooksHandler.getReaderBooksState(reader.getId());
+		Map<String, Integer> readerBooksQuantitiesMap = readerBooksServiceImpl.getReaderBooksQuantities(reader.getId());
 
-		if (reader.getProfilePhoto() != null)
+		if (reader.getProfilePhoto() != null) 
 			theModel.addAttribute("profilePic", photoService.getEncodedImage(reader.getProfilePhoto().getPic()));
 
-		List<Reader> friends = profileService.getReaderFriends(reader.getId());
+		List<Reader> friends = friendsService.getReaderFriends(reader.getId());
 
 		theModel.addAttribute("readerReviews", reviewService.getReviewsByReaderId(readerId));
 		theModel.addAttribute("details", reader.getDetails());
-		theModel.addAttribute("read", readerBooksState.getReaderBooksQuantities().get("read"));
-		theModel.addAttribute("currentlyReading", readerBooksState.getCurrentlyReadingBooks().size());
-		theModel.addAttribute("currentlyReadingList", readerBooksState.getCurrentlyReadingBooks());
-		theModel.addAttribute("wantToRead", readerBooksState.getReaderBooksQuantities().get("wantToRead"));
+		theModel.addAttribute("read", readerBooksQuantitiesMap.get("read"));
+		theModel.addAttribute("currentlyReading", readerBooksQuantitiesMap.get("currentlyReading"));
+		theModel.addAttribute("wantToRead", readerBooksQuantitiesMap.get("wantToRead"));
+		theModel.addAttribute("currentlyReadingList", readerBooksServiceImpl.getCurrentlyReadingBooks(readerId));
 		theModel.addAttribute("reader", reader);
 		theModel.addAttribute("friendsNum", friends.size());
 		theModel.addAttribute("friends", friends);
@@ -110,11 +118,11 @@ public class ProfileController {
 	@GetMapping("/inviteFriend")
 	public String inviteFriend(@RequestParam Map<String, String> params, HttpSession session, RedirectAttributes ra) {
 
-		Pending pending = friendsService.createPending(params);
+		Pending pending = friendsUtilsService.createPending(params);
 
-		profileService.savePending(pending);
+		pendingService.savePending(pending);
 
-		ra.addAttribute("readerId", pending.getRecipentId());
+		ra.addAttribute("readerId", pending.getRecipent().getId());
 		return "redirect:/profile/showProfile";
 	}
 
@@ -122,7 +130,7 @@ public class ProfileController {
 	public String acceptOrAbort(@RequestParam Map<String, String> params, Model theModel, HttpSession session,
 			RedirectAttributes ra) {
 
-		friendsService.acceptOrAbort(params);
+		friendsUtilsService.acceptOrAbort(params);
 
 		ra.addAttribute("readerId", params.get("recipentId"));
 		return "redirect:/profile/showProfile";
@@ -132,7 +140,7 @@ public class ProfileController {
 	public String deleteFriends(@RequestParam("readerId") int readerId, @RequestParam("friendId") int friendId,
 			Model theModel, HttpSession session, Principal principal, RedirectAttributes ra) {
 
-		friendsService.deleteFriends(readerId, friendId);
+		friendsUtilsService.deleteFriends(readerId, friendId);
 
 		ra.addAttribute("readerId", readerId);
 		return "redirect:/profile/showProfile";

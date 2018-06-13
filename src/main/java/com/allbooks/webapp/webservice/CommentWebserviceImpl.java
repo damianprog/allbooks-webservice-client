@@ -12,14 +12,14 @@ import org.springframework.web.client.RestTemplate;
 import com.allbooks.webapp.entity.Comment;
 
 @Service
-public class CommentWebserviceImpl implements CommentWebservice{
+public class CommentWebserviceImpl implements CommentWebservice {
 
 	@Autowired
 	private RestTemplate restTemplate;
 
 	@Value("${service.url.name}")
 	private String serviceUrlName;
-	
+
 	@Override
 	public void submitComment(Comment comment) {
 		restTemplate.postForObject(serviceUrlName + "/comments", comment, Comment.class);
@@ -38,6 +38,18 @@ public class CommentWebserviceImpl implements CommentWebservice{
 		return responseEntity.getBody();
 	}
 
-	
-	
+	@Override
+	public Comment[] getCommentsByReaderIdAndBookId(int readerId, int bookId) {
+
+		Map<String, Integer> params = new HashMap<>();
+		params.put("readerId", readerId);
+		params.put("bookId", bookId);
+
+		ResponseEntity<Comment[]> responseEntity = restTemplate.getForEntity(
+				serviceUrlName + "/readers/{readerId}/books/{bookId}/reviews/comments", Comment[].class, params);
+		
+		return responseEntity.getBody();
+
+	}
+
 }

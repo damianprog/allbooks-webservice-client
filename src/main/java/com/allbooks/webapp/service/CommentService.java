@@ -8,6 +8,8 @@ public interface CommentService {
 
 	public void submitComment(Comment comment);
 
+	public List<Comment> getCommentsByReaderIdAndBookId(int readerId,int bookId);
+	
 	public List<Comment> getReviewComments(int reviewId);
 	
 }

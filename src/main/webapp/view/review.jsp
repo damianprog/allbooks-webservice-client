@@ -102,7 +102,7 @@
 						method="POST">
 						<input type="hidden" name="reviewId" value="${review.id}" />
 						<input type="hidden" name="readerLogin" value="${readerLogin}" />
-						<input type="hidden" name="bookId" value="${bookId}" />
+						<input type="hidden" name="bookId" value="${book.id}" />
 						<input type="hidden" name="bookName" value="${book.miniTitle}" />
 						<input type="hidden" name="authorName" value="${authorName}" />									
 					Comment<br>
@@ -124,8 +124,13 @@
 
 					<tr>
 						<td>
-							<h4 id="h4">${tempComment.readerLogin}</h4> rated it
-							${tempComment.rating.rate}
+							<h4 id="h4">${tempComment.reader.username}</h4>
+							<c:choose>
+							<c:when test="${tempComment.rating != null}">
+								 rated it
+								${tempComment.rating.rate}
+							</c:when>
+							</c:choose>
 						</td>
 					</tr>
 					<tr>

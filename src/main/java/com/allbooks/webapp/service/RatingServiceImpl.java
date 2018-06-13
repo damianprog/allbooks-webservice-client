@@ -36,9 +36,6 @@ public class RatingServiceImpl implements RatingService{
 		
 		Rating rating = ratingWebservice.getReaderRatingObject(bookId,readerId);
 
-		if (rating == null)
-			rating = new Rating();
-
 		return rating;
 	}
 	
@@ -47,18 +44,14 @@ public class RatingServiceImpl implements RatingService{
 
 		Reader reader = readerService.getReaderById(readerId);
 
-		Rating rating = ratingWebservice.getReaderRatingObject(bookId, reader.getId());
+		return ratingWebservice.getReaderRatingObject(bookId, reader.getId());
 
-		if (rating == null)
-			rating = new Rating();
-
-		return rating;
 	}
-
+	
 	@Override
-	public void submitRating(Rating rating) {
+	public Rating submitRating(Rating rating) {
 
-		ratingWebservice.submitRating(rating);
+		return ratingWebservice.submitRating(rating);
 
 	}
 

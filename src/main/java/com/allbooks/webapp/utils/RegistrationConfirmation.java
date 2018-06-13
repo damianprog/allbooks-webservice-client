@@ -13,10 +13,10 @@ import com.allbooks.webapp.service.ReaderService;
 public class RegistrationConfirmation {
 
 	@Autowired
-	ReaderService readerService;
+	private ReaderService readerService;
 	
 	@Autowired
-	TokenVerification tokenVerification;
+	private TokenVerification tokenVerification;
 	
 	public Map<String,Boolean> verifyConfirmation(int readerId,String token) {
 		

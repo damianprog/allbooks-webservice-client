@@ -6,7 +6,7 @@ public interface RatingService {
 
 	public Rating getReaderRatingObject(int readerId,int bookId);
 
-	public void submitRating(Rating rating);
+	public Rating submitRating(Rating rating);
 
 	public Rating[] getBookRatings(int bookId);
 	

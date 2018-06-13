@@ -25,18 +25,19 @@ hr {
     width: 100%;
 }
 
-.cells{
+#mainTable td{
 	padding-top:20px;
 	vertical-align:top;
+	font-size:15px;
 }
 
 .titleRef{
 	color:black;
 }
 
-#lastTd{
-	padding-top:20px;
-	padding-left:10px;
-	vertical-align:top;
-	width:120px;
-}
+/* #lastTd{ */
+/* 	padding-top:20px; */
+/* 	padding-left:10px; */
+/* 	vertical-align:top; */
+/* 	width:120px; */
+/* } */

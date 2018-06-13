@@ -69,7 +69,7 @@
 								</tr>
 								<tr>
 									<td><input name="password" type="password"
-										placeholder="Password" id="joinInputBox" required="required" />
+										placeholder="Password" class="joinInputBox" required="required" />
 										<input name="readerId" type="hidden" value="${readerId}" /></td>
 
 								</tr>
@@ -92,7 +92,7 @@
 								</tr>
 								<tr>
 									<td><input name="email" type="text"
-										placeholder="your@yours.com" id="joinInputBox"
+										placeholder="your@yours.com" class="joinInputBox"
 										required="required" /></td>
 								</tr>
 

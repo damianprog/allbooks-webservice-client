@@ -10,7 +10,7 @@ import com.allbooks.webapp.utils.AverageRating;
 
 public class AverageRatingTest {
 
-	AverageRating averageRating;
+	private AverageRating averageRating;
 
 	@Before
 	public void initFields() {

@@ -9,19 +9,11 @@ public class Rating {
 
 	private int rate;
 
-	private int readerId;
+	private Reader reader;
 
-	private int bookId;
+	private Book book;
 
 	public Rating() {
-	}
-
-	public int getReaderId() {
-		return readerId;
-	}
-
-	public void setReaderId(int readerId) {
-		this.readerId = readerId;
 	}
 
 	public int getId() {
@@ -40,17 +32,25 @@ public class Rating {
 		this.rate = rate;
 	}
 
-	public int getBookId() {
-		return bookId;
+	public Reader getReader() {
+		return reader;
 	}
 
-	public void setBookId(int bookId) {
-		this.bookId = bookId;
+	public void setReader(Reader reader) {
+		this.reader = reader;
 	}
 
+	public Book getBook() {
+		return book;
+	}
+
+	public void setBook(Book book) {
+		this.book = book;
+	}
+	
 	@Override
 	public String toString() {
-		return "Rating [id=" + id + ", rate=" + rate + ", readerId=" + readerId + ", bookId=" + bookId + "]";
+		return "Rating [id=" + id + ", rate=" + rate + ", reader=" + reader + ", book=" + book + "]";
 	}
 
 }

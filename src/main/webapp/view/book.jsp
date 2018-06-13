@@ -56,7 +56,6 @@
 										<form:option value="5" label="5" selected="selected" />
 									</form:select>
 									<form:hidden path="id" />
-									<form:hidden path="readerId" />
 									<input type="hidden" name="bookId" value="${book.id}">
 									<input class="submit" type="submit" value="Submit" />
 								</form:form>
@@ -202,7 +201,7 @@
 	</div>
 
 
-	<script src="/js/showmore.js"></script>
+	<script src="/js/bookShowMore.js"></script>
 
 </body>
 

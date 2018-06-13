@@ -30,5 +30,11 @@ public class CommentServiceImpl implements CommentService{
 
 		return commentsList;
 	}
+
+	@Override
+	public List<Comment> getCommentsByReaderIdAndBookId(int readerId, int bookId) {
+		
+		return Arrays.asList(commentWebservice.getCommentsByReaderIdAndBookId(readerId,bookId)); 
+	}
 	
 }

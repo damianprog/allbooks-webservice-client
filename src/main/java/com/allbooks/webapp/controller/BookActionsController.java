@@ -21,16 +21,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Comment;
-import com.allbooks.webapp.entity.ReaderBookData;
-import com.allbooks.webapp.factories.BookActionDataObjectFactory;
+import com.allbooks.webapp.entity.CommentData;
 import com.allbooks.webapp.entity.Rating;
-import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
+import com.allbooks.webapp.entity.Review;
+import com.allbooks.webapp.factories.BookActionDataObjectFactory;
+import com.allbooks.webapp.factories.ReviewFactory;
 import com.allbooks.webapp.service.BookService;
-import com.allbooks.webapp.service.RatingService;
-import com.allbooks.webapp.service.ReaderBookService;
-import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
+import com.allbooks.webapp.utils.ReaderBookAndRatingModelCreator;
 import com.allbooks.webapp.utils.SubmitComment;
 import com.allbooks.webapp.utils.service.PhotoServiceImpl;
 import com.allbooks.webapp.utils.service.SaveService;
@@ -41,15 +40,6 @@ public class BookActionsController {
 
 	@Autowired
 	private ReviewService reviewService;
-
-	@Autowired
-	private RatingService ratingService;
-
-	@Autowired
-	private ReaderService readerService;
-
-	@Autowired
-	private ReaderBookService readerBookService;
 
 	@Autowired
 	private BookService bookService;
@@ -65,7 +55,13 @@ public class BookActionsController {
 
 	@Autowired
 	private BookActionDataObjectFactory bookActionDataObjectFactory;
-	
+
+	@Autowired
+	private ReaderBookAndRatingModelCreator readerBookAndRatingModelCreator;
+
+	@Autowired
+	private ReviewFactory reviewFactory;
+
 	@PutMapping("/rate")
 	public String rate(@ModelAttribute("rating") Rating rating, BindingResult resultRating,
 			@RequestParam Map<String, String> params, Model theModel, HttpSession session, Principal principal,
@@ -83,9 +79,11 @@ public class BookActionsController {
 			@RequestParam("reviewId") int reviewId, HttpSession session, Model theModel, Principal principal,
 			RedirectAttributes ra) {
 
-		submitComment.submit(comment, params);
+		CommentData commentData = bookActionDataObjectFactory.createCommentData(comment, params);
 
-		ra.addAttribute("reviewId", Integer.valueOf(params.get("reviewId")));
+		submitComment.submit(commentData);
+
+		ra.addAttribute("reviewId", reviewId);
 
 		return "redirect:/reader/reviewPage";
 	}
@@ -125,16 +123,17 @@ public class BookActionsController {
 
 	@PostMapping("/postReview")
 	public String postReview(@RequestParam Map<String, String> params, @ModelAttribute("rating") Rating rating,
-			@ModelAttribute("readerBook") ReaderBook readerBook, RedirectAttributes ra, Principal principal)
-			throws IOException {
+			@ModelAttribute("readerBook") ReaderBook readerBook, RedirectAttributes ra) throws IOException {
 
-		String username = principal.getName();
 		readerBook.setId(Integer.valueOf(params.get("readerBookId")));
-		
-		saveService.saveReaderBook(bookActionDataObjectFactory.createReaderBookData(readerBook, params));
-		
+
+		Review review = reviewFactory.createInstanceFromParams(params);
+
 		saveService.saveRating(bookActionDataObjectFactory.createRatingData(rating, params));
-		saveService.saveReview(params, username);
+
+		saveService.saveReaderBook(bookActionDataObjectFactory.createReaderBookData(readerBook, params));
+
+		saveService.saveReview(bookActionDataObjectFactory.createReviewData(review, params));
 
 		ra.addAttribute("bookId", params.get("bookId"));
 
@@ -146,14 +145,13 @@ public class BookActionsController {
 			throws IOException {
 
 		Book book = bookService.getBook(bookId);
-		Reader reader = readerService.getReaderByUsername(principal.getName());
 
 		byte[] bookPicBytes = photoService.resize(book.getBookPhoto(), 80, 120);
 
-		theModel.addAttribute("readerBook", readerBookService.getReaderBook(book.getId(), reader.getUsername()));
 		theModel.addAttribute("book", book);
+		theModel.addAttribute("review", new Review());
 		theModel.addAttribute("bookPic", photoService.getEncodedImage(bookPicBytes));
-		theModel.addAttribute("rating", ratingService.getReaderRatingObject(reader.getId(), bookId));
+		theModel.addAllAttributes(readerBookAndRatingModelCreator.createModel(bookId));
 
 		return "postreview";
 	}

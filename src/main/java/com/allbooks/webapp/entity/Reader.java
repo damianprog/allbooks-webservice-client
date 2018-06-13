@@ -32,10 +32,6 @@ public class Reader {
 
 	private Details details;
 
-	private List<Rating> ratings;
-
-	private List<ReaderBook> readerBooks;
-
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -58,22 +54,6 @@ public class Reader {
 
 	public void setProfilePhoto(ProfilePhoto profilePhoto) {
 		this.profilePhoto = profilePhoto;
-	}
-
-	public List<ReaderBook> getReaderBooks() {
-		return readerBooks;
-	}
-
-	public void setReaderBooks(List<ReaderBook> readerBooks) {
-		this.readerBooks = readerBooks;
-	}
-
-	public List<Rating> getRatings() {
-		return ratings;
-	}
-
-	public void setRatings(List<Rating> ratings) {
-		this.ratings = ratings;
 	}
 
 	public Details getDetails() {

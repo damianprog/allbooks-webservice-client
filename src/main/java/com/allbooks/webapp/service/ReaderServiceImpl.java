@@ -1,9 +1,6 @@
 package com.allbooks.webapp.service;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.ReaderRole;
-import com.allbooks.webapp.entity.Review;
+import com.allbooks.webapp.utils.ReaderRoleSaver;
 import com.allbooks.webapp.webservice.ReaderWebservice;
 
 @Service
@@ -22,24 +18,20 @@ public class ReaderServiceImpl implements ReaderService {
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Autowired
-	ReaderWebservice readerWebservice;
+	private ReaderWebservice readerWebservice;
 
+	@Autowired
+	private ReaderRoleSaver readerRoleSaver;
+	
 	@Override
-	public boolean saveReader(Reader theReader) {
+	public void saveReader(Reader reader) {
 
-		ReaderRole readerRole = new ReaderRole();
+		reader.setPassword(bCryptPasswordEncoder.encode(reader.getPassword()));
 
-		theReader.setPassword(bCryptPasswordEncoder.encode(theReader.getPassword()));
+		Reader savedReader = readerWebservice.saveReader(reader);
+		
+		readerRoleSaver.save(savedReader);
 
-		if (!checkReaderLogin(theReader.getUsername())) {
-			readerWebservice.saveReader(theReader);
-			Reader reader = readerWebservice.getReaderByUsername(theReader.getUsername());
-			readerRole.setReaderId(reader.getId());
-			readerRole.setRoleId(2);
-			readerWebservice.saveReaderRole(readerRole);
-			return true;
-		} else
-			return false;
 	}
 
 	@Override

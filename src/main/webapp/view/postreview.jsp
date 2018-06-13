@@ -66,7 +66,6 @@
 								<form:option value="5" label="5" selected="selected" />
 
 							</form:select></td>
-						<form:hidden path="bookId" />
 						<form:hidden path="id" />
 
 

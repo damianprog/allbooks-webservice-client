@@ -1,16 +1,18 @@
 package com.allbooks.webapp.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Comment;
+import com.allbooks.webapp.entity.CommentData;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.Review;
+import com.allbooks.webapp.service.BookService;
+import com.allbooks.webapp.service.CommentService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
@@ -23,36 +25,40 @@ public class SubmitComment {
 
 	@Autowired
 	private ReviewService reviewService;
-	
+
 	@Autowired
 	private RatingService ratingService;
+
+	@Autowired
+	private CommentService commentService;
+
+	@Autowired
+	private BookService bookService;
 	
-	public void submit(Comment comment, Map<String, String> params) {
+	@Autowired
+	private HttpSession session;
+	
+	public void submit(CommentData commentData) {
 
-		Reader reader = readerService.getReaderByUsername(params.get("readerLogin"));
-		int readerId = reader.getId();
-
-		comment.setReaderId(readerId);
-		comment.setReaderLogin(reader.getUsername());
-
-		int bookId = Integer.parseInt(params.get("bookId"));
+		int readerId = (int)session.getAttribute("readerId");
+		int bookId = commentData.getBookId();
 		
-		Rating rating = ratingService.getReaderRatingObject(readerId,bookId);
+		Comment comment = commentData.getComment();
+		
+		Reader reader = readerService.getReaderById(readerId);
+		
+		Book book = bookService.getBook(bookId);
+		
+		Rating rating = ratingService.getReaderRatingObject(readerId, bookId);
 
-		if (rating.getId() != 0)
-			comment.setRating(rating);
+		Review review = reviewService.getReviewById(commentData.getReviewId());
 
-		Review review = reviewService.getReviewById(Integer.valueOf(params.get("reviewId")));
-		List<Comment> comments = review.getComments();
+		comment.setReader(reader);
+		comment.setRating(rating);
+		comment.setReview(review);
+		comment.setBook(book);
 
-		if (comments == null)
-			comments = new ArrayList<Comment>();
-
-		comments.add(comment);
-		review.setComments(comments);
-
-		reviewService.updateReview(review);
-
+		commentService.submitComment(comment);
 	}
 
 }

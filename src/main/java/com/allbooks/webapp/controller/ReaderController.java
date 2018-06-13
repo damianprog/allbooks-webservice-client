@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -25,17 +24,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Comment;
-import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.CommentService;
 import com.allbooks.webapp.service.RatingService;
-import com.allbooks.webapp.service.ReaderBookService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
-import com.allbooks.webapp.utils.ReaderBooksForMyBooksHandler;
-import com.allbooks.webapp.utils.RegistrationConfirmation;
+import com.allbooks.webapp.utils.ReaderBookAndRatingModelCreator;
 import com.allbooks.webapp.utils.service.PhotoServiceImpl;
 import com.allbooks.webapp.utils.service.SaveService;
 
@@ -45,19 +41,16 @@ public class ReaderController {
 
 	@Autowired
 	private RatingService ratingService;
-	
+
 	@Autowired
 	private ReaderService readerService;
 
 	@Autowired
 	private BookService bookService;
-	
+
 	@Autowired
 	private CommentService commentService;
-	
-	@Autowired
-	private ReaderBookService readerBookService;
-	
+
 	@Autowired
 	private ReviewService reviewService;
 
@@ -66,9 +59,9 @@ public class ReaderController {
 
 	@Autowired
 	private PhotoServiceImpl photoService;
-	
+
 	@Autowired
-	private ReaderBooksForMyBooksHandler readerBooksForMyBooksHandler;
+	private ReaderBookAndRatingModelCreator readerBookAndRatingModelCreator;
 	
 	@GetMapping("/main")
 	public String mainPage(Model theModel, HttpSession session, HttpServletRequest request) {
@@ -101,16 +94,9 @@ public class ReaderController {
 	public String showBook(@RequestParam(value = "bookId", required = false) int bookId, Model theModel,
 			HttpSession session, Principal principal) throws Exception {
 
-		Book book = bookService.getBook(bookId); //define proper name of method
+		Book book = bookService.getBook(bookId); // define proper name of method
 
-		if (principal != null) {
-			
-			Rating rating = ratingService.getLoggedReaderRatingObject(bookId);
-			
-			theModel.addAttribute("readerBook", readerBookService.getReaderBook(bookId, principal.getName()));
-			theModel.addAttribute("rating", rating);
-		}
-
+		theModel.addAllAttributes(readerBookAndRatingModelCreator.createModel(bookId));
 		theModel.addAttribute("quotesSplit", Arrays.asList(book.getBookQuotes().split("/")));
 		theModel.addAttribute("bookPic", photoService.getEncodedImage(book.getBookPhoto()));
 		theModel.addAttribute("authorPic", photoService.getEncodedImage(book.getAuthorPhoto()));
@@ -120,16 +106,6 @@ public class ReaderController {
 		theModel.addAttribute("book", book);
 
 		return "book";
-	}
-
-	@GetMapping("/showMyBooks")
-	public String showMyBooks(@RequestParam(value = "readerId", required = false) Integer readerId, Model theModel,
-			HttpSession session, Principal principal) {
-
-		theModel.addAttribute("readerBooks", readerBooksForMyBooksHandler.prepareReaderBooks(readerId));
-		theModel.addAttribute("readerLogin", readerService.getReaderById(readerId).getUsername());
-
-		return "mybooks";
 	}
 
 	@GetMapping("/reviewPage")
@@ -158,9 +134,16 @@ public class ReaderController {
 
 		if (bindingResult.hasErrors())
 			return "join";
-
-		theModel.addAttribute("success", saveService.saveReader(reader));
-
+		
+		//TODO add email verification method extract this verification process to external component
+		
+		if(readerService.checkReaderLogin(reader.getUsername())) {
+			theModel.addAttribute("success",true);
+			saveService.saveReader(reader);
+		}
+		else
+			theModel.addAttribute("success",false);
+		
 		return "saved";
 	}
 

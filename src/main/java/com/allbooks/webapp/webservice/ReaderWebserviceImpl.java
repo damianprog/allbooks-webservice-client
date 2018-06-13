@@ -5,13 +5,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderRole;
-import com.allbooks.webapp.entity.Review;
 
 @Service
 public class ReaderWebserviceImpl implements ReaderWebservice {
@@ -23,9 +21,9 @@ public class ReaderWebserviceImpl implements ReaderWebservice {
 	private String serviceUrlName;
 
 	@Override
-	public void saveReader(Reader theReader) {
+	public Reader saveReader(Reader theReader) {
 
-		restTemplate.postForObject(serviceUrlName + "/readers", theReader, Reader.class);
+		return restTemplate.postForObject(serviceUrlName + "/readers", theReader, Reader.class);
 	}
 
 	@Override

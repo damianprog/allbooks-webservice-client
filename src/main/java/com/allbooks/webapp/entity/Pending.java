@@ -7,13 +7,9 @@ public class Pending {
 
 	private int id;
 
-	private int recipentId;
+	private Reader recipent;
 
-	private int senderId;
-
-	private String recipentLogin;
-
-	private String senderLogin;
+	private Reader sender;
 
 	public Pending() {
 	}
@@ -26,36 +22,20 @@ public class Pending {
 		this.id = id;
 	}
 
-	public int getRecipentId() {
-		return recipentId;
+	public Reader getRecipent() {
+		return recipent;
 	}
 
-	public void setRecipentId(int recipentId) {
-		this.recipentId = recipentId;
+	public void setRecipent(Reader recipent) {
+		this.recipent = recipent;
 	}
 
-	public int getSenderId() {
-		return senderId;
+	public Reader getSender() {
+		return sender;
 	}
 
-	public void setSenderId(int senderId) {
-		this.senderId = senderId;
-	}
-
-	public String getRecipentLogin() {
-		return recipentLogin;
-	}
-
-	public void setRecipentLogin(String recipentLogin) {
-		this.recipentLogin = recipentLogin;
-	}
-
-	public String getSenderLogin() {
-		return senderLogin;
-	}
-
-	public void setSenderLogin(String senderLogin) {
-		this.senderLogin = senderLogin;
+	public void setSender(Reader sender) {
+		this.sender = sender;
 	}
 
 }

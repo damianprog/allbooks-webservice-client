@@ -7,5 +7,7 @@ public interface CommentWebservice {
 	public void submitComment(Comment comment);
 	
 	public Comment[] getReviewComments(int reviewId);
+
+	public Comment[] getCommentsByReaderIdAndBookId(int readerId, int bookId);
 	
 }

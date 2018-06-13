@@ -109,6 +109,8 @@ public class ReaderAccount {
 	public String registrationConfirm(@RequestParam("token") String token, @RequestParam("readerId") Integer readerId,
 			Model theModel, HttpSession session, Principal principal) {
 
+		//TODO object with these parameters info maybe?
+		
 		Map<String, Boolean> map = registrationConfirmation.verifyConfirmation(readerId, token);
 
 		theModel.addAttribute("success", map.get("success"));

@@ -14,7 +14,7 @@ public class RegistrationListener implements
 ApplicationListener<OnRegistrationCompleteEvent>{
 	
 	@Autowired
-	EmailService emailService;
+	private EmailService emailService;
 	
 	@Override
 	public void onApplicationEvent(OnRegistrationCompleteEvent event) {

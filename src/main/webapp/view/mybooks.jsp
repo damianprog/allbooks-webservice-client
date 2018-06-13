@@ -14,29 +14,29 @@
 
 <body>
 
-<sec:authentication var="principal" property="principal" />
+	<sec:authentication var="principal" property="principal" />
 
-<c:set var="myBooks" value="false"></c:set>
+	<c:set var="isItMyBooks" value="false"></c:set>
 
-<sec:authorize access="isFullyAuthenticated()">
-	<sec:authentication property="principal.username" var="username" />
-	
-	<c:if test="${username == readerLogin}">
-	
-		<c:set var="myBooks" value="true"></c:set>
-	
-	</c:if>
-</sec:authorize>
+	<sec:authorize access="isFullyAuthenticated()">
+		<sec:authentication property="principal.username" var="username" />
+
+		<c:if test="${username == readerLogin}">
+
+			<c:set var="isItMyBooks" value="true"></c:set>
+
+		</c:if>
+	</sec:authorize>
 
 	<div id="container">
 		<jsp:include page='/view/header.jsp' />
 		<br>
 		<c:choose>
-			<c:when test="${myBooks == true }">
+			<c:when test="${isItMyBooks == true }">
 				<h2 id="first">My Books</h2>
 			</c:when>
-			<c:when test="${myBooks == false }">
-				<h2 id="first">${readerLogin}'s Books</h2>
+			<c:when test="${isItMyBooks == false }">
+				<h2 id="first">${readerLogin}'sBooks</h2>
 			</c:when>
 		</c:choose>
 		<hr>
@@ -45,7 +45,7 @@
 			There are no books yet!
 			</c:when>
 			<c:otherwise>
-				<table>
+				<table id="mainTable">
 
 					<tr>
 						<th>cover</th>
@@ -56,52 +56,57 @@
 						<th>shelves</th>
 						<th>date read</th>
 						<th>date added</th>
-						<c:if test="${myBooks == true}">
+						<c:if test="${isItMyBooks == true}">
 							<th>Delete</th>
 						</c:if>
 					</tr>
 
-					<c:forEach var="tempBook" items="${readerBooks}">
-						<c:url var="titleRef" value="showBook">
-							<c:param name="bookName" value="${tempBook.book.miniTitle}" />
+					<c:forEach var="tempReaderBook" items="${readerBooks}">
+						<c:url var="titleRef" value="/reader/showBook">
+							<c:param name="bookId" value="${tempReaderBook.book.id}" />
 						</c:url>
 						<tr>
 							<td><img
-								src="data:image/jpeg;base64,${tempBook.encodedBookPic}" /></td>
-							<td class="cells"><a class="titleRef" href="${titleRef}">${tempBook.book.fullTitle}</a></td>
-							<td class="cells">${tempBook.book.author}</td>
-							<td class="cells">${tempBook.overallRating}</td>
-							<td class="cells">${tempBook.readerRating.rate}</td>
-							<td class="cells">${tempBook.shelves}<br> <c:choose>
-									<c:when test="${myBooks == true}">
-										<form method="GET" action="/myBooks/updateState">
-											<select name="newState">
+								src="data:image/jpeg;base64,${tempReaderBook.encodedBookPic}" /></td>
+							<td><a class="titleRef" href="${titleRef}">${tempReaderBook.book.fullTitle}</a></td>
+							<td>${tempReaderBook.book.author}</td>
+							<td>${tempReaderBook.overallRating}</td>
+							<td>${tempReaderBook.readerRating.rate}</td>
+							<td>${tempReaderBook.shelves}<br> <c:choose>
+									<c:when test="${isItMyBooks == true}">
+										<form method="POST" action="/myBooks/updateState">
+											<select name="newShelves">
 												<option value="Read">Read</option>
 												<option value="Currently Reading">Currently Reading</option>
 												<option value="Want To Read">Want To Read</option>
-											</select> <input type="hidden" name="bookName"
-												value="${tempBook.book.miniTitle}"> <input
+											</select> <input type="hidden" name="bookId"
+												value="${tempReaderBook.book.id}"> 
+												<input type="hidden" name="isItUpdateReaderBook"
+												value="true">
+												<input type="hidden" name="readerBookId"
+												value="${tempReaderBook.id}">
+												<input
 												type="submit" value="Submit" />
 										</form>
 									</c:when>
 								</c:choose>
 							</td>
-							<td class="cells">${tempBook.dateRead}<c:choose>
-									<c:when test="${myBooks == true}">
+							<td>${tempReaderBook.dateRead}<c:choose>
+									<c:when test="${isItMyBooks == true}">
 										<form method="GET" action="/myBooks/updateDateRead">
 											<input id="dateReadChooser" name="dateRead" type="date"
-												value="${tempBook.dateRead}"> <input type="hidden"
-												name="bookName" value="${tempBook.book.miniTitle}">
+												value="${tempReaderBook.dateRead}"> <input type="hidden"
+												name="bookName" value="${tempReaderBook.book.miniTitle}">
 											<input type="submit" value="Submit" />
 										</form>
 									</c:when>
 								</c:choose>
 							</td>
-							<td id="lastTd">${tempBook.dateAdded}</td>
+							<td>${tempReaderBook.dateAdded}</td>
 							<c:url var="delete" value="/myBooks/deleteReaderBook">
-								<c:param name="bookId" value="${tempBook.book.id}"></c:param>
+								<c:param name="bookId" value="${tempReaderBook.book.id}"></c:param>
 							</c:url>
-							<c:if test="${myBooks == true}">
+							<c:if test="${isItMyBooks == true}">
 								<td style="vertical-align: top; padding-top: 20px;"><a
 									class="titleRef" href="${delete}">Delete</a></td>
 							</c:if>
@@ -114,5 +119,46 @@
 	</div>
 
 </body>
+
+<script src="/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		var isItMyBooks = ${isItMyBooks}
+
+		if (isItMyBooks == false) {
+
+			$('#mainTable td').css({
+				'padding-left' : '30px'
+			})
+
+			$('#mainTable th').css({
+				'padding-left' : '30px'
+			})
+
+		}
+
+		else if (isItMyBooks == true) {
+
+			$('#mainTable td').css({
+				'padding-left' : '10px'
+			})
+
+			$('#mainTable th').css({
+				'padding-left' : '10px'
+			})
+
+			$('#mainTable td:nth-child(8)').css({
+				'width' : '120px'
+			})
+
+			$('#mainTable td:nth-child(8)').css({
+				'padding-left' : '40px'
+			})
+
+		}
+
+	});
+</script>
 
 </html>

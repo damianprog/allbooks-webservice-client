@@ -30,7 +30,7 @@
 
 				<td class="pageRef"><sec:authorize
 						access="isFullyAuthenticated()">
-						<c:url var="showMyBooks" value="/reader/showMyBooks">
+						<c:url var="showMyBooks" value="/myBooks/showMyBooks">
 							<c:param name="readerId" value="${sessionScope.readerId}"></c:param>
 						</c:url>
 						<a class="blackRefNon" href="${showMyBooks}">My Books</a>
