@@ -68,7 +68,7 @@
 							<p>${review.text }</p>
 
 							<div id="reviewLikes">
-								Likes: ${review.likes}
+								Likes: ${review.likes.size()}
 
 								<sec:authorize access="isFullyAuthenticated()">
 										<form:form action="/bookActions/dropLikeReview" method="GET"

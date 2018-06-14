@@ -21,6 +21,4 @@ public interface ReviewService {
 	
 	public List<Review> getReviewsByReaderId(int readerId);
 	
-	public void dropLike(int reviewId);
-	
 }

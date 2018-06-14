@@ -7,8 +7,6 @@ public class Details {
 
 	private int id;
 
-	private int readerId;
-
 	private String firstName;
 
 	private String lastName;
@@ -30,9 +28,9 @@ public class Details {
 	private String about;
 
 	public Details() {
-		
+
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -121,13 +119,4 @@ public class Details {
 		this.about = about;
 	}
 
-	public int getReaderId() {
-		return readerId;
-	}
-
-	public void setReaderId(int readerId) {
-		this.readerId = readerId;
-	}
-	
-	
 }

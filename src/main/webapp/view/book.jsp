@@ -177,7 +177,9 @@
 							</td>
 						</tr>
 						<tr>
-							<td id="spaceUnder">Likes: ${tempReview.likes} <sec:authorize
+							<td id="spaceUnder">
+							Likes: ${tempReview.likes.size()}
+							<sec:authorize
 									access="isFullyAuthenticated()">
 									<form:form action="/bookActions/dropLike" method="GET"
 										id="likeForm">

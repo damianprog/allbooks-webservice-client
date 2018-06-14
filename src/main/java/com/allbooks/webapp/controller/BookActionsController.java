@@ -29,6 +29,7 @@ import com.allbooks.webapp.factories.BookActionDataObjectFactory;
 import com.allbooks.webapp.factories.ReviewFactory;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.ReviewService;
+import com.allbooks.webapp.utils.LikesDropper;
 import com.allbooks.webapp.utils.ReaderBookAndRatingModelCreator;
 import com.allbooks.webapp.utils.SubmitComment;
 import com.allbooks.webapp.utils.service.PhotoServiceImpl;
@@ -62,6 +63,9 @@ public class BookActionsController {
 	@Autowired
 	private ReviewFactory reviewFactory;
 
+	@Autowired
+	private LikesDropper likesDropper;
+	
 	@PutMapping("/rate")
 	public String rate(@ModelAttribute("rating") Rating rating, BindingResult resultRating,
 			@RequestParam Map<String, String> params, Model theModel, HttpSession session, Principal principal,
@@ -92,7 +96,8 @@ public class BookActionsController {
 	public String dropLike(@RequestParam("reviewId") int reviewId, @RequestParam("bookId") int bookId,
 			HttpSession session, HttpServletRequest request, RedirectAttributes ra) {
 
-		reviewService.dropLike(reviewId);
+		likesDropper.dropLike(reviewId);
+		
 		ra.addAttribute("bookId", bookId);
 
 		return "redirect:/reader/showBook";
@@ -102,7 +107,7 @@ public class BookActionsController {
 	public String dropLikeReview(@RequestParam("reviewId") int reviewId, Model theModel, HttpSession session,
 			RedirectAttributes ra) {
 
-		reviewService.dropLike(reviewId);
+		
 		ra.addAttribute("reviewId", reviewId);
 
 		return "redirect:/reader/reviewPage";

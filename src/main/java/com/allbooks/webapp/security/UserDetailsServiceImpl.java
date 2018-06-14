@@ -30,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Reader reader;
 
-		boolean isUserInDb = readerService.checkReaderLogin(username);
+		boolean isUserInDb = readerService.isThisLoginTaken(username);
 
 		if (isUserInDb == true) {
 			reader = readerService.getReaderByUsername(username);

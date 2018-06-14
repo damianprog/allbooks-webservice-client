@@ -19,7 +19,7 @@ public class ReaderSaver {
 
 	public void save(Reader reader) {
 
-		Reader readerPass = readerService.getReaderById(reader.getId());
+		Reader readerPass = readerService.saveReader(reader);
 		eventPublisher.publishEvent(new OnRegistrationCompleteEvent(readerPass));
 
 	}

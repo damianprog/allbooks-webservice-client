@@ -62,7 +62,7 @@ public class ReaderController {
 
 	@Autowired
 	private ReaderBookAndRatingModelCreator readerBookAndRatingModelCreator;
-	
+
 	@GetMapping("/main")
 	public String mainPage(Model theModel, HttpSession session, HttpServletRequest request) {
 
@@ -134,16 +134,13 @@ public class ReaderController {
 
 		if (bindingResult.hasErrors())
 			return "join";
-		
-		//TODO add email verification method extract this verification process to external component
-		
-		if(readerService.checkReaderLogin(reader.getUsername())) {
-			theModel.addAttribute("success",true);
+
+		if (!readerService.isThisLoginTaken(reader.getUsername())) {
+			theModel.addAttribute("success", true);
 			saveService.saveReader(reader);
-		}
-		else
-			theModel.addAttribute("success",false);
-		
+		} else
+			theModel.addAttribute("success", false);
+
 		return "saved";
 	}
 

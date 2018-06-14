@@ -26,8 +26,6 @@
 		<form:form action="saveDetails" modelAttribute="details" method="POST">
 			
 			<form:hidden path="id" />
-			<form:hidden path="readerId" />
-			
 			<table>
 
 				<tr>

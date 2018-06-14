@@ -32,6 +32,10 @@ public class Reader {
 
 	private Details details;
 
+	public Reader() {
+
+	}
+	
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -54,18 +58,6 @@ public class Reader {
 
 	public void setProfilePhoto(ProfilePhoto profilePhoto) {
 		this.profilePhoto = profilePhoto;
-	}
-
-	public Details getDetails() {
-		return details;
-	}
-
-	public void setDetails(Details details) {
-		this.details = details;
-	}
-
-	public Reader() {
-
 	}
 
 	public int getId() {
@@ -100,11 +92,6 @@ public class Reader {
 		this.email = email;
 	}
 
-	@Override
-	public String toString() {
-		return "Reader [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + "]";
-	}
-
 	public Set<Role> getRoles() {
 		return roles;
 	}
@@ -113,4 +100,17 @@ public class Reader {
 		this.roles = roles;
 	}
 
+	public Details getDetails() {
+		return details;
+	}
+
+	public void setDetails(Details details) {
+		this.details = details;
+	}
+
+	@Override
+	public String toString() {
+		return "Reader [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + "]";
+	}
+	
 }

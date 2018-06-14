@@ -1,5 +1,7 @@
 package com.allbooks.webapp.entity;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -12,7 +14,7 @@ public class Review {
 
 	private String title;
 
-	private int likes;
+	private List<Like> likes;
 
 	private Reader reader;
 
@@ -74,11 +76,11 @@ public class Review {
 		this.title = title;
 	}
 
-	public int getLikes() {
+	public List<Like> getLikes() {
 		return likes;
 	}
 
-	public void setLikes(int likes) {
+	public void setLikes(List<Like> likes) {
 		this.likes = likes;
 	}
 

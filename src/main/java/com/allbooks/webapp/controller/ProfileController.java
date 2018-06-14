@@ -150,14 +150,11 @@ public class ProfileController {
 	public String showEdit(HttpSession session, Model theModel, Principal principal) {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
-		Details details;
+		
+		Details details = reader.getDetails();
 
-		details = profileService.getDetails(reader.getId());
-
-		if (details == null) {
+		if (details == null) 
 			details = new Details();
-			details.setReaderId(reader.getId());
-		}
 
 		theModel.addAttribute("reader", reader);
 		theModel.addAttribute("details", details);

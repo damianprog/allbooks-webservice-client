@@ -24,13 +24,15 @@ public class ReaderServiceImpl implements ReaderService {
 	private ReaderRoleSaver readerRoleSaver;
 	
 	@Override
-	public void saveReader(Reader reader) {
+	public Reader saveReader(Reader reader) {
 
 		reader.setPassword(bCryptPasswordEncoder.encode(reader.getPassword()));
 
 		Reader savedReader = readerWebservice.saveReader(reader);
 		
 		readerRoleSaver.save(savedReader);
+		
+		return savedReader;
 
 	}
 
@@ -41,7 +43,7 @@ public class ReaderServiceImpl implements ReaderService {
 	}
 
 	@Override
-	public boolean checkReaderLogin(String username) {
+	public boolean isThisLoginTaken(String username) {
 
 		Reader reader = readerWebservice.getReaderByUsername(username);
 

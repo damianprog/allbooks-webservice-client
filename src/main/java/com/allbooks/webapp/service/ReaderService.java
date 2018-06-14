@@ -4,7 +4,7 @@ import com.allbooks.webapp.entity.Reader;
 
 public interface ReaderService {
 
-	public void saveReader(Reader reader);
+	public Reader saveReader(Reader reader);
 
 	public Reader getReaderByUsernameAndPassword(String username, String password);
 
@@ -12,7 +12,7 @@ public interface ReaderService {
 
 	public void updateReader(Reader reader);
 
-	public boolean checkReaderLogin(String username);
+	public boolean isThisLoginTaken(String username);
 
 	public Reader getReaderById(int readerId);
 

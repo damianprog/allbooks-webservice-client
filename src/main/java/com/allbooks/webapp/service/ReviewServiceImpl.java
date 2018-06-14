@@ -29,7 +29,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public void submitReview(Review review) {
-		
+
 		reviewWebservice.submitReview(review);
 	}
 
@@ -80,22 +80,12 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public void dropLike(int reviewId) {
-
-		Review review = reviewWebservice.getReviewById(reviewId);
-
-		review.setLikes(review.getLikes() + 1);
-
-		reviewWebservice.updateReview(review);
-	}
-
-	@Override
 	public List<Review> getReviewsByReaderId(int readerId) {
 
 		List<Review> reviews = Arrays.asList(reviewWebservice.getReviewsByReaderId(readerId));
 		reviews.sort(Comparator.comparingInt(Review::getId).reversed());
-		
+
 		return reviews;
 	}
-	
+
 }
