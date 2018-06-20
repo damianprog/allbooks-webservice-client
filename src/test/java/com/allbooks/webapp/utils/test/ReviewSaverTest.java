@@ -3,8 +3,6 @@ package com.allbooks.webapp.utils.test;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import javax.servlet.http.HttpSession;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,6 +22,7 @@ import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
 import com.allbooks.webapp.utils.ReviewSaver;
+import com.allbooks.webapp.utils.SecurityContextService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -37,7 +36,7 @@ public class ReviewSaverTest {
 	private BookService bookServiceMock;
 	
 	@Mock
-	private HttpSession sessionMock;
+	private SecurityContextService contextServiceMock;
 	
 	@Mock
 	private ReaderService readerServiceMock;
@@ -70,7 +69,7 @@ public class ReviewSaverTest {
 	@Test
 	public void saveTest() {
 		
-		when(sessionMock.getAttribute("readerId")).thenReturn(readerId);
+		when(contextServiceMock.getLoggedReaderId()).thenReturn(readerId);
 		when(reviewDataMock.getBookId()).thenReturn(bookId);
 		when(readerServiceMock.getReaderById(readerId)).thenReturn(readerMock);
 		when(bookServiceMock.getBook(bookId)).thenReturn(bookMock);
@@ -80,7 +79,7 @@ public class ReviewSaverTest {
 		
 		reviewSaver.save(reviewDataMock);
 		
-		verify(sessionMock).getAttribute("readerId");
+		verify(contextServiceMock).getLoggedReaderId();
 		verify(reviewDataMock).getBookId();
 		verify(readerServiceMock).getReaderById(readerId);
 		verify(bookServiceMock).getBook(bookId);

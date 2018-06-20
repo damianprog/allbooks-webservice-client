@@ -75,7 +75,8 @@
 							<td>${tempReaderBook.shelves}<br> <c:choose>
 									<c:when test="${isItMyBooks == true}">
 										<form method="POST" action="/myBooks/updateState">
-											<select name="newShelves">
+											<select class="rounded" name="newShelves" onchange="this.form.submit()">
+											<option value="" selected disabled hidden>Select Shelves</option>
 												<option value="Read">Read</option>
 												<option value="Currently Reading">Currently Reading</option>
 												<option value="Want To Read">Want To Read</option>
@@ -85,19 +86,16 @@
 												value="true">
 												<input type="hidden" name="readerBookId"
 												value="${tempReaderBook.id}">
-												<input
-												type="submit" value="Submit" />
 										</form>
 									</c:when>
 								</c:choose>
 							</td>
 							<td>${tempReaderBook.dateRead}<c:choose>
 									<c:when test="${isItMyBooks == true}">
-										<form method="GET" action="/myBooks/updateDateRead">
-											<input id="dateReadChooser" name="dateRead" type="date"
-												value="${tempReaderBook.dateRead}"> <input type="hidden"
+										<form method="POST" action="/myBooks/updateDateRead" id="dateReadForm">
+											<input class="dateReadChooser" name="dateRead" type="date"
+												value="${tempReaderBook.dateRead}" onchange="this.form.submit()"> <input type="hidden"
 												name="bookName" value="${tempReaderBook.book.miniTitle}">
-											<input type="submit" value="Submit" />
 										</form>
 									</c:when>
 								</c:choose>
@@ -108,7 +106,7 @@
 							</c:url>
 							<c:if test="${isItMyBooks == true}">
 								<td style="vertical-align: top; padding-top: 20px;"><a
-									class="titleRef" href="${delete}">Delete</a></td>
+									class="titleRef" href="${delete}" onclick="return confirm('Are you sure you want to delete this book?');">Delete</a></td>
 							</c:if>
 						</tr>
 					</c:forEach>
@@ -123,7 +121,7 @@
 <script src="/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
-
+		
 		var isItMyBooks = ${isItMyBooks}
 
 		if (isItMyBooks == false) {
@@ -157,7 +155,6 @@
 			})
 
 		}
-
 	});
 </script>
 

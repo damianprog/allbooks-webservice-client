@@ -1,7 +1,5 @@
 package com.allbooks.webapp.utils;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
@@ -16,10 +14,7 @@ import com.allbooks.webapp.service.ReaderBookService;
 public class ReaderBookAndRatingModelCreator {
 
 	@Autowired
-	private HttpSession session;
-	
-	@Autowired
-	private SecurityContextService securityContextService;
+	private SecurityContextService contextService;
 	
 	@Autowired
 	private ModelMapFactory modelMapFactory;
@@ -34,9 +29,9 @@ public class ReaderBookAndRatingModelCreator {
 		
 		ModelMap modelMap = modelMapFactory.createInstance();
 		
-		if (securityContextService.isReaderAuthenticated()) {
+		if (contextService.isReaderAuthenticated()) {
 
-			int readerId = (int) session.getAttribute("readerId");
+			int readerId = contextService.getLoggedReaderId();
 
 			Rating rating = ratingService.getLoggedReaderRatingObject(bookId);
 			

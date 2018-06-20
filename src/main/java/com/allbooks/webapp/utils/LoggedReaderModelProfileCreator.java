@@ -1,7 +1,5 @@
 package com.allbooks.webapp.utils;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
@@ -13,9 +11,6 @@ import com.allbooks.webapp.service.PendingService;
 
 @Component
 public class LoggedReaderModelProfileCreator {
-
-	@Autowired
-	private HttpSession session;
 
 	@Autowired
 	private FriendsService friendsService;
@@ -37,19 +32,21 @@ public class LoggedReaderModelProfileCreator {
 
 		if (securityContextService.isReaderAuthenticated()) {
 
-			int loggedReaderId = (int) session.getAttribute("readerId");
+			int loggedReaderId = securityContextService.getLoggedReaderId();
 			
-			if (!(loggedReaderId == readerOfProfile.getId())) {
+			int readerOfProfileId = readerOfProfile.getId();
+			
+			if (!(loggedReaderId == readerOfProfileId)) {
 
 				modelMap.addAttribute("areTheyFriends",
-						friendsService.areTheyFriends(loggedReaderId, readerOfProfile.getId()));
-				modelMap.addAttribute("pending", pendingService.checkPending(loggedReaderId, readerOfProfile.getId()));
+						friendsService.areTheyFriends(loggedReaderId, readerOfProfileId));
+				modelMap.addAttribute("pending", pendingService.checkPending(loggedReaderId, readerOfProfileId));
 				modelMap.addAttribute("invite", true); //TODO use more descriptive attribute name
-				modelMap.addAttribute("isItSenderProfile", pendingService.isItSenderProfile(loggedReaderId,readerOfProfile.getId())); 
+				modelMap.addAttribute("isItSenderProfile", pendingService.isItSenderProfile(loggedReaderId,readerOfProfileId)); 
 			}
 
 			else
-				modelMap.addAttribute("friendsInvites", pendingService.getFriendsInvites(readerOfProfile.getId()));
+				modelMap.addAttribute("friendsInvites", pendingService.getFriendsInvites(readerOfProfileId));
 
 			modelMap.addAttribute("principalName", loggedReaderName);
 		}

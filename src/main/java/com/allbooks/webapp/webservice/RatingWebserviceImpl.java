@@ -43,7 +43,7 @@ public class RatingWebserviceImpl implements RatingWebservice {
 	@Override
 	public Rating[] getBookRatings(int bookId) {
 
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		params.put("bookId", String.valueOf(bookId));
 
 		ResponseEntity<Rating[]> responseEntity = restTemplate.getForEntity(serviceUrlName + "/books/{bookId}/ratings",
@@ -56,6 +56,15 @@ public class RatingWebserviceImpl implements RatingWebservice {
 	public int getReaderRating(String username, String bookName) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public Rating getRatingById(int ratingId) {
+		Map<String, Integer> params = new HashMap<>();
+		params.put("ratingId", ratingId);
+		
+		return restTemplate.getForObject(serviceUrlName + "/ratings/{ratingId}", Rating.class,params);
+		
 	}
 
 }

@@ -80,5 +80,10 @@ public class RatingServiceImpl implements RatingService{
 	public Rating[] getBookRatings(int bookId) {
 		return ratingWebservice.getBookRatings(bookId);
 	}
+
+	@Override
+	public Rating getRatingById(int ratingId) {
+		return ratingWebservice.getRatingById(ratingId);
+	}
 	
 }

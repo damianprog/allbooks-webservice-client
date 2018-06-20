@@ -15,5 +15,7 @@ public interface RatingService {
 	public int getReaderRating(String username, String bookName);
 
 	public Rating getLoggedReaderRatingObject(int bookId);
+
+	public Rating getRatingById(int ratingId);
 	
 }

@@ -2,8 +2,6 @@ package com.allbooks.webapp.utils;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +26,7 @@ public class ReaderBookSaver {
 	private LocalDateGetter localDateGetter;
 
 	@Autowired
-	private HttpSession session;
+	private SecurityContextService contextService;
 
 	@Autowired
 	private ReaderBookService readerBookService;
@@ -44,7 +42,7 @@ public class ReaderBookSaver {
 
 	public void save(ReaderBookData readerBookData) throws IOException {
 
-		int readerId = (int) session.getAttribute("readerId");
+		int readerId = contextService.getLoggedReaderId();
 
 		ReaderBook readerBook = readerBookData.getReaderBook();
 

@@ -5,8 +5,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -23,6 +21,7 @@ import com.allbooks.webapp.service.LikeService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
 import com.allbooks.webapp.utils.LikesDropper;
+import com.allbooks.webapp.utils.SecurityContextService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -33,7 +32,7 @@ public class LikesDropperTest {
 	private LikesDropper likesDropper;
 	
 	@Mock
-	private HttpSession sessionMock;
+	private SecurityContextService contextServiceMock;
 
 	@Mock
 	private LikeService likeServiceMock;
@@ -66,7 +65,7 @@ public class LikesDropperTest {
 	@Test
 	public void dropLikeTest() {
 		
-		when(sessionMock.getAttribute("readerId")).thenReturn(readerId);
+		when(contextServiceMock.getLoggedReaderId()).thenReturn(readerId);
 		when(readerServiceMock.getReaderById(readerId)).thenReturn(readerMock);
 		when(likeServiceMock.getLikeByReviewIdAndReaderId(reviewId,readerId)).thenReturn(null);
 		when(reviewServiceMock.getReviewById(reviewId)).thenReturn(reviewMock);
@@ -75,7 +74,7 @@ public class LikesDropperTest {
 
 		likesDropper.dropLike(reviewId);
 		
-		verify(sessionMock).getAttribute("readerId");
+		verify(contextServiceMock).getLoggedReaderId();
 		verify(readerServiceMock).getReaderById(readerId);
 		verify(likeServiceMock).getLikeByReviewIdAndReaderId(reviewId,readerId);
 		verify(reviewServiceMock).getReviewById(reviewId);
@@ -92,14 +91,14 @@ public class LikesDropperTest {
 		
 		int likeMockId = 3;
 		
-		when(sessionMock.getAttribute("readerId")).thenReturn(readerId);
+		when(contextServiceMock.getLoggedReaderId()).thenReturn(readerId);
 		when(readerServiceMock.getReaderById(readerId)).thenReturn(readerMock);
 		when(likeServiceMock.getLikeByReviewIdAndReaderId(reviewId,readerId)).thenReturn(likeMock);
 		when(likeMock.getId()).thenReturn(likeMockId);
 
 		likesDropper.dropLike(reviewId);
 		
-		verify(sessionMock).getAttribute("readerId");
+		verify(contextServiceMock).getLoggedReaderId();
 		verify(readerServiceMock).getReaderById(readerId);
 		verify(likeServiceMock).getLikeByReviewIdAndReaderId(reviewId,readerId);
 		

@@ -1,7 +1,5 @@
 package com.allbooks.webapp.utils;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +15,7 @@ import com.allbooks.webapp.service.ReaderService;
 public class RatingSaver {
 
 	@Autowired
-	private HttpSession session;
+	private SecurityContextService contextService;
 
 	@Autowired
 	private RatingService ratingService;
@@ -36,7 +34,7 @@ public class RatingSaver {
 	
 	public void save(RatingData ratingData) {
 
-		int readerId = (int) session.getAttribute("readerId");
+		int readerId = contextService.getLoggedReaderId();
 
 		Rating rating = ratingData.getRating();
 

@@ -40,10 +40,15 @@
 						<c:when test="${reader.username == principalName}">
 							<tr>
 								<td>
+								<div id="uploadPhotoLabel">
+									Upload profile photo
+								</div>
+								
+								<div id="extensionError"></div>
 									<form method="POST" action="/profile/profileUpload"
-										enctype="multipart/form-data">
-										<input type="file" name="file" required="true" /> <br /> <input
-											type="submit" value="Submit" />
+										enctype="multipart/form-data" id="uploadForm">
+										<input type="file" name="file" required="required" accept=".jpg" id="photoInput"/> <br /> <input
+											type="submit" value="Submit" id="photoSubmit"/>
 									</form>
 								</td>
 							</tr>
@@ -147,18 +152,18 @@
 
 			</div>
 			<div class="underFirstTable">
-				<h4 id="topDesc">${reader.username}iscurrently reading</h4>
+				<h4 id="topDesc">${reader.username}is currently reading</h4>
 				<hr>
 				<table class="currentlyReadingBooks">
 					<c:forEach var="tempBook" items="${currentlyReadingList}">
 						<c:url var="bookSite" value="/reader/showBook">
-							<c:param name="bookName" value="${tempBook.book.miniTitle}" />
+							<c:param name="bookId" value="${tempBook.book.id}" />
 						</c:url>
 						<tr>
 							<td><a href="${bookSite}"> <img
 									src="data:image/jpeg;base64,${tempBook.encodedBookPic}" />
 							</a></td>
-							<td>${reader.username}iscurrently reading<br>
+							<td>${reader.username}is currently reading<br>
 								<h4 id="topDesc">
 									<a class="blackRef" href="${bookSite}">${tempBook.book.fullTitle}</a>
 								</h4> <br> by ${tempBook.book.author}<br> bookshelves:
@@ -169,14 +174,14 @@
 				</table>
 			</div>
 			<div class="underFirstTable">
-				<h4>${reader.username}'srecentreviews</h4>
+				<h4>${reader.username}'s recent reviews</h4>
 				<hr>
 				<c:choose>
 					<c:when test="${!empty readerReviews}">
 						<table>
 							<c:forEach var="tempReview" items="${readerReviews}" begin="0"
 								end="2">
-								<c:url var="reviewLink" value="/reader/reviewPage">
+								<c:url var="reviewLink" value="/bookActions/reviewPage">
 									<c:param name="reviewId" value="${tempReview.id}" />
 									<c:param name="readerLogin"
 										value="${tempReview.reader.username}" />
@@ -217,11 +222,12 @@
 			</c:when>
 							<c:otherwise>
 								<c:forEach var="tempPending" items="${friendsInvites}">
+								<div class="pendingDiv">
 									<c:url var="senderProfile" value="/profile/showProfile">
 										<c:param name="readerId" value="${tempPending.sender.id}" />
 									</c:url>
 									<a href="${senderProfile}">${tempPending.sender.username}</a> Has sent you a friends request!
-				<form method="GET" action="/profile/acceptOrAbort">
+				<form method="POST" action="/profile/acceptOrAbort">
 										<select name="acceptOrAbort">
 											<option value="accept">Accept</option>
 											<option value="abort">Abort</option>
@@ -231,6 +237,7 @@
 											type="hidden" name="pendingId" value="${tempPending.id}">
 										<input type="submit" value="Submit" />
 									</form>
+								</div>
 								</c:forEach>
 							</c:otherwise>
 						</c:choose>
@@ -238,7 +245,7 @@
 				</c:when>
 			</c:choose>
 			<div id="friendsList">
-				<h4 id="topDesc">${reader.username}'sfriends(${friendsNum})</h4>
+				<h4 id="topDesc">${reader.username}'s friends(${friendsNum})</h4>
 				<br>
 				<hr>
 				<c:choose>
@@ -246,21 +253,23 @@
 			 Friends list is empty
 		</c:when>
 					<c:otherwise>
-						<table>
+						<table id="friendsTable">
 							<c:forEach var="tempFriends" items="${friends}">
 								<c:url var="friendProfile" value="/profile/showProfile">
 									<c:param name="readerId" value="${tempFriends.id}" />
 								</c:url>
 								<tr>
 									<td>Friend's name: <a class="blackRef"
-										href="${friendProfile}"> ${tempFriends.username} </a> <c:choose>
+										href="${friendProfile}"> ${tempFriends.username} </a>
+										</td>
+										<td> <c:choose>
 											<c:when test="${reader.username == principalName }">
-												<form:form action="/profile/deleteFriends" method="GET"
-													id="deleteForm">
+												<form:form action="/profile/deleteFriends" method="DELETE"
+													class="deleteForm">
 													<input type="hidden" name="friendId"
 														value="${tempFriends.id}">
 													<input type="hidden" name="readerId" value="${reader.id}">
-													<input type="submit" value="Delete" />
+													<input class="delete" type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this friend?');"/>
 												</form:form>
 											</c:when>
 										</c:choose>
@@ -274,6 +283,8 @@
 		</div>
 	</div>
 	<script src="/js/profileShowMore.js"></script>
+	<script src="/js/photoUpload.js"></script>
+	
 </body>
 
 </html>

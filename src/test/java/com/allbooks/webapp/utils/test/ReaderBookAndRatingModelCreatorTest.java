@@ -32,10 +32,7 @@ public class ReaderBookAndRatingModelCreatorTest {
 	private ReaderBookAndRatingModelCreator readerBookAndRatingModelCreator;
 	
 	@Mock
-	private HttpSession sessionMock;
-	
-	@Mock
-	private SecurityContextService securityContextServiceMock;
+	private SecurityContextService contextServiceMock;
 	
 	@Mock
 	private ModelMapFactory modelMapFactoryMock;
@@ -63,16 +60,16 @@ public class ReaderBookAndRatingModelCreatorTest {
 	public void createModelTest() {
 		
 		when(modelMapFactoryMock.createInstance()).thenReturn(modelMapMock);
-		when(securityContextServiceMock.isReaderAuthenticated()).thenReturn(true);
-		when(sessionMock.getAttribute("readerId")).thenReturn(readerId);
+		when(contextServiceMock.isReaderAuthenticated()).thenReturn(true);
+		when(contextServiceMock.getLoggedReaderId()).thenReturn(readerId);
 		when(ratingServiceMock.getLoggedReaderRatingObject(bookId)).thenReturn(ratingMock);
 		when(readerBookServiceMock.getReaderBook(bookId, readerId)).thenReturn(readerBookMock);
 		
 		readerBookAndRatingModelCreator.createModel(bookId);
 		
 		verify(modelMapFactoryMock).createInstance();
-		verify(securityContextServiceMock).isReaderAuthenticated();
-		verify(sessionMock).getAttribute("readerId");
+		verify(contextServiceMock).isReaderAuthenticated();
+		verify(contextServiceMock).getLoggedReaderId();
 		verify(ratingServiceMock).getLoggedReaderRatingObject(bookId);
 		verify(readerBookServiceMock).getReaderBook(bookId, readerId);
 

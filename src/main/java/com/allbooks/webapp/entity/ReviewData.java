@@ -1,19 +1,15 @@
 package com.allbooks.webapp.entity;
 
-public class ReviewData extends BookActionDataObject{
+public class ReviewData{
 
 	private Review review;
 
 	private int bookId;
 
-	private boolean isItUpdate;
-
-	public ReviewData(Review review,int bookId,boolean isItUpdate) {
+	public ReviewData(Review review,int bookId) {
 		
 		this.review = review;
 		this.bookId = bookId;
-		this.isItUpdate = isItUpdate;
-		
 	}
 	
 	public Review getReview() {
@@ -30,14 +26,6 @@ public class ReviewData extends BookActionDataObject{
 
 	public void setBookId(int bookId) {
 		this.bookId = bookId;
-	}
-
-	public boolean isItUpdate() {
-		return isItUpdate;
-	}
-
-	public void setIsItUpdate(boolean isItUpdate) {
-		this.isItUpdate = isItUpdate;
 	}
 	
 }

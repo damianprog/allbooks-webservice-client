@@ -19,7 +19,7 @@ import com.allbooks.webapp.service.ReviewService;
 public class LikesDropper {
 
 	@Autowired
-	private HttpSession session;
+	private SecurityContextService securityContextService;
 
 	@Autowired
 	private LikeService likeService;
@@ -35,7 +35,7 @@ public class LikesDropper {
 
 	public void dropLike(int reviewId) {
 
-		int loggedReaderId = (int) session.getAttribute("readerId");
+		int loggedReaderId = securityContextService.getLoggedReaderId();
 
 		Reader loggedReader = readerService.getReaderById(loggedReaderId);
 

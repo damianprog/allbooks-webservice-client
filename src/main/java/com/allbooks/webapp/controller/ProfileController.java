@@ -7,9 +7,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.DataBinder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,14 +26,14 @@ import com.allbooks.webapp.entity.Pending;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.service.FriendsService;
 import com.allbooks.webapp.service.PendingService;
-import com.allbooks.webapp.service.ProfileService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
-import com.allbooks.webapp.utils.CurrentlyReadingBooksGetter;
 import com.allbooks.webapp.utils.LoggedReaderModelProfileCreator;
 import com.allbooks.webapp.utils.service.FriendsUtilsService;
 import com.allbooks.webapp.utils.service.PhotoServiceImpl;
 import com.allbooks.webapp.utils.service.ReaderBooksServiceImpl;
+import com.allbooks.webapp.validators.PhotoUploadValidationFields;
+import com.allbooks.webapp.validators.PhotoUploadValidator;
 
 @Controller
 @RequestMapping("/profile")
@@ -41,9 +44,6 @@ public class ProfileController {
 
 	@Autowired
 	private ReviewService reviewService;
-
-	@Autowired
-	private ProfileService profileService;
 
 	@Autowired
 	private FriendsUtilsService friendsUtilsService;
@@ -95,7 +95,6 @@ public class ProfileController {
 			Principal principal, RedirectAttributes ra) throws IOException {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
-
 		ra.addAttribute("readerId", reader.getId());
 
 		if (multipartFile.isEmpty())
@@ -126,7 +125,7 @@ public class ProfileController {
 		return "redirect:/profile/showProfile";
 	}
 
-	@GetMapping("/acceptOrAbort") // need to change property friendsId
+	@PostMapping("/acceptOrAbort") // need to change property friendsId
 	public String acceptOrAbort(@RequestParam Map<String, String> params, Model theModel, HttpSession session,
 			RedirectAttributes ra) {
 
@@ -136,7 +135,7 @@ public class ProfileController {
 		return "redirect:/profile/showProfile";
 	}
 
-	@GetMapping("/deleteFriends")
+	@DeleteMapping("/deleteFriends")
 	public String deleteFriends(@RequestParam("readerId") int readerId, @RequestParam("friendId") int friendId,
 			Model theModel, HttpSession session, Principal principal, RedirectAttributes ra) {
 

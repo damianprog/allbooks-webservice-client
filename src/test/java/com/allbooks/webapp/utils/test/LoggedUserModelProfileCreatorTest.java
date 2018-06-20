@@ -6,8 +6,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -33,9 +31,6 @@ public class LoggedUserModelProfileCreatorTest {
 
 	@InjectMocks
 	private LoggedReaderModelProfileCreator creator;
-	
-	@Mock
-	private HttpSession sessionMock;
 
 	@Mock
 	private FriendsService friendsServiceMock;
@@ -70,7 +65,7 @@ public class LoggedUserModelProfileCreatorTest {
 		when(modelMapFactoryMock.createInstance()).thenReturn(modelMapMock);
 		when(securityContextServiceMock.getLoggedReaderUserName()).thenReturn(loggedReaderName);
 		when(securityContextServiceMock.isReaderAuthenticated()).thenReturn(true);
-		when(sessionMock.getAttribute("readerId")).thenReturn(loggedReaderId);
+		when(securityContextServiceMock.getLoggedReaderId()).thenReturn(loggedReaderId);
 		when(currentReaderMock.getId()).thenReturn(currentReaderId);
 		
 		when(friendsServiceMock.areTheyFriends(loggedReaderId,currentReaderId)).thenReturn(true);
@@ -81,12 +76,12 @@ public class LoggedUserModelProfileCreatorTest {
 		verify(modelMapFactoryMock).createInstance();
 		verify(securityContextServiceMock).getLoggedReaderUserName();
 		verify(securityContextServiceMock).isReaderAuthenticated();
-		verify(sessionMock).getAttribute("readerId");
-		verify(currentReaderMock,times(3)).getId();
+		verify(securityContextServiceMock).getLoggedReaderId();
+		verify(currentReaderMock).getId();
 		verify(friendsServiceMock).areTheyFriends(loggedReaderId,currentReaderId);
 		verify(pendingServiceMock).checkPending(loggedReaderId,currentReaderId);
 		
-		verify(modelMapMock).addAttribute("booFriends",true);
+		verify(modelMapMock).addAttribute("areTheyFriends",true);
 		verify(modelMapMock).addAttribute("pending",false);
 		verify(modelMapMock).addAttribute("invite",true);
 		
@@ -102,7 +97,7 @@ public class LoggedUserModelProfileCreatorTest {
 		when(modelMapFactoryMock.createInstance()).thenReturn(modelMapMock);
 		when(securityContextServiceMock.getLoggedReaderUserName()).thenReturn(loggedReaderName);
 		when(securityContextServiceMock.isReaderAuthenticated()).thenReturn(true);
-		when(sessionMock.getAttribute("readerId")).thenReturn(loggedReaderId);
+		when(securityContextServiceMock.getLoggedReaderId()).thenReturn(loggedReaderId);
 		when(currentReaderMock.getId()).thenReturn(currentReaderId);
 
 		when(pendingServiceMock.getFriendsInvites(currentReaderId)).thenReturn(friendsInvitesMock);
@@ -112,8 +107,8 @@ public class LoggedUserModelProfileCreatorTest {
 		verify(modelMapFactoryMock).createInstance();
 		verify(securityContextServiceMock).getLoggedReaderUserName();
 		verify(securityContextServiceMock).isReaderAuthenticated();
-		verify(sessionMock).getAttribute("readerId");
-		verify(currentReaderMock,times(2)).getId();
+		verify(securityContextServiceMock).getLoggedReaderId();
+		verify(currentReaderMock).getId();
 		
 		verify(modelMapMock).addAttribute("friendsInvites",friendsInvitesMock);
 		verify(modelMapMock).addAttribute("principalName",loggedReaderName);

@@ -32,14 +32,14 @@
 				</tr>
 				<tr>
 					<td class="bottomTd"><input type="file" name="bookPhotoTemp"
-						class="inputBox" required="required" /></td>
+						class="fileInputBox" required="required" /></td>
 				</tr>
 				<tr>
 					<td class="addingName">Author Photo (JPG extension, please)</td>
 				</tr>
 				<tr>
 					<td class="bottomTd"><input type="file" name="authorPhotoTemp"
-						class="inputBox" required="required" /></td>
+						class="fileInputBox" required="required" /></td>
 				</tr>
 				<tr>
 					<td class="addingName">Full Title</td>

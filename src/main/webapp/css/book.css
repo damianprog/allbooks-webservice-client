@@ -1,8 +1,13 @@
 body {
-	background-image: url("/css/images/upfeathers.png");
+	background-image: url("/css/images/dust_scratches.png");
 	font-family: 'Roboto', sans-serif;
 	font-size: 17px;
 	color: black;
+}
+
+#container {
+	width: 1000px;
+	margin: 0 auto;
 }
 
 #bookDescription {
@@ -12,38 +17,28 @@ body {
 	overflow: hidden;
 }
 
-#authorDescription{
-	height:188px;
+#authorDescription {
+	height: 188px;
 	display: block;
-	overflow:hidden;
+	overflow: hidden;
 }
 
-#container {
-	width: 1000px;
-	margin: 0 auto;
+.moreDesc {
+	color: #00635d;
 }
 
 .blackRef {
 	color: black;
 }
 
-#mainTable {
-	float: left;
-}
-
 .rounded {
 	border-radius: 5px;
 }
 
-#like {
+.like {
 	background-color: #3b5998;
 	border-radius: 5px;
 	color: white;
-}
-
-.submit {
-	background-color: #fdd05f;
-	border-radius: 5px;
 }
 
 #desc {
@@ -53,20 +48,15 @@ body {
 	text-align: left;
 }
 
-#h3 {
-	margin-top: -5px;
-	margin-bottom: -2px;
-}
-
-#h4 {
-	display: inline;
+.inline {
+	display:inline;
 }
 
 #img {
 	vertical-align: top;
 }
 
-#img2 {
+#authorImg {
 	vertical-align: top;
 	padding-top: 30px;
 }
@@ -105,24 +95,6 @@ button {
 	width: 660px;
 }
 
-#reviewBox {
-	width: 600px;
-	height: 150px;
-}
-
-#reviewTitle {
-	margin-bottom: 20px;
-	width: 300px;
-}
-
-#allReviews {
-	margin-top: 20px;
-}
-
-#allReviewsTable {
-	float: left;
-}
-
 #likeForm {
 	display: inline;
 }
@@ -131,13 +103,13 @@ button {
 	padding-bottom: 20px;
 }
 
-#reviewTitleTable {
+#reviewTitleTd {
 	padding-top: 10px;
 	padding-bottom: 10px;
 	width: 600px;
 }
 
-#pInstead {
+#ratingTd {
 	padding-bottom: 10px;
 }
 

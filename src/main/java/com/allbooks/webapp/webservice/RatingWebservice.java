@@ -11,5 +11,7 @@ public interface RatingWebservice {
 	public Rating[] getBookRatings(int bookId);
 
 	public int getReaderRating(String username, String bookName);
+
+	public Rating getRatingById(int ratingId);
 	
 }

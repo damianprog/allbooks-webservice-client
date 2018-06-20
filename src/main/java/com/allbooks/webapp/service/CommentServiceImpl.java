@@ -36,5 +36,10 @@ public class CommentServiceImpl implements CommentService{
 		
 		return Arrays.asList(commentWebservice.getCommentsByReaderIdAndBookId(readerId,bookId)); 
 	}
+
+	@Override
+	public Comment getCommentById(int commentId) {
+		return commentWebservice.getCommentById(commentId);
+	}
 	
 }

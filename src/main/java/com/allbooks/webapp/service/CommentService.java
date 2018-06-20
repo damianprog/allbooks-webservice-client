@@ -11,5 +11,8 @@ public interface CommentService {
 	public List<Comment> getCommentsByReaderIdAndBookId(int readerId,int bookId);
 	
 	public List<Comment> getReviewComments(int reviewId);
+
+	public Comment getCommentById(int commentId);
+
 	
 }

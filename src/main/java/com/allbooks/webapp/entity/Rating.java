@@ -16,6 +16,10 @@ public class Rating {
 	public Rating() {
 	}
 
+	public Rating(int rate) {
+		this.rate = rate;
+	}
+	
 	public int getId() {
 		return id;
 	}

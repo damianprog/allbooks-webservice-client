@@ -22,7 +22,7 @@ public class CommentWebserviceImpl implements CommentWebservice {
 
 	@Override
 	public void submitComment(Comment comment) {
-		restTemplate.postForObject(serviceUrlName + "/comments", comment, Comment.class);
+		restTemplate.put(serviceUrlName + "/comments", comment, Comment.class);
 
 	}
 
@@ -50,6 +50,16 @@ public class CommentWebserviceImpl implements CommentWebservice {
 		
 		return responseEntity.getBody();
 
+	}
+
+	@Override
+	public Comment getCommentById(int commentId) {
+		
+		Map<String, Integer> params = new HashMap<>();
+		params.put("commentId", commentId);
+		
+		return restTemplate.getForObject(serviceUrlName + "/comments/{commentId}", Comment.class,params);
+		
 	}
 
 }

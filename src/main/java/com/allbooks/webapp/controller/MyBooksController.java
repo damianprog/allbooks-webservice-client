@@ -40,7 +40,7 @@ public class MyBooksController {
 
 	@Autowired
 	private ReaderBookSaver readerBookSaver;
-	
+
 	@Autowired
 	private ReaderBooksForMyBooksGetter readerBooksForMyBooksGetter;
 
@@ -59,16 +59,18 @@ public class MyBooksController {
 
 	@PostMapping("/updateState")
 	public String updateState(@RequestParam("newShelves") String newShelves,
-			@RequestParam("readerBookId") int readerBookId, @RequestParam Map<String, String> params,
-			HttpSession session, Model theModel, Principal principal, RedirectAttributes ra) throws IOException {
+			@RequestParam("readerBookId") int readerBookId, @RequestParam("bookId") int bookId,
+			@RequestParam("isItUpdateReaderBook") boolean isItUpdateReaderBook, HttpSession session, Model theModel,
+			Principal principal, RedirectAttributes ra) throws IOException {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 
 		ReaderBook readerBook = readerBookService.getReaderBookById(readerBookId);
 		readerBook.setShelves(newShelves);
 
-		ReaderBookData readerBookData = bookActionDataObjectFactory.createReaderBookData(readerBook, params);
-		
+		ReaderBookData readerBookData = bookActionDataObjectFactory.createReaderBookData(readerBook, bookId,
+				isItUpdateReaderBook);
+
 		readerBookSaver.save(readerBookData);
 
 		ra.addAttribute("readerId", reader.getId());
@@ -77,7 +79,7 @@ public class MyBooksController {
 
 	}
 
-	@GetMapping("/updateDateRead")
+	@PostMapping("/updateDateRead")
 	public String updateDateRead(@RequestParam("bookName") String bookName, @RequestParam("dateRead") String dateRead,
 			HttpSession session, Model theModel, Principal principal, RedirectAttributes ra) {
 

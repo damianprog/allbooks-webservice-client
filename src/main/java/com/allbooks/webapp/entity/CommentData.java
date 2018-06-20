@@ -1,6 +1,6 @@
 package com.allbooks.webapp.entity;
 
-public class CommentData extends BookActionDataObject {
+public class CommentData{
 
 	private Comment comment;
 
@@ -8,15 +8,12 @@ public class CommentData extends BookActionDataObject {
 
 	private int reviewId;
 
-	private boolean isItUpdate;
-
-	public CommentData(Comment comment, int bookId, int reviewId, boolean isItUpdate) {
+	public CommentData(Comment comment, int bookId, int reviewId) {
 		this.comment = comment;
 		this.bookId = bookId;
 		this.reviewId = reviewId;
-		this.isItUpdate = isItUpdate;
 	}
-
+	
 	public Comment getComment() {
 		return comment;
 	}
@@ -39,14 +36,6 @@ public class CommentData extends BookActionDataObject {
 
 	public void setReviewId(int reviewId) {
 		this.reviewId = reviewId;
-	}
-
-	public boolean isItUpdate() {
-		return isItUpdate;
-	}
-
-	public void setIsItUpdate(boolean isItUpdate) {
-		this.isItUpdate = isItUpdate;
 	}
 
 }

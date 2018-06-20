@@ -1,0 +1,54 @@
+body {
+	background-image: url("/css/images/dust_scratches.png");
+	font-family: 'Roboto', sans-serif;
+	font-size: 17px;
+	color: black;
+}
+#container {
+	width: 1000px;
+	margin: 0 auto;
+}
+
+h4{
+	display:inline;
+}
+
+textarea{
+	border-radius:5px;
+}
+
+.blackRef {
+	color: black;
+}
+
+.rounded {
+	border-radius: 5px;
+}
+
+.submit {
+	background-color: #fdd05f;
+	border-radius: 5px;
+}
+
+#reviewBox {
+	width: 600px;
+	height: 150px;
+}
+
+#reviewTitle {
+	margin-bottom: 20px;
+	width: 300px;
+	border-radius:5px;
+	border:1px solid #aaaaaa;
+}
+
+#imgRateReview {
+	float: left;
+}
+
+#reviewDesc {
+	align:top;
+	float: left;
+	width: 500px;
+	padding-left: 20px;
+}

@@ -1,6 +1,6 @@
 package com.allbooks.webapp.entity;
 
-public class ReaderBookData extends BookActionDataObject{
+public class ReaderBookData{
 
 	private ReaderBook readerBook;
 

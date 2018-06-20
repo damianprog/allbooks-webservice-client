@@ -2,6 +2,7 @@ package com.allbooks.webapp.controller;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,21 +27,20 @@ import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.factories.BookActionDataObjectFactory;
-import com.allbooks.webapp.factories.ReviewFactory;
 import com.allbooks.webapp.service.BookService;
+import com.allbooks.webapp.service.CommentService;
 import com.allbooks.webapp.service.ReviewService;
 import com.allbooks.webapp.utils.LikesDropper;
+import com.allbooks.webapp.utils.LoggedReviewPageModelCreator;
+import com.allbooks.webapp.utils.PostReviewHelper;
 import com.allbooks.webapp.utils.ReaderBookAndRatingModelCreator;
 import com.allbooks.webapp.utils.SubmitComment;
-import com.allbooks.webapp.utils.service.PhotoServiceImpl;
+import com.allbooks.webapp.utils.service.PhotoService;
 import com.allbooks.webapp.utils.service.SaveService;
 
 @Controller
 @RequestMapping("/bookActions")
 public class BookActionsController {
-
-	@Autowired
-	private ReviewService reviewService;
 
 	@Autowired
 	private BookService bookService;
@@ -52,7 +52,10 @@ public class BookActionsController {
 	private SubmitComment submitComment;
 
 	@Autowired
-	private PhotoServiceImpl photoService;
+	private PhotoService photoService;
+
+	@Autowired
+	private LoggedReviewPageModelCreator loggedReviewPageModelCreator;
 
 	@Autowired
 	private BookActionDataObjectFactory bookActionDataObjectFactory;
@@ -61,65 +64,73 @@ public class BookActionsController {
 	private ReaderBookAndRatingModelCreator readerBookAndRatingModelCreator;
 
 	@Autowired
-	private ReviewFactory reviewFactory;
+	private LikesDropper likesDropper;
 
 	@Autowired
-	private LikesDropper likesDropper;
+	private CommentService commentService;
+
+	@Autowired
+	private ReviewService reviewService;
+	
+	@Autowired
+	private PostReviewHelper postReviewHelper;
 	
 	@PutMapping("/rate")
 	public String rate(@ModelAttribute("rating") Rating rating, BindingResult resultRating,
-			@RequestParam Map<String, String> params, Model theModel, HttpSession session, Principal principal,
+			@RequestParam("bookId") int bookId, Model theModel, HttpSession session, Principal principal,
 			RedirectAttributes ra) {
 
-		saveService.saveRating(bookActionDataObjectFactory.createRatingData(rating, params));
+		saveService.saveRating(bookActionDataObjectFactory.createRatingData(rating, bookId));
 
-		ra.addAttribute("bookId", params.get("bookId"));
+		ra.addAttribute("bookId", bookId);
 
 		return "redirect:/reader/showBook";
 	}
 
 	@PostMapping("/postComment")
 	public String submitComment(@ModelAttribute("comment") Comment comment, @RequestParam Map<String, String> params,
-			@RequestParam("reviewId") int reviewId, HttpSession session, Model theModel, Principal principal,
-			RedirectAttributes ra) {
+			@RequestParam("reviewId") int reviewId, @RequestParam("bookId") int bookId, HttpSession session,
+			Model theModel, Principal principal, RedirectAttributes ra) {
 
-		CommentData commentData = bookActionDataObjectFactory.createCommentData(comment, params);
+		CommentData commentData = bookActionDataObjectFactory.createCommentData(comment, reviewId, bookId);
 
 		submitComment.submit(commentData);
 
 		ra.addAttribute("reviewId", reviewId);
 
-		return "redirect:/reader/reviewPage";
+		return "redirect:/bookActions/reviewPage";
 	}
 
-	@GetMapping("/dropLike")
+	@PostMapping("/dropLike")
 	public String dropLike(@RequestParam("reviewId") int reviewId, @RequestParam("bookId") int bookId,
 			HttpSession session, HttpServletRequest request, RedirectAttributes ra) {
 
 		likesDropper.dropLike(reviewId);
-		
+
 		ra.addAttribute("bookId", bookId);
 
 		return "redirect:/reader/showBook";
 	}
 
-	@GetMapping("/dropLikeReview")
+	@PostMapping("/dropLikeReview")
 	public String dropLikeReview(@RequestParam("reviewId") int reviewId, Model theModel, HttpSession session,
 			RedirectAttributes ra) {
 
-		
+		likesDropper.dropLike(reviewId);
+
 		ra.addAttribute("reviewId", reviewId);
 
-		return "redirect:/reader/reviewPage";
+		return "redirect:/bookActions/reviewPage";
 
 	}
 
 	@PostMapping("/saveReaderBook")
 	public String readState(@RequestParam Map<String, String> params,
-			@ModelAttribute("readerBook") ReaderBook readerBook, HttpSession session, Principal principal,
-			RedirectAttributes ra) throws IOException {
+			@ModelAttribute("readerBook") ReaderBook readerBook, @RequestParam("bookId") int bookId,
+			@RequestParam("isItUpdateReaderBook") boolean isItUpdateReaderBook,
+			HttpSession session, Principal principal, RedirectAttributes ra) throws IOException {
 
-		saveService.saveReaderBook(bookActionDataObjectFactory.createReaderBookData(readerBook, params));
+		saveService.saveReaderBook(bookActionDataObjectFactory.createReaderBookData(readerBook, bookId,isItUpdateReaderBook));
 
 		ra.addAttribute("bookId", params.get("bookId"));
 
@@ -127,20 +138,25 @@ public class BookActionsController {
 	}
 
 	@PostMapping("/postReview")
-	public String postReview(@RequestParam Map<String, String> params, @ModelAttribute("rating") Rating rating,
-			@ModelAttribute("readerBook") ReaderBook readerBook, RedirectAttributes ra) throws IOException {
+	public String postReview(@RequestParam("isItUpdateReaderBook") boolean isItUpdateReaderBook,
+			@RequestParam("ratingId") int ratingId,
+			@RequestParam("rate") int rate,
+			@RequestParam("readerBookId") int readerBookId,
+			@RequestParam("shelves") String shelves,
+			@RequestParam("bookId") int bookId, @ModelAttribute("review") Review review,
+			RedirectAttributes ra) throws IOException {
 
-		readerBook.setId(Integer.valueOf(params.get("readerBookId")));
+		ReaderBook readerBook = postReviewHelper.getReaderBook(readerBookId, shelves);
+		
+		Rating rating = postReviewHelper.getRating(ratingId, rate);
+		
+		saveService.saveRating(bookActionDataObjectFactory.createRatingData(rating, bookId));
 
-		Review review = reviewFactory.createInstanceFromParams(params);
+		saveService.saveReaderBook(bookActionDataObjectFactory.createReaderBookData(readerBook, bookId,isItUpdateReaderBook));
 
-		saveService.saveRating(bookActionDataObjectFactory.createRatingData(rating, params));
+		saveService.saveReview(bookActionDataObjectFactory.createReviewData(review, bookId));
 
-		saveService.saveReaderBook(bookActionDataObjectFactory.createReaderBookData(readerBook, params));
-
-		saveService.saveReview(bookActionDataObjectFactory.createReviewData(review, params));
-
-		ra.addAttribute("bookId", params.get("bookId"));
+		ra.addAttribute("bookId", bookId);
 
 		return "redirect:/reader/showBook";
 	}
@@ -159,6 +175,60 @@ public class BookActionsController {
 		theModel.addAllAttributes(readerBookAndRatingModelCreator.createModel(bookId));
 
 		return "postreview";
+	}
+
+	@GetMapping("/reviewPage")
+	public String reviewPage(@RequestParam("reviewId") int reviewId, Model theModel, HttpSession session,
+			Principal principal) {
+
+		Review review = reviewService.getReviewById(reviewId);
+
+		Book book = review.getBook();
+
+		List<Comment> reviewComments = commentService.getReviewComments(reviewId);
+
+		theModel.addAllAttributes(loggedReviewPageModelCreator.createModel(review));
+		theModel.addAttribute("book", review.getBook());
+		theModel.addAttribute("review", review);
+		theModel.addAttribute("bookPic", photoService.getEncodedImage(book.getBookPhoto()));
+		theModel.addAttribute("rating", review.getRating());
+		theModel.addAttribute("comment", new Comment());
+		theModel.addAttribute("reviewComments", reviewComments);
+
+		return "review";
+	}
+
+	@PostMapping("/editReview")
+	public String editReview(@RequestParam("reviewId") int reviewId, @RequestParam("reviewText") String reviewText,
+			Model theModel, HttpSession session, Principal principal, RedirectAttributes ra) {
+
+		Review review = reviewService.getReviewById(reviewId);
+
+		review.setText(reviewText);
+
+		reviewService.updateReview(review);
+
+		ra.addAttribute("reviewId", reviewId);
+
+		return "redirect:/bookActions/reviewPage";
+
+	}
+
+	@PostMapping("/editComment")
+	public String editComment(@RequestParam("reviewId") int reviewId, @RequestParam("commentId") int commentId,
+			@RequestParam("commentText") String commentText, Model theModel, HttpSession session, Principal principal,
+			RedirectAttributes ra) {
+
+		Comment comment = commentService.getCommentById(commentId);
+
+		comment.setText(commentText);
+
+		commentService.submitComment(comment);
+
+		ra.addAttribute("reviewId", reviewId);
+
+		return "redirect:/bookActions/reviewPage";
+
 	}
 
 }

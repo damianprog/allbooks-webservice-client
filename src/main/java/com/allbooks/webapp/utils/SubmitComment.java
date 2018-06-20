@@ -36,11 +36,11 @@ public class SubmitComment {
 	private BookService bookService;
 	
 	@Autowired
-	private HttpSession session;
+	private SecurityContextService contextService;
 	
 	public void submit(CommentData commentData) {
 
-		int readerId = (int)session.getAttribute("readerId");
+		int readerId = contextService.getLoggedReaderId();
 		int bookId = commentData.getBookId();
 		
 		Comment comment = commentData.getComment();

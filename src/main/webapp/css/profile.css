@@ -11,6 +11,48 @@ body{
      margin:0 auto;
 }
 
+.moreDesc{
+	color:#00635d;
+}
+
+#uploadPhotoLabel{
+	margin-top:10px;
+	width:160px;
+	background-color:#3b5998;
+	color:white;
+	border-radius:7px;
+	text-align:center;
+	cursor: pointer;
+}
+
+.pendingDiv{
+	margin-top:10px;
+}
+
+#friendsTable tr:not(:first-child) td{
+	padding-top:20px;
+}
+
+#friendsTable{
+	width:250px;
+}
+
+.delete{
+	background-color:#3b5998;
+	color:white;
+	border-radius:7px;
+	cursor: pointer;
+}
+
+#uploadForm{
+	margin-top:10px;
+}
+
+#extensionError{
+	color:red;
+	font-size:13px;
+}
+
 #firstTd{
 	vertical-align:top;
 	padding-left:20px;

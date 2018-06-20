@@ -3,8 +3,6 @@ package com.allbooks.webapp.utils.test;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import javax.servlet.http.HttpSession;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -25,6 +23,7 @@ import com.allbooks.webapp.service.CommentService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
+import com.allbooks.webapp.utils.SecurityContextService;
 import com.allbooks.webapp.utils.SubmitComment;
 
 @RunWith(SpringRunner.class)
@@ -51,7 +50,7 @@ public class SubmitCommentTest {
 	private BookService bookServiceMock;
 
 	@Mock
-	private HttpSession sessionMock;
+	private SecurityContextService contextServiceMock;
 
 	@Mock
 	private CommentData commentDataMock;
@@ -82,7 +81,7 @@ public class SubmitCommentTest {
 
 		when(commentDataMock.getComment()).thenReturn(commentMock);
 
-		when(sessionMock.getAttribute("readerId")).thenReturn(readerId);
+		when(contextServiceMock.getLoggedReaderId()).thenReturn(readerId);
 
 		when(readerServiceMock.getReaderById(readerId)).thenReturn(readerMock);
 
@@ -97,7 +96,7 @@ public class SubmitCommentTest {
 		submitComment.submit(commentDataMock);
 		
 		verify(commentDataMock).getComment();
-		verify(sessionMock).getAttribute("readerId");
+		verify(contextServiceMock).getLoggedReaderId();
 		verify(readerServiceMock).getReaderById(readerId);
 		verify(commentDataMock).getBookId();
 		verify(bookServiceMock).getBook(bookId);

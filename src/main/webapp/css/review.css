@@ -1,0 +1,119 @@
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size: 17px;
+	color: black;
+}
+
+#container {
+	width: 1000px;
+	margin: 0 auto;
+}
+
+.blackRef {
+	color: black;
+}
+
+.rounded {
+	border-radius: 5px;
+}
+
+#editReview{
+	width:40px;
+	margin-top:10px;
+}
+
+#like{
+	background-color: #3b5998;
+	border-radius: 5px;
+	font-size:15px;
+	color: white;
+}
+
+#reviewLikes {
+	margin-left:400px;	
+}
+
+#editReviewTextArea{
+	width:516px;
+	height:198px;
+}
+
+#editReviewButton{
+	cursor:pointer;
+	width:100px;
+}
+
+.submit{
+	background-color:#fdd05f;
+	color:black;
+	border-radius:5px;
+}
+
+textarea{
+	border-radius:5px;
+}
+
+#like {
+	background-color: #3b5998;
+	border-radius: 5px;
+	color: white;
+}
+
+#img {
+	vertical-align: top;
+}
+
+#rating {
+	font-size: 15px;
+}
+
+#reviewBox {
+	width: 600px;
+	height: 150px;
+}
+
+#reviewTitle {
+	margin-bottom: 20px;
+	width: 300px;
+}
+
+#allComments {
+	margin-top: 20px;
+}
+
+#allReviewsTable {
+	float: left;
+}
+
+#likeForm {
+	display: inline;
+}
+
+#spaceUnder {
+	padding-bottom: 20px;
+}
+
+#reviewTitleTable {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	width: 600px;
+}
+
+#ratingDetails {
+	padding-bottom: 10px;
+	color: #00635d;
+}
+
+#commentLabel{
+	padding-top:10px;
+}
+
+#imgReview {
+	float: left;
+}
+
+#reviewDesc {
+	float: left;
+	padding-left: 20px;
+}
+

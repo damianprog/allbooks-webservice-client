@@ -49,9 +49,6 @@ public class ReaderController {
 	private BookService bookService;
 
 	@Autowired
-	private CommentService commentService;
-
-	@Autowired
 	private ReviewService reviewService;
 
 	@Autowired
@@ -106,26 +103,6 @@ public class ReaderController {
 		theModel.addAttribute("book", book);
 
 		return "book";
-	}
-
-	@GetMapping("/reviewPage")
-	public String reviewPage(@RequestParam("reviewId") int reviewId, Model theModel, HttpSession session) {
-
-		Review review = reviewService.getReviewById(reviewId);
-
-		Book book = review.getBook();
-
-		List<Comment> reviewComments = commentService.getReviewComments(reviewId);
-
-		theModel.addAttribute("book", bookService.getBook(review.getBook().getId()));
-		theModel.addAttribute("review", reviewService.getReviewById(reviewId));
-		theModel.addAttribute("bookPic", photoService.getEncodedImage(book.getBookPhoto()));
-		theModel.addAttribute("rating", review.getRating());
-		theModel.addAttribute("readerLogin", review.getReader().getUsername());
-		theModel.addAttribute("comment", new Comment());
-		theModel.addAttribute("reviewComments", reviewComments);
-
-		return "review";
 	}
 
 	@PostMapping("/saveReader")

@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
+
+import com.allbooks.webapp.validators.ProfilePhotoUploadConstraint;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -35,7 +37,7 @@ public class Reader {
 	public Reader() {
 
 	}
-	
+
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -112,5 +114,5 @@ public class Reader {
 	public String toString() {
 		return "Reader [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + "]";
 	}
-	
+
 }

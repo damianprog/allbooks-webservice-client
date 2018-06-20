@@ -3,8 +3,6 @@ package com.allbooks.webapp.utils.test;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import javax.servlet.http.HttpSession;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -21,8 +19,10 @@ import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
+import com.allbooks.webapp.utils.CommentsRatingUpdater;
 import com.allbooks.webapp.utils.RatingSaver;
 import com.allbooks.webapp.utils.ReaderBookRatingUpdater;
+import com.allbooks.webapp.utils.SecurityContextService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -33,7 +33,7 @@ public class RatingSaverTest {
 	private RatingSaver ratingSaver;
 	
 	@Mock
-	private HttpSession sessionMock;
+	private SecurityContextService contextServiceMock;
 
 	@Mock
 	private RatingService ratingServiceMock;
@@ -59,6 +59,9 @@ public class RatingSaverTest {
 	@Mock
 	private ReaderBookRatingUpdater readerBookRatingUpdaterMock;
 	
+	@Mock
+	private CommentsRatingUpdater commentsRatingUpdaterMock;
+	
 	private int readerId = 1;
 	
 	private int bookId = 1;
@@ -66,7 +69,7 @@ public class RatingSaverTest {
 	@Test
 	public void saveTest() {
 		
-		when(sessionMock.getAttribute("readerId")).thenReturn(readerId);
+		when(contextServiceMock.getLoggedReaderId()).thenReturn(readerId);
 		when(ratingDataMock.getRating()).thenReturn(ratingMock);
 		when(readerServiceMock.getReaderById(readerId)).thenReturn(readerMock);
 		when(ratingDataMock.getBookId()).thenReturn(bookId);
@@ -75,7 +78,7 @@ public class RatingSaverTest {
 		
 		ratingSaver.save(ratingDataMock);
 		
-		verify(sessionMock).getAttribute("readerId");
+		verify(contextServiceMock).getLoggedReaderId();
 		verify(ratingDataMock).getRating();
 		verify(readerServiceMock).getReaderById(readerId);
 		verify(ratingDataMock).getBookId();
@@ -83,6 +86,7 @@ public class RatingSaverTest {
 		verify(ratingMock).setReader(readerMock);
 		verify(ratingMock).setBook(bookMock);
 		verify(readerBookRatingUpdaterMock).update(ratingMock);
+		verify(commentsRatingUpdaterMock).update(ratingMock);
 		
 		
 		

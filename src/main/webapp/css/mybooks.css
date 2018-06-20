@@ -16,6 +16,15 @@ body{
 	margin-top:
 }
 
+.rounded{
+	border-radius:5px;
+}
+
+.dateReadChooser{
+	border-radius:5px;
+	border:1px solid #aaaaaa;
+}
+
 hr {
     border: 0;
     border-bottom: 1px solid #DCDCDC;

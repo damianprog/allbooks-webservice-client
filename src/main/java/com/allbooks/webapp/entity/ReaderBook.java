@@ -27,6 +27,14 @@ public class ReaderBook {
 
 	private String dateAdded;
 
+	public ReaderBook() {
+		
+	}
+	
+	public ReaderBook(String shelves) {
+		this.shelves = shelves;
+	}
+	
 	public Book getBook() {
 		return book;
 	}

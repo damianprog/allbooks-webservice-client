@@ -9,5 +9,7 @@ public interface CommentWebservice {
 	public Comment[] getReviewComments(int reviewId);
 
 	public Comment[] getCommentsByReaderIdAndBookId(int readerId, int bookId);
+
+	public Comment getCommentById(int commentId);
 	
 }
