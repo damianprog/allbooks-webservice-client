@@ -6,7 +6,7 @@ import com.allbooks.webapp.entity.Reader;
 
 public interface EmailService {
 
-	public void sendRegistrationConfirmation(Reader reader) throws MessagingException;
+	public void sendVerificationToken(Reader reader) throws MessagingException;
 	
 	public void sendPasswordChanging(Reader reader) throws MessagingException;
 	

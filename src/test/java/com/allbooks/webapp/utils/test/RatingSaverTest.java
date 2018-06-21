@@ -19,10 +19,10 @@ import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
-import com.allbooks.webapp.utils.CommentsRatingUpdater;
-import com.allbooks.webapp.utils.RatingSaver;
-import com.allbooks.webapp.utils.ReaderBookRatingUpdater;
 import com.allbooks.webapp.utils.SecurityContextService;
+import com.allbooks.webapp.utils.bookactions.CommentsRatingUpdater;
+import com.allbooks.webapp.utils.bookactions.RatingSaver;
+import com.allbooks.webapp.utils.readerbook.ReaderBookRatingUpdater;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)

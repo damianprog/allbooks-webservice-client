@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.allbooks.webapp.Application;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.service.ReaderBookService;
-import com.allbooks.webapp.utils.ReaderBooksQuantitiesGetter;
+import com.allbooks.webapp.utils.readerbook.ReaderBooksQuantitiesGetter;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)

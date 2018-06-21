@@ -1,8 +1,6 @@
 
-*.png
-*.jpg
-*.properties
-*.jpg
 src/main/resources/application.properties
 target/classes/application.properties
-GitHubDesktop.exe
+*.properties
+*.png
+*.jpg

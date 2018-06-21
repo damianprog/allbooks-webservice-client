@@ -39,9 +39,9 @@ public class BookActionDataFactoryImpl extends BookActionDataObjectFactory {
 	}
 
 	@Override
-	public CommentData createCommentData(Comment comment, int reviewId, int bookId) {
+	public CommentData createCommentData(Comment comment, int bookId, int reviewId) {
 		
-		return new CommentData(comment,reviewId,bookId);
+		return new CommentData(comment,bookId,reviewId);
 		
 		
 	}

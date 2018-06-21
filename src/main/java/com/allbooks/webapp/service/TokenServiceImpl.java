@@ -12,13 +12,13 @@ import com.allbooks.webapp.webservice.TokenWebservice;
 public class TokenServiceImpl implements TokenService {
 
 	@Autowired
-	TokenWebservice tokenWebservice;
+	private TokenWebservice tokenWebservice;
 
 	@Override
-	public void createPasswordToken(Reader reader, String token) {
+	public PasswordToken createPasswordToken(Reader reader, String token) {
 
 		PasswordToken passwordToken = new PasswordToken(token, reader);
-		tokenWebservice.savePasswordToken(passwordToken);
+		return tokenWebservice.savePasswordToken(passwordToken);
 
 	}
 
@@ -41,11 +41,11 @@ public class TokenServiceImpl implements TokenService {
 	}
 
 	@Override
-	public void createVerificationToken(Reader reader, String token) {
+	public VerificationToken createVerificationToken(Reader reader, String token) {
 
 		VerificationToken tokenObj = new VerificationToken(token, reader);
 
-		tokenWebservice.saveVerificationToken(tokenObj);
+		return tokenWebservice.saveVerificationToken(tokenObj);
 
 	}
 
@@ -59,6 +59,12 @@ public class TokenServiceImpl implements TokenService {
 	public void deleteVerificationTokenById(int tokenId) {
 
 		tokenWebservice.deleteVerificationTokenTokenById(tokenId);
+	}
+
+	@Override
+	public void updateVerificationToken(VerificationToken verificationToken) {
+
+		tokenWebservice.updateVerificationToken(verificationToken);
 	}
 
 }

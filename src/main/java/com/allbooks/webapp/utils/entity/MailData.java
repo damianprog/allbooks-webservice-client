@@ -3,6 +3,7 @@ package com.allbooks.webapp.utils.entity;
 import java.util.UUID;
 
 import com.allbooks.webapp.entity.Reader;
+import com.allbooks.webapp.entity.Token;
 
 public class MailData {
 

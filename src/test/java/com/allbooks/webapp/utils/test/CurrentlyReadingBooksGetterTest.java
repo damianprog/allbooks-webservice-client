@@ -20,7 +20,7 @@ import com.allbooks.webapp.Application;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.factories.ListFactory;
 import com.allbooks.webapp.service.ReaderBookService;
-import com.allbooks.webapp.utils.CurrentlyReadingBooksGetter;
+import com.allbooks.webapp.utils.readerbook.CurrentlyReadingBooksGetter;
 import com.allbooks.webapp.utils.service.PhotoService;
 
 @RunWith(SpringRunner.class)

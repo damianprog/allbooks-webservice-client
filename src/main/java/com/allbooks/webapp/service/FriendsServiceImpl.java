@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.allbooks.webapp.entity.Friends;
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.utils.ReaderFriendsInitializer;
+import com.allbooks.webapp.utils.reader.ReaderFriendsInitializer;
 import com.allbooks.webapp.webservice.FriendsWebservice;
 
 @Service

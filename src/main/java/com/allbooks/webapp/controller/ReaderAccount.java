@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.Map;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.allbooks.webapp.entity.PasswordToken;
 import com.allbooks.webapp.entity.Reader;
+import com.allbooks.webapp.entity.VerificationToken;
+import com.allbooks.webapp.enumeration.PasswordTokenResponses;
+import com.allbooks.webapp.enumeration.VerificationTokenResponses;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.TokenService;
-import com.allbooks.webapp.utils.RegistrationConfirmation;
+import com.allbooks.webapp.utils.entity.MailData;
+import com.allbooks.webapp.utils.mail.MailBuilder;
+import com.allbooks.webapp.utils.mail.RegistrationConfirmation;
 import com.allbooks.webapp.utils.service.EmailService;
 
 @Controller
@@ -78,20 +84,20 @@ public class ReaderAccount {
 		Reader reader = readerService.getReaderByEmail(email + ".com");
 
 		if (reader == null) {
-			theModel.addAttribute("error", true);
+			theModel.addAttribute("info", PasswordTokenResponses.EMAIL_ERROR);
 			return "forgot";
 		}
 
 		PasswordToken token = tokenService.getPasswordTokenByReaderId(reader.getId());
 
 		if (token != null) {
-			theModel.addAttribute("tokenSent", true);
+			theModel.addAttribute("info", PasswordTokenResponses.ALREADY_SENT);
 			return "forgot";
 		}
 
 		emailService.sendPasswordChanging(reader);
 
-		theModel.addAttribute("success", true);
+		theModel.addAttribute("info", PasswordTokenResponses.TOKEN_SENT);
 
 		return "forgot";
 	}
@@ -109,16 +115,27 @@ public class ReaderAccount {
 	public String registrationConfirm(@RequestParam("token") String token, @RequestParam("readerId") Integer readerId,
 			Model theModel, HttpSession session, Principal principal) {
 
-		//TODO object with these parameters info maybe?
+		Map<String, VerificationTokenResponses> map = registrationConfirmation.verifyConfirmation(readerId, token);
+
+		theModel.addAttribute("info", map.get("info"));
+		theModel.addAttribute("readerId",readerId);
 		
-		Map<String, Boolean> map = registrationConfirmation.verifyConfirmation(readerId, token);
-
-		theModel.addAttribute("success", map.get("success"));
-		theModel.addAttribute("alreadyDone", map.get("alreadyDone"));
-
 		return "registrationConfirm";
 	}
 
+	@PostMapping("/resendVerificationToken")
+	public String resendVerificationToken(@RequestParam("readerId") int readerId,Model theModel) throws MessagingException {
+		
+		Reader reader = readerService.getReaderById(readerId);
+		
+		emailService.sendVerificationToken(reader);
+		
+		theModel.addAttribute("info",VerificationTokenResponses.VERIFICATION_TOKEN_RESEND);
+		
+		return "registrationConfirm";
+		
+	}
+	
 	@GetMapping("/accessDenied")
 	public String accessDenied() {
 		return "accessDenied";

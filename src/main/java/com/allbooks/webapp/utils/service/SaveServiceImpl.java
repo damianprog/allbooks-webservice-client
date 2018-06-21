@@ -9,10 +9,10 @@ import com.allbooks.webapp.entity.RatingData;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBookData;
 import com.allbooks.webapp.entity.ReviewData;
-import com.allbooks.webapp.utils.RatingSaver;
-import com.allbooks.webapp.utils.ReaderBookSaver;
-import com.allbooks.webapp.utils.ReaderSaver;
-import com.allbooks.webapp.utils.ReviewSaver;
+import com.allbooks.webapp.utils.bookactions.RatingSaver;
+import com.allbooks.webapp.utils.bookactions.ReviewSaver;
+import com.allbooks.webapp.utils.reader.ReaderSaver;
+import com.allbooks.webapp.utils.readerbook.ReaderBookSaver;
 
 @Service
 public class SaveServiceImpl implements SaveService {

@@ -31,7 +31,7 @@ import com.allbooks.webapp.service.CommentService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
-import com.allbooks.webapp.utils.ReaderBookAndRatingModelCreator;
+import com.allbooks.webapp.utils.readerbook.ReaderBookAndRatingModelCreator;
 import com.allbooks.webapp.utils.service.PhotoServiceImpl;
 import com.allbooks.webapp.utils.service.SaveService;
 

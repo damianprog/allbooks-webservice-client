@@ -11,12 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.ProfilePhoto;
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.photos.utils.Base64Encoder;
-import com.allbooks.webapp.photos.utils.BookPicsEncoder;
-import com.allbooks.webapp.photos.utils.MultipartImageConverter;
-import com.allbooks.webapp.photos.utils.MultipartToFile;
-import com.allbooks.webapp.photos.utils.ProfilePhotoCreator;
-import com.allbooks.webapp.photos.utils.ResizePhoto;
+import com.allbooks.webapp.utils.photos.Base64Encoder;
+import com.allbooks.webapp.utils.photos.BookPicsEncoder;
+import com.allbooks.webapp.utils.photos.MultipartImageConverter;
+import com.allbooks.webapp.utils.photos.MultipartToFile;
+import com.allbooks.webapp.utils.photos.ProfilePhotoCreator;
+import com.allbooks.webapp.utils.photos.ResizePhoto;
 
 @Service
 public class PhotoServiceImpl implements PhotoService {

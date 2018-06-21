@@ -20,8 +20,8 @@ import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.factories.ModelMapFactory;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderBookService;
-import com.allbooks.webapp.utils.ReaderBookAndRatingModelCreator;
 import com.allbooks.webapp.utils.SecurityContextService;
+import com.allbooks.webapp.utils.readerbook.ReaderBookAndRatingModelCreator;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)

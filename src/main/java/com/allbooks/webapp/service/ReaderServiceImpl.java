@@ -8,7 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.utils.ReaderRoleSaver;
+import com.allbooks.webapp.utils.reader.ReaderRoleSaver;
 import com.allbooks.webapp.webservice.ReaderWebservice;
 
 @Service

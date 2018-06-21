@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.allbooks.webapp.entity.ReaderBook;
-import com.allbooks.webapp.utils.CurrentlyReadingBooksGetter;
-import com.allbooks.webapp.utils.ReaderBooksQuantitiesGetter;
+import com.allbooks.webapp.utils.readerbook.CurrentlyReadingBooksGetter;
+import com.allbooks.webapp.utils.readerbook.ReaderBooksQuantitiesGetter;
 
 @Service
 public class ReaderBooksServiceImpl implements ReaderBooksService{

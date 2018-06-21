@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.utils.SendMail;
 import com.allbooks.webapp.utils.entity.MailData;
 import com.allbooks.webapp.utils.entity.MailData.TokenType;
+import com.allbooks.webapp.utils.mail.SendMail;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -20,7 +20,7 @@ public class EmailServiceImpl implements EmailService {
 	private MailData mailData;
 
 	@Override
-	public void sendRegistrationConfirmation(Reader reader) throws MessagingException {
+	public void sendVerificationToken(Reader reader) throws MessagingException {
 
 		mailData.setReader(reader);
 		mailData.setSubject("Registration Confirmation");

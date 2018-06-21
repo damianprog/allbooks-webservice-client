@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Review;
-import com.allbooks.webapp.utils.Sorter;
+import com.allbooks.webapp.utils.bookactions.Sorter;
 import com.allbooks.webapp.utils.webservice.UtilsWebservice;
 import com.allbooks.webapp.webservice.ReviewWebservice;
 

@@ -15,14 +15,14 @@ import com.allbooks.webapp.entity.VerificationToken;
 public class TokenWebserviceImpl implements TokenWebservice{
 
 	@Autowired
-	RestTemplate restTemplate;
+	private RestTemplate restTemplate;
 
 	@Value("${service.url.name}")
-	String serviceUrlName;
+	private String serviceUrlName;
 	
 	@Override
-	public void savePasswordToken(PasswordToken passwordToken) {
-		restTemplate.postForObject(serviceUrlName + "/readers/passwordTokens", passwordToken, PasswordToken.class);
+	public PasswordToken savePasswordToken(PasswordToken passwordToken) {
+		return restTemplate.postForObject(serviceUrlName + "/readers/passwordTokens", passwordToken, PasswordToken.class);
 		
 	}
 
@@ -55,8 +55,8 @@ public class TokenWebserviceImpl implements TokenWebservice{
 	}
 
 	@Override
-	public void saveVerificationToken(VerificationToken verificationToken) {
-		restTemplate.postForObject(serviceUrlName + "/readers/verificationTokens", verificationToken, VerificationToken.class);
+	public VerificationToken saveVerificationToken(VerificationToken verificationToken) {
+		return restTemplate.postForObject(serviceUrlName + "/readers/verificationTokens", verificationToken, VerificationToken.class);
 		
 	}
 
@@ -76,6 +76,12 @@ public class TokenWebserviceImpl implements TokenWebservice{
 
 		restTemplate.delete(serviceUrlName + "/verificationTokens/{tokenId}", params);
 		
+	}
+
+	@Override
+	public void updateVerificationToken(VerificationToken verificationToken) {
+
+		restTemplate.put(serviceUrlName + "/verificationTokens", verificationToken);
 	}
 
 	

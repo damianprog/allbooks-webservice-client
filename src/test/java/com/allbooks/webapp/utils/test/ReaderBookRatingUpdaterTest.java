@@ -17,7 +17,7 @@ import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.service.ReaderBookService;
-import com.allbooks.webapp.utils.ReaderBookRatingUpdater;
+import com.allbooks.webapp.utils.readerbook.ReaderBookRatingUpdater;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)

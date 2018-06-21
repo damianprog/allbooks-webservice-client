@@ -38,6 +38,10 @@ body {
 	height:198px;
 }
 
+#reviewText{
+	width:600px;
+}
+
 #editReviewButton{
 	cursor:pointer;
 	width:100px;

@@ -3,7 +3,7 @@ package com.allbooks.webapp.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PasswordToken {
+public class PasswordToken implements Token{
 
 	private int id;
 

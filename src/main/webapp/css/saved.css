@@ -24,6 +24,11 @@ body{
   	margin: 0 auto;
 }
 
+#resendSubmit{
+	cursor:pointer;
+	text-decoration:underline;
+}
+
 .joinInputBox{
 	width: 300px;
 	height: 40px;

@@ -19,7 +19,7 @@ import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderBookService;
-import com.allbooks.webapp.utils.ReaderBooksForMyBooksGetter;
+import com.allbooks.webapp.utils.readerbook.ReaderBooksForMyBooksGetter;
 import com.allbooks.webapp.utils.service.PhotoService;
 
 @RunWith(SpringRunner.class)

@@ -24,7 +24,7 @@ import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
 import com.allbooks.webapp.utils.SecurityContextService;
-import com.allbooks.webapp.utils.SubmitComment;
+import com.allbooks.webapp.utils.bookactions.SubmitComment;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)

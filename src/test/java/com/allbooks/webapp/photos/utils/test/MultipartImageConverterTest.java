@@ -17,9 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.allbooks.webapp.Application;
 import com.allbooks.webapp.factories.FileFactory;
-import com.allbooks.webapp.photos.utils.MultipartImageConverter;
-import com.allbooks.webapp.photos.utils.MultipartToFile;
-import com.allbooks.webapp.photos.utils.ResizePhoto;
+import com.allbooks.webapp.utils.photos.MultipartImageConverter;
+import com.allbooks.webapp.utils.photos.MultipartToFile;
+import com.allbooks.webapp.utils.photos.ResizePhoto;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)

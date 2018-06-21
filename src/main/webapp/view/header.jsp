@@ -61,10 +61,10 @@
 						<td>
 							<table id="mainLogin">
 								<tr>
-									<td><input type="text" placeholder="Login" id="inputBox"
+									<td><input type="text" placeholder="Login" class="inputBox"
 										required="required" name="username" /></td>
 									<td><input type="password" placeholder="Password"
-										id="inputBox" required="required" name="password" /></td>
+										class="inputBox" required="required" name="password" /></td>
 									<td><input class="signInHeader" type="submit"
 										value="Sign In" /></td>
 								</tr>

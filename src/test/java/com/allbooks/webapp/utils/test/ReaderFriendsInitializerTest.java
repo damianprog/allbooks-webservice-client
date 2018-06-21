@@ -19,7 +19,7 @@ import com.allbooks.webapp.entity.Friends;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.factories.ListFactory;
 import com.allbooks.webapp.service.FriendsService;
-import com.allbooks.webapp.utils.ReaderFriendsInitializer;
+import com.allbooks.webapp.utils.reader.ReaderFriendsInitializer;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)

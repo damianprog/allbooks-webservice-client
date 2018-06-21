@@ -22,8 +22,8 @@ import com.allbooks.webapp.factories.BookActionDataObjectFactory;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.ReaderBookService;
 import com.allbooks.webapp.service.ReaderService;
-import com.allbooks.webapp.utils.ReaderBookSaver;
-import com.allbooks.webapp.utils.ReaderBooksForMyBooksGetter;
+import com.allbooks.webapp.utils.readerbook.ReaderBookSaver;
+import com.allbooks.webapp.utils.readerbook.ReaderBooksForMyBooksGetter;
 
 @Controller
 @RequestMapping("/myBooks")

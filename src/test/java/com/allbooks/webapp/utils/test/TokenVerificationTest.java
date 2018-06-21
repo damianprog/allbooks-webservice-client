@@ -18,7 +18,7 @@ import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.VerificationToken;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.TokenService;
-import com.allbooks.webapp.utils.TokenVerification;
+import com.allbooks.webapp.utils.mail.TokenVerification;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)

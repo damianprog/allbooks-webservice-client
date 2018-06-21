@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.allbooks.webapp.Application;
 import com.allbooks.webapp.factories.Base64Factory;
-import com.allbooks.webapp.photos.utils.Base64Encoder;
+import com.allbooks.webapp.utils.photos.Base64Encoder;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)

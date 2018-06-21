@@ -34,23 +34,18 @@
 			</c:otherwise>
 			</c:choose>
 			<c:choose>
-				<c:when test="${!empty error}">
+				<c:when test="${info == 'EMAIL_ERROR'}">
 					<br>
 					<span style="color: red">There is no reader with email like
 						this</span>
 				</c:when>
 
-				<c:when test="${!empty success}">
+				<c:when test="${info == 'TOKEN_SENT'}">
 					<br>
 				The email has been sent to the given email address.
 			</c:when>
 
-				<c:when test="${!empty invalidToken}">
-					<br>
-					<span style="color: red">The token is invalid</span>
-				</c:when>
-
-				<c:when test="${!empty tokenSent}">
+				<c:when test="${info == 'ALREADY_SENT'}">
 					<br>
 					<span style="color: red">The token has been already sent to
 						this email!</span>

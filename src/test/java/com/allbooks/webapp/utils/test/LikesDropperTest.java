@@ -20,8 +20,8 @@ import com.allbooks.webapp.factories.LikeFactory;
 import com.allbooks.webapp.service.LikeService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
-import com.allbooks.webapp.utils.LikesDropper;
 import com.allbooks.webapp.utils.SecurityContextService;
+import com.allbooks.webapp.utils.bookactions.LikesDropper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

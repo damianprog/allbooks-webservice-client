@@ -169,11 +169,17 @@
 						</tr>
 						<tr>
 							<td id="reviewTitleTd">
-								${fn:substring(tempReview.text,0,300)}...
+								${fn:substring(tempReview.text,0,500)}
+								<c:choose>
+								<c:when test="${fn:length(tempReview.text) > 500}">
+									<a class="moreDesc" href="${reviewLink}">...see review</a>
+								</c:when>
+								</c:choose> 
 							</td>
 						</tr>
 						<tr>
 							<td id="spaceUnder">
+							<div style="float:left;">
 							Likes ${tempReview.likes.size()}
 							<sec:authorize
 									access="isFullyAuthenticated()">
@@ -184,6 +190,12 @@
 										<input class="like" type="submit" value="Like" />
 									</form:form>
 								</sec:authorize> 
+							</div>
+							<div style="float:left; margin-left:10px;">
+								<a class="blackRef" href="${reviewLink}">see review</a>
+							</div>
+							
+							<div style="clear:both;"></div>
 							</td>
 						</tr>
 					</c:forEach>

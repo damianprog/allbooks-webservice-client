@@ -21,8 +21,8 @@ import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
-import com.allbooks.webapp.utils.ReviewSaver;
 import com.allbooks.webapp.utils.SecurityContextService;
+import com.allbooks.webapp.utils.bookactions.ReviewSaver;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)

@@ -5,7 +5,7 @@ import com.allbooks.webapp.entity.VerificationToken;
 
 public interface TokenWebservice {
 
-	public void savePasswordToken(PasswordToken passwordToken);
+	public PasswordToken savePasswordToken(PasswordToken passwordToken);
 
 	public PasswordToken getPasswordTokenByReaderId(int readerId);
 
@@ -13,10 +13,12 @@ public interface TokenWebservice {
 
 	public void deletePasswordTokenByReaderId(int readerId);
 
-	public void saveVerificationToken(VerificationToken verificationToken);
+	public VerificationToken saveVerificationToken(VerificationToken verificationToken);
 
 	public VerificationToken getVerificationTokenByReaderId(int readerId);
 
 	public void deleteVerificationTokenTokenById(int tokenId);
+
+	public void updateVerificationToken(VerificationToken verificationToken);
 	
 }

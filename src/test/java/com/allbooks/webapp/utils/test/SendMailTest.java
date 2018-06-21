@@ -18,10 +18,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.allbooks.webapp.Application;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.service.TokenService;
-import com.allbooks.webapp.utils.MailBuilder;
-import com.allbooks.webapp.utils.SendMail;
 import com.allbooks.webapp.utils.entity.MailData;
 import com.allbooks.webapp.utils.entity.MailData.TokenType;
+import com.allbooks.webapp.utils.mail.MailBuilder;
+import com.allbooks.webapp.utils.mail.SendMail;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -57,6 +57,7 @@ public class SendMailTest {
 		String methodMapping = "/readerAccount/registrationConfirm";
 		
 		when(mailDataMock.getToken()).thenReturn(registrationToken);
+		
 		when(mailDataMock.getReader()).thenReturn(readerMock);
 		
 		when(mailDataMock.getTokenType()).thenReturn(TokenType.REGISTRATION_CONFIRM);

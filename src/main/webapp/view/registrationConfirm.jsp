@@ -10,7 +10,7 @@
 <link type="text/css" rel="stylesheet" href="/css/saved.css" />
 <link href="https://fonts.googleapis.com/css?family=Roboto|Spectral+SC"
 	rel="stylesheet">
-
+<script src="/js/jquery-3.3.1.min.js"></script>
 </head>
 
 <body>
@@ -24,7 +24,7 @@
 
 		<div class="whiteContainer">
 			<c:choose>
-				<c:when test="${alreadyDone == true}">
+				<c:when test="${info == 'ALREADY_AUTHENTICATED'}">
 					<h3>You are already authenticated!</h3>
 					<p>
 						<a href="/reader/main">Allbooks Home</a>
@@ -33,7 +33,7 @@
 
 				<c:otherwise>
 					<c:choose>
-						<c:when test="${success == true }">
+						<c:when test="${info == 'VALID_TOKEN'}">
 							<h3>You've been successfully Authenticated!</h3>
 							<p>
 								<a href="/reader/main">Allbooks Home</a>
@@ -43,19 +43,41 @@
 								<a href="/login">Login Page</a>
 							</p>
 						</c:when>
-						<c:when test="${success == false }">
+						<c:when test="${info == 'INVALID_TOKEN'}">
 							<h3>The token is invalid</h3>
 							<p>
 								<a href="/reader/main">Go back to Home page</a>
 							</p>
 						</c:when>
+						<c:when test="${info == 'TOKEN_EXPIRED'}">
+
+							<form id="resendForm" action="/readerAccount/resendVerificationToken" method="POST">
+					
+							<input type="hidden" name="readerId" value="${readerId}">
+						
+							<h3>The token has expired.Click on the link below to resend
+								token to your email.</h3>
+								
+								<div id="resendSubmit">Resend
+									verification token</div>
+							
+							</form>
+							
+						</c:when>
+						
+						<c:when test="${info == 'VERIFICATION_TOKEN_RESEND'}">
+
+							<h3>New verification token has been resent to your email address</h3>
+							<p>
+								<a class="blackRef" href="/reader/main">Go to main page</a>
+							</p>
+						</c:when>
+						
 					</c:choose>
 				</c:otherwise>
 
 
 			</c:choose>
-
-
 
 			<div id="sponsored">
 				sponsored books
@@ -82,6 +104,19 @@
 
 	</div>
 
+<script type="text/javascript">
+	
+	$(document).ready(function(){
+		
+		$('#resendSubmit').click(function(){
+			document.getElementById('resendForm').submit();
+		});
+		
+	});
+	
+
+	
+</script>
 
 </body>
 

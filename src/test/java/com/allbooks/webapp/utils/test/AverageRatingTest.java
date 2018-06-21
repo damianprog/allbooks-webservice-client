@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.allbooks.webapp.entity.Rating;
-import com.allbooks.webapp.utils.AverageRating;
+import com.allbooks.webapp.utils.bookactions.AverageRating;
 
 public class AverageRatingTest {
 

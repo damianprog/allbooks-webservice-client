@@ -16,9 +16,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.allbooks.webapp.Application;
 import com.allbooks.webapp.entity.Reader;
+import com.allbooks.webapp.enumeration.VerificationTokenResponses;
 import com.allbooks.webapp.service.ReaderService;
-import com.allbooks.webapp.utils.RegistrationConfirmation;
-import com.allbooks.webapp.utils.TokenVerification;
+import com.allbooks.webapp.utils.mail.RegistrationConfirmation;
+import com.allbooks.webapp.utils.mail.TokenVerification;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -46,12 +47,11 @@ public class RegistrationConfirmationTest {
 		
 		when(readerServiceMock.getReaderById(readerId)).thenReturn(readerMock);
 		when(readerMock.isEnabled()).thenReturn(false);
-		when(tokenVerificationMock.verifyToken(readerMock,token)).thenReturn(true);
+		when(tokenVerificationMock.verifyToken(readerMock,token)).thenReturn(VerificationTokenResponses.VALID_TOKEN);
 		
-		Map<String,Boolean> map = registrationConfirmation.verifyConfirmation(readerId, token);
+		Map<String,VerificationTokenResponses> map = registrationConfirmation.verifyConfirmation(readerId, token);
 		
-		assertEquals(map.get("success"),true);
-		assertEquals(map.get("alreadyDone"),false);
+		assertEquals(map.get("info"),VerificationTokenResponses.VALID_TOKEN);
 		
 		verify(readerServiceMock).getReaderById(readerId);
 		verify(readerMock).isEnabled();

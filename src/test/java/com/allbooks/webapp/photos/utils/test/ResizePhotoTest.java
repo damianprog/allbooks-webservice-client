@@ -18,8 +18,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.allbooks.webapp.Application;
 import com.allbooks.webapp.factories.FileFactory;
-import com.allbooks.webapp.photos.utils.ResizePhoto;
-import com.allbooks.webapp.photos.utils.ThumbnailsResize;
+import com.allbooks.webapp.utils.photos.ResizePhoto;
+import com.allbooks.webapp.utils.photos.ThumbnailsResize;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)

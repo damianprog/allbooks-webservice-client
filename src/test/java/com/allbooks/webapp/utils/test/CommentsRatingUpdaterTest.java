@@ -20,7 +20,7 @@ import com.allbooks.webapp.entity.Comment;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.service.CommentService;
-import com.allbooks.webapp.utils.CommentsRatingUpdater;
+import com.allbooks.webapp.utils.bookactions.CommentsRatingUpdater;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
