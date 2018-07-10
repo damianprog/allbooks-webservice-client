@@ -2,6 +2,7 @@ package com.allbooks.webapp.entity;
 
 import java.util.Arrays;
 
+import com.allbooks.webapp.enumeration.ShelvesStates;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -21,20 +22,16 @@ public class ReaderBook {
 
 	private Reader reader;
 
-	private String shelves;
+	private ShelvesStates shelvesStates;
 
 	private String dateRead;
 
 	private String dateAdded;
 
 	public ReaderBook() {
-		
+
 	}
-	
-	public ReaderBook(String shelves) {
-		this.shelves = shelves;
-	}
-	
+
 	public Book getBook() {
 		return book;
 	}
@@ -75,12 +72,12 @@ public class ReaderBook {
 		this.reader = reader;
 	}
 
-	public String getShelves() {
-		return shelves;
+	public ShelvesStates getShelvesStates() {
+		return shelvesStates;
 	}
 
-	public void setShelves(String shelves) {
-		this.shelves = shelves;
+	public void setShelvesStates(ShelvesStates shelvesStates) {
+		this.shelvesStates = shelvesStates;
 	}
 
 	public String getDateRead() {
@@ -113,13 +110,6 @@ public class ReaderBook {
 
 	public void setReaderRating(Rating readerRating) {
 		this.readerRating = readerRating;
-	}
-
-	@Override
-	public String toString() {
-		return "ReaderBook [id=" + id + ", book=" + book + ", bookPic=" + Arrays.toString(bookPic) + ", encodedBookPic="
-				+ encodedBookPic + ", overallRating=" + overallRating + ", readerRating=" + readerRating + ", reader="
-				+ reader + ", shelves=" + shelves + ", dateRead=" + dateRead + ", dateAdded=" + dateAdded + "]";
 	}
 
 }

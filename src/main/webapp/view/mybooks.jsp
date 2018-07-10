@@ -33,7 +33,15 @@
 		<br>
 		<c:choose>
 			<c:when test="${isItMyBooks == true }">
-				<h2 id="first">My Books</h2>
+				<c:choose>
+					<c:when test="${empty shelvesStates}">
+						<h2 id="first">My Books:All</h2>
+					</c:when>
+					<c:otherwise>
+						<h2 id="first">My Books:${shelvesStates.shelveState()}</h2>
+					</c:otherwise>
+				</c:choose>
+
 			</c:when>
 			<c:when test="${isItMyBooks == false }">
 				<h2 id="first">${readerLogin}'sBooks</h2>
@@ -41,10 +49,39 @@
 		</c:choose>
 		<hr>
 		<c:choose>
-			<c:when test="${empty readerBooks}">
+			<c:when test="${all == 0}">
 			There are no books yet!
 			</c:when>
 			<c:otherwise>
+
+				<c:url var="showAll" value="/myBooks/showMyBooks">
+					<c:param name="readerId" value="${readerId}" />
+				</c:url>
+
+				<c:url var="showRead" value="/myBooks/showMyBooks">
+					<c:param name="shelves" value="Read" />
+					<c:param name="readerId" value="${readerId}" />
+				</c:url>
+
+				<c:url var="showCurrentlyReading" value="/myBooks/showMyBooks">
+					<c:param name="shelves" value="Currently Reading" />
+					<c:param name="readerId" value="${readerId}" />
+				</c:url>
+
+				<c:url var="showWantToRead" value="/myBooks/showMyBooks">
+					<c:param name="shelves" value="Want To Read" />
+					<c:param name="readerId" value="${readerId}" />
+				</c:url>
+
+				<div id="filters">
+					<b>Bookshelves</b><br> <a class="blackRefNoDec"
+						href="${showAll}">All(${all})</a><br> <a
+						class="blackRefNoDec" href="${showRead}">Read(${read})</a><br>
+					<a class="blackRefNoDec" href="${showCurrentlyReading}">Currently
+						Reading(${currentlyReading})</a><br> <a class="blackRefNoDec"
+						href="${showWantToRead}">Want To Read(${wantToRead})</a><br>
+				</div>
+
 				<table id="mainTable">
 
 					<tr>
@@ -72,19 +109,20 @@
 							<td>${tempReaderBook.book.author}</td>
 							<td>${tempReaderBook.overallRating}</td>
 							<td>${tempReaderBook.readerRating.rate}</td>
-							<td>${tempReaderBook.shelves}<br> <c:choose>
+							<td>${tempReaderBook.shelvesStates.shelveState()}<br> <c:choose>
 									<c:when test="${isItMyBooks == true}">
 										<form method="POST" action="/myBooks/updateState">
-											<select class="rounded" name="newShelves" onchange="this.form.submit()">
-											<option value="" selected disabled hidden>Select Shelves</option>
+											<select class="rounded" name="newShelves"
+												onchange="this.form.submit()">
+												<option value="" selected disabled hidden>Select
+													Shelves</option>
 												<option value="Read">Read</option>
 												<option value="Currently Reading">Currently Reading</option>
 												<option value="Want To Read">Want To Read</option>
 											</select> <input type="hidden" name="bookId"
-												value="${tempReaderBook.book.id}"> 
-												<input type="hidden" name="isItUpdateReaderBook"
-												value="true">
-												<input type="hidden" name="readerBookId"
+												value="${tempReaderBook.book.id}"> <input
+												type="hidden" name="isItUpdateReaderBook" value="true">
+											<input type="hidden" name="readerBookId"
 												value="${tempReaderBook.id}">
 										</form>
 									</c:when>
@@ -92,9 +130,11 @@
 							</td>
 							<td>${tempReaderBook.dateRead}<c:choose>
 									<c:when test="${isItMyBooks == true}">
-										<form method="POST" action="/myBooks/updateDateRead" id="dateReadForm">
+										<form method="POST" action="/myBooks/updateDateRead"
+											id="dateReadForm">
 											<input class="dateReadChooser" name="dateRead" type="date"
-												value="${tempReaderBook.dateRead}" onchange="this.form.submit()"> <input type="hidden"
+												value="${tempReaderBook.dateRead}"
+												onchange="this.form.submit()"> <input type="hidden"
 												name="bookName" value="${tempReaderBook.book.miniTitle}">
 										</form>
 									</c:when>
@@ -106,7 +146,8 @@
 							</c:url>
 							<c:if test="${isItMyBooks == true}">
 								<td style="vertical-align: top; padding-top: 20px;"><a
-									class="titleRef" href="${delete}" onclick="return confirm('Are you sure you want to delete this book?');">Delete</a></td>
+									class="titleRef" href="${delete}"
+									onclick="return confirm('Are you sure you want to delete this book?');">Delete</a></td>
 							</c:if>
 						</tr>
 					</c:forEach>
@@ -114,6 +155,21 @@
 				</table>
 			</c:otherwise>
 		</c:choose>
+		
+		<div style="clear:both"></div>
+		
+		<div id="pageNumbers">
+		<c:forEach begin="1" end="${readerBooksPage.totalPages}" var="i">
+			<c:url var="page" value="/myBooks/showMyBooks">
+				<c:param name="page" value="${i}"></c:param>
+				<c:param name="shelves" value="${shelvesState.shelveState()}"></c:param>
+				<c:param name="readerId" value="${readerId}"></c:param>
+			</c:url>
+			<h3 class="pageNum">
+				<a class="blackRef" href="${page}">${i}</a>
+			</h3>
+		</c:forEach>
+		</div>
 	</div>
 
 </body>
@@ -121,8 +177,11 @@
 <script src="/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
-		
-		var isItMyBooks = ${isItMyBooks}
+
+		var isItMyBooks = $
+		{
+			isItMyBooks
+		}
 
 		if (isItMyBooks == false) {
 

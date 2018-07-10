@@ -19,6 +19,9 @@ body{
 	border-radius:5px;
 }
 
+#extensionError{
+	color:red;
+}
 
 .inputBox{
 	width: 300px;

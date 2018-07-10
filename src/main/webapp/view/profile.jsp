@@ -167,7 +167,7 @@
 								<h4 id="topDesc">
 									<a class="blackRef" href="${bookSite}">${tempBook.book.fullTitle}</a>
 								</h4> <br> by ${tempBook.book.author}<br> bookshelves:
-								${tempBook.shelves}
+								${tempBook.shelvesStates.shelveState()}
 							</td>
 						</tr>
 					</c:forEach>

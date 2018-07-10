@@ -29,7 +29,7 @@ import com.allbooks.webapp.service.ReviewService;
 import com.allbooks.webapp.utils.model.LoggedReaderModelProfileCreator;
 import com.allbooks.webapp.utils.service.FriendsUtilsService;
 import com.allbooks.webapp.utils.service.PhotoServiceImpl;
-import com.allbooks.webapp.utils.service.ReaderBooksServiceImpl;
+import com.allbooks.webapp.utils.service.ReaderBooksUtilsService;
 
 @Controller
 @RequestMapping("/profile")
@@ -45,7 +45,7 @@ public class ProfileController {
 	private FriendsUtilsService friendsUtilsService;
 
 	@Autowired
-	private ReaderBooksServiceImpl readerBooksServiceImpl;
+	private ReaderBooksUtilsService readerBooksService;
 
 	@Autowired
 	private PhotoServiceImpl photoService;
@@ -65,7 +65,7 @@ public class ProfileController {
 
 		Reader reader = readerService.getReaderById(readerId);
 
-		Map<String, Integer> readerBooksQuantitiesMap = readerBooksServiceImpl.getReaderBooksQuantities(reader.getId());
+		Map<String, Integer> readerBooksQuantitiesMap = readerBooksService.getReaderBooksQuantities(reader.getId());
 
 		if (reader.getProfilePhoto() != null) 
 			theModel.addAttribute("profilePic", photoService.getEncodedImage(reader.getProfilePhoto().getPic()));
@@ -77,7 +77,7 @@ public class ProfileController {
 		theModel.addAttribute("read", readerBooksQuantitiesMap.get("read"));
 		theModel.addAttribute("currentlyReading", readerBooksQuantitiesMap.get("currentlyReading"));
 		theModel.addAttribute("wantToRead", readerBooksQuantitiesMap.get("wantToRead"));
-		theModel.addAttribute("currentlyReadingList", readerBooksServiceImpl.getCurrentlyReadingBooks(readerId));
+		theModel.addAttribute("currentlyReadingList", readerBooksService.getCurrentlyReadingBooks(readerId));
 		theModel.addAttribute("reader", reader);
 		theModel.addAttribute("friendsNum", friends.size());
 		theModel.addAttribute("friends", friends);

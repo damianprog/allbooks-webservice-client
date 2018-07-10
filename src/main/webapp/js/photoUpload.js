@@ -8,6 +8,7 @@ $(document).ready(function() {
 				document.getElementById('photoSubmit').disabled = false;
 				 $('#extensionError').text('');
 			}
+			
 			 var name = document.getElementById('photoInput'); 
 		      var fileName = name.files.item(0).name;
 		      var fileExtension = fileName.substr((fileName.lastIndexOf('.') + 1));

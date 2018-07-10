@@ -54,8 +54,6 @@ public class ReaderBookSaver {
 
 		Book book = bookService.getBook(readerBookData.getBookId());
 
-		addBookPicToReaderBook(readerBook, book);
-
 		if (!readerBookData.isItUpdate()) {
 
 			String date = localDateGetter.getLocalDateStamp();
@@ -66,15 +64,16 @@ public class ReaderBookSaver {
 		readerBook.setReaderRating(rating);
 		readerBook.setBook(book);
 		readerBook.setReader(reader);
+		readerBook.setBookPic(resizeBookPic(book));
 
 		readerBookService.saveReaderBook(readerBook);
 
 	}
 
-	private void addBookPicToReaderBook(ReaderBook readerBook, Book book) throws IOException {
+	private byte[] resizeBookPic(Book book) throws IOException {
 		byte[] bookPic = photoService.resize(book.getBookPhoto(), 125, 190);
 
-		readerBook.setBookPic(bookPic);
+		return bookPic;
 	}
 
 }

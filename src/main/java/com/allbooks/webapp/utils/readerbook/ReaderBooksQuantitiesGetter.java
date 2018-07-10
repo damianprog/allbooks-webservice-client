@@ -25,17 +25,17 @@ public class ReaderBooksQuantitiesGetter {
 		
 		for (ReaderBook readerBook : readerBooks) {
 
-			switch (readerBook.getShelves()) {
+			switch (readerBook.getShelvesStates()) {
 
-			case "Read":
+			case READ:
 				read++;
 				break;
 
-			case "Currently Reading":
+			case CURRENTLY_READING:
 				currentlyReading++;
 				break;
 
-			case "Want To Read":
+			case WANT_TO_READ:
 				wantToRead++;
 				break;
 
@@ -47,6 +47,7 @@ public class ReaderBooksQuantitiesGetter {
 		readerBooksQuantities.put("read", read);
 		readerBooksQuantities.put("wantToRead", wantToRead);
 		readerBooksQuantities.put("currentlyReading", currentlyReading);
+		readerBooksQuantities.put("all", read + wantToRead + currentlyReading);
 
 		return readerBooksQuantities;
 		

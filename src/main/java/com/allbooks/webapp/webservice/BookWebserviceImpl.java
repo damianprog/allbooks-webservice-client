@@ -3,10 +3,13 @@ package com.allbooks.webapp.webservice;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,7 +26,15 @@ public class BookWebserviceImpl implements BookWebservice {
 	@Value("${service.url.name}")
 	private String serviceUrlName;
 
+	@Autowired
+    private OAuth2RestOperations oAuth2RestOperations;
 	
+	private String accessTokenParameter;
+
+	@PostConstruct
+	private void initializeAccessTokenField() {
+		accessTokenParameter = "?access_token=" + oAuth2RestOperations.getAccessToken().getValue();
+	}
 
 	@Override
 	public Book getBook(int bookId) {
@@ -31,7 +42,8 @@ public class BookWebserviceImpl implements BookWebservice {
 		Map<String, String> params = new HashMap<>();
 		params.put("bookId", String.valueOf(bookId));
 
-		Book book = restTemplate.getForObject(serviceUrlName + "/books/{bookId}", Book.class, params);
+		Book book = restTemplate.getForObject(serviceUrlName + "/books/{bookId}" + accessTokenParameter, Book.class,
+				params);
 
 		return book;
 	}
@@ -42,18 +54,17 @@ public class BookWebserviceImpl implements BookWebservice {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("title", bookname);
 
-		Book book = restTemplate.getForObject(serviceUrlName + "/books/title/{title}", Book.class, params);
+		Book book = restTemplate.getForObject(serviceUrlName + "/books/title/{title}" + accessTokenParameter,
+				Book.class, params);
 
 		return book;
 	}
 
 	@Override
 	public void saveBook(Book book) {
-		restTemplate.postForObject(serviceUrlName + "/books", book, Book.class);
+		restTemplate.postForObject(serviceUrlName + "/books" + accessTokenParameter, book, Book.class);
 
 	}
-
-	
 
 	@Override
 	public Page<Book> getBooksByCategory(String category, int page) {
@@ -61,12 +72,11 @@ public class BookWebserviceImpl implements BookWebservice {
 		params.put("category", category);
 		params.put("page", String.valueOf(page));
 
-		HelperPage responseEntity = restTemplate.getForObject(serviceUrlName + "/books/categories/{category}/{page}",
-				HelperPage.class, params);
+		HelperPage responseEntity = restTemplate.getForObject(
+				serviceUrlName + "/books/categories/{category}/{page}" + accessTokenParameter, HelperPage.class,
+				params);
 
 		return responseEntity;
 	}
-
-	
 
 }

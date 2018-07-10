@@ -35,6 +35,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .defaultSuccessUrl("/reader/main")
         .permitAll()
         .and()
+        .rememberMe()
+        	.key("uniqueAndSecret")
+        	.rememberMeCookieName("allbooks-remember-me")
+        	.tokenValiditySeconds(24 * 60 * 60)
+        .and()
         .logout().logoutSuccessUrl("/reader/main")
         .and()
         .exceptionHandling().accessDeniedPage("/readerAccount/accessDenied");

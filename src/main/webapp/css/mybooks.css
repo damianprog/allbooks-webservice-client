@@ -1,7 +1,7 @@
 body{
 	background-image: url("/css/images/dust_scratches.png");
 	font-family: 'Roboto', sans-serif;
-	font-size:17px;
+	font-size:12px;
 	color:black;	
 }
 
@@ -11,9 +11,36 @@ body{
      margin:0 auto;
 }
 
+.blackRefNoDec{
+	color:black;
+	text-decoration:none;
+}
+
+.blackRef{
+	color:black;
+}
+
+#pageNumbers{
+	margin-top:15px;
+}
+
+.pageNum{
+	display:inline;
+	margin-left:5px;
+}
+
 #first{
-	width:200px;
-	margin-top:
+	width:400px;
+}
+
+#filters{
+	float:left;
+	font-size:17px;
+}
+
+#mainTable{
+	float:left;
+	width:1100px;
 }
 
 .rounded{
@@ -37,7 +64,6 @@ hr {
 #mainTable td{
 	padding-top:20px;
 	vertical-align:top;
-	font-size:15px;
 }
 
 .titleRef{

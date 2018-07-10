@@ -7,9 +7,11 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,12 +20,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.ReaderBookData;
+import com.allbooks.webapp.enumeration.ShelvesStates;
 import com.allbooks.webapp.factories.BookActionDataObjectFactory;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.ReaderBookService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.utils.readerbook.ReaderBookSaver;
 import com.allbooks.webapp.utils.readerbook.ReaderBooksForMyBooksGetter;
+import com.allbooks.webapp.utils.service.ReaderBooksUtilsService;
+import com.allbooks.webapp.utils.service.SaveService;
 
 @Controller
 @RequestMapping("/myBooks")
@@ -47,12 +52,33 @@ public class MyBooksController {
 	@Autowired
 	private BookActionDataObjectFactory bookActionDataObjectFactory;
 
-	@GetMapping("/showMyBooks")
-	public String showMyBooks(@RequestParam(value = "readerId", required = false) Integer readerId, Model theModel,
-			HttpSession session, Principal principal) {
+	@Autowired
+	private SaveService saveService;
 
-		theModel.addAttribute("readerBooks", readerBooksForMyBooksGetter.getPreparedReaderBooks(readerId));
+	@Autowired
+	private ReaderBooksUtilsService readerBooksUtilsService;
+
+	@GetMapping("/showMyBooks")
+	public String showMyBooks(@RequestParam("readerId") int readerId, @RequestParam(defaultValue = "1") int page,
+			@RequestParam(value = "shelves", defaultValue = "All") String shelves, Model theModel, HttpSession session,
+			Principal principal) {
+
+		Map<String, Integer> readerBooksQuantitiesMap = readerBooksUtilsService.getReaderBooksQuantities(readerId);
+
+		ShelvesStates shelvesStates = ShelvesStates.enumValueOf(shelves);
+		
+		Page<ReaderBook> readerBooksPage = readerBooksForMyBooksGetter.getPreparedReaderBooks(readerId, shelvesStates,page);
+		
+		theModel.addAttribute("read", readerBooksQuantitiesMap.get("read"));
+		theModel.addAttribute("currentlyReading", readerBooksQuantitiesMap.get("currentlyReading"));
+		theModel.addAttribute("wantToRead", readerBooksQuantitiesMap.get("wantToRead"));
+		theModel.addAttribute("all", readerBooksQuantitiesMap.get("all"));
+		theModel.addAttribute("readerBooks", readerBooksPage.getContent());
 		theModel.addAttribute("readerLogin", readerService.getReaderById(readerId).getUsername());
+		theModel.addAttribute("readerId", readerId);
+		theModel.addAttribute("shelvesStates", shelvesStates);
+		theModel.addAttribute("readerBooksPage", readerBooksPage);
+		theModel.addAttribute("page", page);
 
 		return "mybooks";
 	}
@@ -66,7 +92,8 @@ public class MyBooksController {
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 
 		ReaderBook readerBook = readerBookService.getReaderBookById(readerBookId);
-		readerBook.setShelves(newShelves);
+		
+		readerBook.setShelvesStates(ShelvesStates.enumValueOf(newShelves));
 
 		ReaderBookData readerBookData = bookActionDataObjectFactory.createReaderBookData(readerBook, bookId,
 				isItUpdateReaderBook);
@@ -101,6 +128,23 @@ public class MyBooksController {
 		ra.addAttribute("readerId", readerService.getReaderByUsername(principal.getName()).getId());
 
 		return "redirect:/myBooks/showMyBooks";
+	}
+
+	@PostMapping("/saveReaderBook")
+	public String readState(@RequestParam Map<String, String> params,
+			@ModelAttribute("readerBook") ReaderBook readerBook, @RequestParam("bookId") int bookId,
+			@RequestParam("shelves") String shelves,
+			@RequestParam("isItUpdateReaderBook") boolean isItUpdateReaderBook, HttpSession session,
+			Principal principal, RedirectAttributes ra) throws IOException {
+
+		readerBook.setShelvesStates(ShelvesStates.enumValueOf(shelves));
+		
+		saveService.saveReaderBook(
+				bookActionDataObjectFactory.createReaderBookData(readerBook, bookId, isItUpdateReaderBook));
+
+		ra.addAttribute("bookId", params.get("bookId"));
+
+		return "redirect:/reader/showBook";
 	}
 
 }

@@ -69,8 +69,7 @@
 										value="Sign In" /></td>
 								</tr>
 								<tr>
-									<td id="cbMain"><input type="checkbox" name="cb"
-										value="remember" /> Remember me</td>
+									<td id="cbMain"><input type="checkbox" name="remember-me"/> Remember me</td>
 									<td id="cbMainForgot"><a href="/readerAccount/forgot">Forgot
 											it?</a></td>
 								</tr>

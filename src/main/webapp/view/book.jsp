@@ -57,27 +57,27 @@
 								</form:form>
 							</div>
 
-							<form:form action="/bookActions/saveReaderBook"
-								modelAttribute="readerBook" method="POST">
+							<form:form action="/myBooks/saveReaderBook" modelAttribute="readerBook" method="POST">
 								<c:choose>
 									<c:when test="${readerBook.id == 0}">
 										<br>Add this book to your books
+										<input type="hidden" name="isItUpdateReaderBook" value="false">
 									</c:when>
 									<c:otherwise>
-										<br>Current State:${readerBook.shelves}
+										<br>Current State:${readerBook.shelvesStates.shelveState()}
 										<form:hidden path="id" />
 										<form:hidden path="dateAdded" />
 										<input type="hidden" name="isItUpdateReaderBook" value="true">
 									</c:otherwise>
 								</c:choose>
 
-								<form:select class="rounded" path="shelves" onchange="this.form.submit()">
-									<form:option value="Read" label="Read" />
-									<form:option value="Currently Reading"
+								<select class="rounded" name="shelves" onchange="this.form.submit()">
+									<option value="Read" label="Read" />
+									<option value="Currently Reading"
 										label="Currently Reading" />
-									<form:option value="Want to Read" label="Want to Read" />
-									<form:option value="0" label="Change State" selected="selected" disabled="disabled" hidden="true"/>
-								</form:select>
+									<option value="Want To Read" label="Want to Read" />
+									<option value="0" label="Change State" selected="selected" disabled="disabled" hidden="true"/>
+								</select>
 
 								<input type="hidden" name="bookId" value="${book.id}">
 							</form:form>

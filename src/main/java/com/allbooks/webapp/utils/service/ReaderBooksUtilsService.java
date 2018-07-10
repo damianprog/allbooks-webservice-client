@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.allbooks.webapp.entity.ReaderBook;
 
-public interface ReaderBooksService {
+public interface ReaderBooksUtilsService {
 
 	public Map<String, Integer> getReaderBooksQuantities(int readerId);
 

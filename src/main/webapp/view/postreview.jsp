@@ -73,7 +73,7 @@
 									<input type="hidden" name="isItUpdateReaderBook" value="false">
 								</c:when>
 								<c:otherwise>
-									<br>Current State:${readerBook.shelves}
+									<br>Current State:${readerBook.shelvesStates.shelveState()}
 									<input type="hidden" name="isItUpdateReaderBook" value="true">
 
 								</c:otherwise>

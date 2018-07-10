@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.allbooks.webapp.entity.Book;
-import com.allbooks.webapp.entity.ProfilePhoto;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.utils.photos.Base64Encoder;
 import com.allbooks.webapp.utils.photos.BookPicsEncoder;
@@ -22,22 +21,22 @@ import com.allbooks.webapp.utils.photos.ResizePhoto;
 public class PhotoServiceImpl implements PhotoService {
 
 	@Autowired
-	Base64Encoder base64Encoder;
+	private Base64Encoder base64Encoder;
 
 	@Autowired
-	BookPicsEncoder bookPicsEncoder;
+	private BookPicsEncoder bookPicsEncoder;
 
 	@Autowired
-	MultipartImageConverter multipartImageConverter;
+	private MultipartImageConverter multipartImageConverter;
 
 	@Autowired
-	MultipartToFile multipartToFile;
+	private MultipartToFile multipartToFile;
 
 	@Autowired
-	ResizePhoto resizePhoto;
+	private ResizePhoto resizePhoto;
 
 	@Autowired
-	ProfilePhotoCreator profilePhotoCreator;
+	private ProfilePhotoCreator profilePhotoCreator;
 	
 	@Override
 	public String getEncodedImage(byte[] theEncodedBase64) {

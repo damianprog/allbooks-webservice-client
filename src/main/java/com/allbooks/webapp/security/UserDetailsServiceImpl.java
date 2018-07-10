@@ -34,7 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		if (isUserInDb == true) {
 			reader = readerService.getReaderByUsername(username);
-
+			
 			if (reader.isEnabled() == false)
 				throw new UsernameNotFoundException(username);
 			else {

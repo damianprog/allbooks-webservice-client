@@ -4,10 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
+import com.allbooks.webapp.enumeration.ShelvesStates;
 import com.allbooks.webapp.webservice.ReaderBookWebservice;
 
 @Service
@@ -65,6 +67,23 @@ public class ReaderBookServiceImpl implements ReaderBookService{
 		readerBook.setReader(reader);
 
 		readerBookWebservice.updateReaderBook(readerBook);
+	}
+
+	@Override
+	public List<ReaderBook> getReaderBooksByShelves(int readerId, ShelvesStates shelvesStates) {
+		
+		return Arrays.asList(readerBookWebservice.getReaderBooksByShelves(readerId,shelvesStates));
+		
+	}
+
+	@Override
+	public Page<ReaderBook> getReaderBooksPages(int readerId, int page) {
+		return readerBookWebservice.getReaderBooksPages(readerId,page);
+	}
+
+	@Override
+	public Page<ReaderBook> getReaderBooksByShelvesPages(int readerId, ShelvesStates shelvesStates, int page) {
+		return readerBookWebservice.getReaderBooksByShelvesPages(readerId,shelvesStates,page);
 	}
 
 	

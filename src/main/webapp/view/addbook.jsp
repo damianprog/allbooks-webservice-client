@@ -15,6 +15,7 @@
 <link type="text/css" rel="stylesheet" href="/css/addbook.css" />
 <link href="https://fonts.googleapis.com/css?family=Roboto|Spectral+SC"
 	rel="stylesheet">
+	<script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
 </head>
 
 <body>
@@ -27,6 +28,13 @@
 		<form:form action="addBook" modelAttribute="book" method="POST"
 			enctype="multipart/form-data">
 			<table>
+				<tr>
+					<td>
+						<div id="extensionError">
+							
+						</div>
+					</td>
+				</tr>
 				<tr>
 					<td class="addingName">Book Photo (JPG extension, please)</td>
 				</tr>
@@ -157,6 +165,53 @@
 			<input id="submit" type="submit" value="Create" />
 		</form:form>
 	</div>
+	
+	<script type="text/javascript">
+	
+	$(document).ready(function() {
+		
+		$('.fileInputBox').change(function() {
+			
+			if(document.getElementById('submit').disabled == true){
+				document.getElementById('submit').disabled = false;
+				 $('#extensionError').text('');
+			}
+			
+			var names = document.getElementsByClassName("fileInputBox");
+			
+			for(var i = 0; i < names.length; i++)
+			{
+				
+				if(names[i].files.item(0) != null){
+				
+				 var fileName = names[i].files.item(0).name;
+			      var fileExtension = fileName.substr((fileName.lastIndexOf('.') + 1));
+			      
+			      console.log(fileExtension);
+			      
+			      if((fileExtension != 'jpg' && fileExtension != 'jpeg')){
+			    	  $('#extensionError').text('Wrong file extension.Choose jpg image');
+			    	  document.getElementById('submit').disabled = true;
+			      }
+			      else if(name.files.item(0).size > 5242880){
+			    	  $('#extensionError').text('The File size should not exceed 5MB');
+			    	  document.getElementById('submit').disabled = true;
+			      }
+				}
+			}
+			
+			  
+		     
+		      
+		});
+		
+		
+	});
+	
+	</script>
+	
 </body>
+
+
 
 </html>

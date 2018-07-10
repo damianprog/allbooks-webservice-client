@@ -11,7 +11,7 @@ import com.allbooks.webapp.utils.readerbook.CurrentlyReadingBooksGetter;
 import com.allbooks.webapp.utils.readerbook.ReaderBooksQuantitiesGetter;
 
 @Service
-public class ReaderBooksServiceImpl implements ReaderBooksService{
+public class ReaderBooksUtilsServiceImpl implements ReaderBooksUtilsService{
 	
 	@Autowired
 	private ReaderBooksQuantitiesGetter readerBooksQuantitiesGetter;

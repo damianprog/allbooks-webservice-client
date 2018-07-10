@@ -98,20 +98,6 @@ public class BookActionsController {
 		return "redirect:/reader/showBook";
 	}
 
-	@PostMapping("/saveReaderBook")
-	public String readState(@RequestParam Map<String, String> params,
-			@ModelAttribute("readerBook") ReaderBook readerBook, @RequestParam("bookId") int bookId,
-			@RequestParam("isItUpdateReaderBook") boolean isItUpdateReaderBook, HttpSession session,
-			Principal principal, RedirectAttributes ra) throws IOException {
-
-		saveService.saveReaderBook(
-				bookActionDataObjectFactory.createReaderBookData(readerBook, bookId, isItUpdateReaderBook));
-
-		ra.addAttribute("bookId", params.get("bookId"));
-
-		return "redirect:/reader/showBook";
-	}
-
 	@PostMapping("/postComment")
 	public String submitComment(@ModelAttribute("comment") Comment comment, @RequestParam Map<String, String> params,
 			@RequestParam("reviewId") int reviewId, @RequestParam("bookId") int bookId, HttpSession session,
@@ -145,14 +131,14 @@ public class BookActionsController {
 			@RequestParam("bookId") int bookId, @ModelAttribute("review") Review review, RedirectAttributes ra)
 			throws IOException {
 
-		ReaderBook readerBook = postReviewHelper.getReaderBook(readerBookId, shelves);
+//		ReaderBook readerBook = postReviewHelper.getReaderBook(readerBookId, shelves);
 
 		Rating rating = postReviewHelper.getRating(ratingId, rate);
 
 		saveService.saveRating(bookActionDataObjectFactory.createRatingData(rating, bookId));
 
-		saveService.saveReaderBook(
-				bookActionDataObjectFactory.createReaderBookData(readerBook, bookId, isItUpdateReaderBook));
+//		saveService.saveReaderBook(
+//				bookActionDataObjectFactory.createReaderBookData(readerBook, bookId, isItUpdateReaderBook));
 
 		saveService.saveReview(bookActionDataObjectFactory.createReviewData(review, bookId));
 
