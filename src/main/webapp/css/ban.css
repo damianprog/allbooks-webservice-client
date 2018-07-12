@@ -1,0 +1,48 @@
+body {
+	background-image: url("/css/images/dust_scratches.png");
+	font-family: 'Roboto', sans-serif;
+	font-size: 17px;
+	color: black;
+}
+
+#container {
+	width: 1000px;
+	margin: 0 auto;
+}
+
+#banningContainer {
+	width: 600px;
+}
+
+.error{
+	color:red;
+	font-size:15px;
+}
+
+.inputBox {
+	width: 300px;
+	height: 23px;
+	font-family: 'Roboto', sans-serif;
+	border-radius: 5px;
+	border: 1px solid #aaaaaa;
+}
+
+#reasonTextArea {
+	width: 517px;
+	height: 142px;
+	border-radius:5px;
+}
+
+.tdBottomSpace{
+	padding-bottom:30px;
+}
+
+#banButton{
+	margin-top:20px;
+	background-color:#fdd05f;
+	color:black;
+	border-radius:5px;
+	font-weight:bold;
+	width:70px;
+	height:30px;
+}

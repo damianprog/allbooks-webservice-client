@@ -89,10 +89,34 @@
 			</div>
 			<div id="reviewDesc">
 
-				<h4 style="margin-top: -5px; margin-bottom: -2px;">
-					<a class="blackRef" href="${bookPageRef}">${review.book.fullTitle}</a>
-				</h4>
-				by ${authorName}<br> ${review.reader.username}'s Review<br>
+				<div id="reviewHeader">
+					<h4 style="margin-top: -5px; margin-bottom: -2px;">
+						<a class="blackRef" href="${bookPageRef}">${review.book.fullTitle}</a>
+					</h4>
+					by ${authorName}<br> ${review.reader.username}'s Review
+				</div>
+
+				<div class="adminActions">
+					<sec:authorize access="hasAuthority('ADMIN')">
+
+						<form action="/admin/adminAction">
+
+							<select class="rounded" name="adminAction"
+								onchange="this.form.submit()">
+								<option value="deleteReview" label="Delete review" />
+								<option value="sendNotice" label="Send notice" />
+								<option value="0" label="Admin Actions" selected="selected"
+									disabled="disabled" hidden="true" />
+							</select> <input name="reviewId" type="hidden" value="${review.id}" />
+							<input name="readerId" type="hidden" value="${review.reader.id}" />
+
+						</form>
+					</sec:authorize>
+				</div>
+
+				<div style="clear: both"></div>
+
+				<br>
 				<div id="reviewText">
 					<p>${review.text }</p>
 				</div>
@@ -132,6 +156,15 @@
 						<div id="editReviewButton">Edit</div>
 					</div>
 
+					<div id="deleteReview">
+						<c:url var="deleteReview" value="/bookActions/deleteReview">
+							<c:param name="reviewId" value="${tempReview.id}" />
+						</c:url>
+
+						<a
+							onclick="return confirm('Are you sure you want to delete this review?');"
+							class="blackRefNon" href="${deleteReview}">Delete review</a>
+					</div>
 				</c:if>
 			</div>
 
@@ -151,13 +184,30 @@
 
 						<tr>
 							<td>
-								<h4 style="display: inline;">${tempComment.reader.username}</h4>
-								<c:choose>
-									<c:when test="${tempComment.rating != null}">
+								<div class="commentHeader">
+									<h4 style="display: inline;">${tempComment.reader.username}</h4>
+									<c:if test="${tempComment.rating != null}">
 								 rated it
 								${tempComment.rating.rate}
-							</c:when>
-								</c:choose>
+							</c:if>
+								</div>
+								<div class="adminActions">
+
+									<form action="/admin/adminAction">
+
+										<select class="rounded" name="adminAction"
+											onchange="this.form.submit()">
+											<option value="deleteComment" label="Delete comment" />
+											<option value="sendNotice" label="Send notice" />
+											<option value="0" label="Admin Actions" selected="selected"
+												disabled="disabled" hidden="true" />
+										</select> <input name="commentId" type="hidden"
+											value="${tempComment.id}" />
+											<input name="readerId" type="hidden"
+											value="${tempComment.reader.id}" />
+
+									</form>
+								</div>
 							</td>
 						</tr>
 						<tr>
@@ -185,8 +235,17 @@
 
 								<td style="padding-bottom: 15px;">
 									<div class="editCommentButton${status.count}"
-										style="cursor: pointer;"
-										onclick="showEditCommentBox(${status.count})">Edit</div>
+										style="cursor: pointer;float:left;"
+										onclick="showEditCommentBox(${status.count})">Edit</div> <c:url
+										var="removeCommentRef" value="/bookActions/deleteComment">
+										<c:param name="commentId" value="${tempComment.id}" />
+									</c:url>
+
+									<div id="deleteComment">
+										<a	class="blackRefNon"
+											onclick="return confirm('Are you sure you want to delete this comment?');"
+											href="${removeCommentRef}">Delete</a>
+									</div>
 								</td>
 
 							</tr>

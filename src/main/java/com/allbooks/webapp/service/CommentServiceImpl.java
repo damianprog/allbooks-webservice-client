@@ -42,4 +42,17 @@ public class CommentServiceImpl implements CommentService{
 		return commentWebservice.getCommentById(commentId);
 	}
 	
+	@Override
+	public void deleteCommentById(int commentId) {
+		
+		commentWebservice.deleteCommentById(commentId);
+		
+	}
+
+	@Override
+	public void deleteCommentByIdAndReaderId(int commentId, int readerId) {
+
+		commentWebservice.deleteCommentByIdAndReaderId(commentId,readerId);
+	}
+	
 }

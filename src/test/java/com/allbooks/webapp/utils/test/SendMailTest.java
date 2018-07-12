@@ -19,7 +19,7 @@ import com.allbooks.webapp.Application;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.service.TokenService;
 import com.allbooks.webapp.utils.entity.MailData;
-import com.allbooks.webapp.utils.entity.MailData.TokenType;
+import com.allbooks.webapp.utils.entity.MailData.MailType;
 import com.allbooks.webapp.utils.mail.MailBuilder;
 import com.allbooks.webapp.utils.mail.SendMail;
 
@@ -60,7 +60,7 @@ public class SendMailTest {
 		
 		when(mailDataMock.getReader()).thenReturn(readerMock);
 		
-		when(mailDataMock.getTokenType()).thenReturn(TokenType.REGISTRATION_CONFIRM);
+		when(mailDataMock.getTokenType()).thenReturn(MailType.REGISTRATION_CONFIRM);
 		
 		when(mailBuilderMock.createMail(mailDataMock, methodMapping)).thenReturn(mimeMessageMock);
 		
@@ -89,7 +89,7 @@ public class SendMailTest {
 		when(mailDataMock.getToken()).thenReturn(passwordToken);
 		when(mailDataMock.getReader()).thenReturn(readerMock);
 		
-		when(mailDataMock.getTokenType()).thenReturn(TokenType.CHANGE_PASSWORD);
+		when(mailDataMock.getTokenType()).thenReturn(MailType.CHANGE_PASSWORD);
 		
 		when(mailBuilderMock.createMail(mailDataMock, methodMapping)).thenReturn(mimeMessageMock);
 		

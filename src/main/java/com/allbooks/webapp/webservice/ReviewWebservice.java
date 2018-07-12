@@ -4,16 +4,18 @@ import com.allbooks.webapp.entity.Review;
 
 public interface ReviewWebservice {
 
-	public void submitReview(Review review);
+	void submitReview(Review review);
 
-	public Review[] getBookReviews(int bookId);
-	
-	public Review[] getReviewsByReaderId(int readerId);
-	
-	public Review getReviewById(int reviewId);
-	
-	public void deleteReviewById(int reviewId);
-	
-	public void updateReview(Review review);
-	
+	Review[] getBookReviews(int bookId);
+
+	Review[] getReviewsByReaderId(int readerId);
+
+	Review getReviewById(int reviewId);
+
+	void deleteReviewById(int reviewId);
+
+	void updateReview(Review review);
+
+	void deleteReviewByIdAndReaderId(int reviewId, int readerId);
+
 }

@@ -20,9 +20,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.allbooks.webapp.entity.Details;
+import com.allbooks.webapp.entity.Notification;
 import com.allbooks.webapp.entity.Pending;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.service.FriendsService;
+import com.allbooks.webapp.service.NotificationService;
 import com.allbooks.webapp.service.PendingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
@@ -67,7 +69,7 @@ public class ProfileController {
 
 		Map<String, Integer> readerBooksQuantitiesMap = readerBooksService.getReaderBooksQuantities(reader.getId());
 
-		if (reader.getProfilePhoto() != null) 
+		if (reader.getProfilePhoto() != null)
 			theModel.addAttribute("profilePic", photoService.getEncodedImage(reader.getProfilePhoto().getPic()));
 
 		List<Reader> friends = friendsService.getReaderFriends(reader.getId());
@@ -145,10 +147,10 @@ public class ProfileController {
 	public String showEdit(HttpSession session, Model theModel, Principal principal) {
 
 		Reader reader = readerService.getReaderByUsername(principal.getName());
-		
+
 		Details details = reader.getDetails();
 
-		if (details == null) 
+		if (details == null)
 			details = new Details();
 
 		theModel.addAttribute("reader", reader);

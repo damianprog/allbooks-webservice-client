@@ -3,7 +3,6 @@ package com.allbooks.webapp.utils.entity;
 import java.util.UUID;
 
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.Token;
 
 public class MailData {
 
@@ -13,14 +12,14 @@ public class MailData {
 	private String subjectMessage;
 	private String templateName;
 	private String token;
-	private TokenType tokenType;
+	private MailType mailType;
 
 	public MailData() {
 		this.token = UUID.randomUUID().toString();
 	}
 
-	public enum TokenType {
-		CHANGE_PASSWORD, REGISTRATION_CONFIRM;
+	public enum MailType {
+		CHANGE_PASSWORD, REGISTRATION_CONFIRM,BAN_INFORMATION;
 	}
 
 	public Reader getReader() {
@@ -63,12 +62,12 @@ public class MailData {
 		this.templateName = templateName;
 	}
 
-	public TokenType getTokenType() {
-		return tokenType;
+	public MailType getMailType() {
+		return mailType;
 	}
 
-	public void setTokenType(TokenType tokenType) {
-		this.tokenType = tokenType;
+	public void setMailType(MailType mailType) {
+		this.mailType = mailType;
 	}
 
 	public String getToken() {

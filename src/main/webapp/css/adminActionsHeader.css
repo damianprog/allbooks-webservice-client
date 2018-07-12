@@ -1,0 +1,28 @@
+body{
+	background-image: url("/css/images/dust_scratches.png");
+	font-family: 'Roboto', sans-serif;
+	font-size:17px;
+	color:black;	
+}
+
+#container 
+{
+	width:1100px;
+     margin:0 auto;
+}
+
+.blackRef{
+	color:black;
+}
+
+#adminActionsTable td:not(:first-child){
+	padding-left:15px;
+}
+
+#adminActionsHeaderContainer{
+	width:600px;
+}
+
+#adminActionsHr{
+	margin-bottom:30px;
+}

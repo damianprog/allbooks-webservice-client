@@ -8,13 +8,11 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.allbooks.webapp.entity.Book;
-import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.utils.entity.HelperPage;
 
 @Service

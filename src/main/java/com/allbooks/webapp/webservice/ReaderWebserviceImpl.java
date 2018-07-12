@@ -21,18 +21,18 @@ public class ReaderWebserviceImpl implements ReaderWebservice {
 	private RestTemplate restTemplate;
 
 	@Autowired
-    private OAuth2RestOperations oAuth2RestOperations;
+	private OAuth2RestOperations oAuth2RestOperations;
 
 	@Value("${service.url.name}")
 	private String serviceUrlName;
 
 	private String accessTokenParameter;
-	
+
 	@PostConstruct
 	private void initializeAccessTokenField() {
 		accessTokenParameter = "?access_token=" + oAuth2RestOperations.getAccessToken().getValue();
 	}
-	
+
 	@Override
 	public Reader saveReader(Reader theReader) {
 
@@ -45,7 +45,8 @@ public class ReaderWebserviceImpl implements ReaderWebservice {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("readerLogin", login);
 
-		return restTemplate.getForObject(serviceUrlName + "/readers/logins/{readerLogin}" + accessTokenParameter, Reader.class, params);
+		return restTemplate.getForObject(serviceUrlName + "/readers/logins/{readerLogin}" + accessTokenParameter,
+				Reader.class, params);
 
 	}
 
@@ -54,15 +55,14 @@ public class ReaderWebserviceImpl implements ReaderWebservice {
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("readerLogin", login);
-		
-		return restTemplate.getForObject(serviceUrlName + "/readers/logins/{readerLogin}" + accessTokenParameter, Reader.class, params);
+
+		return restTemplate.getForObject(serviceUrlName + "/readers/logins/{readerLogin}" + accessTokenParameter,
+				Reader.class, params);
 
 	}
 
 	@Override
 	public void updateReader(Reader reader) {
-
-		Map<String, String> params = new HashMap<String, String>();
 
 		restTemplate.put(serviceUrlName + "/readers" + accessTokenParameter, reader);
 
@@ -73,7 +73,8 @@ public class ReaderWebserviceImpl implements ReaderWebservice {
 		Map<String, String> params = new HashMap<>();
 		params.put("readerId", String.valueOf(readerId));
 
-		return restTemplate.getForObject(serviceUrlName + "/readers/{readerId}" + accessTokenParameter, Reader.class, params);
+		return restTemplate.getForObject(serviceUrlName + "/readers/{readerId}" + accessTokenParameter, Reader.class,
+				params);
 	}
 
 	@Override
@@ -90,7 +91,8 @@ public class ReaderWebserviceImpl implements ReaderWebservice {
 		Map<String, String> params = new HashMap<>();
 		params.put("email", email);
 
-		return restTemplate.getForObject(serviceUrlName + "/readers/emails/{email}" + accessTokenParameter, Reader.class, params);
+		return restTemplate.getForObject(serviceUrlName + "/readers/emails/{email}" + accessTokenParameter,
+				Reader.class, params);
 	}
 
 	@Override

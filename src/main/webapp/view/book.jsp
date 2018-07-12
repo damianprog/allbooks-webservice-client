@@ -44,20 +44,23 @@
 										</c:otherwise>
 									</c:choose>
 
-									<form:select id="selectRate" class="rounded" path="rate" onchange="this.form.submit()">
+									<form:select id="selectRate" class="rounded" path="rate"
+										onchange="this.form.submit()">
 										<form:option value="1" label="1" />
 										<form:option value="2" label="2" />
 										<form:option value="3" label="3" />
 										<form:option value="4" label="4" />
 										<form:option value="5" label="5" />
-										<form:option value="0" label="Rate" selected="selected" disabled="disabled" hidden="true"/>
+										<form:option value="0" label="Rate" selected="selected"
+											disabled="disabled" hidden="true" />
 									</form:select>
 									<form:hidden path="id" />
 									<input type="hidden" name="bookId" value="${book.id}">
 								</form:form>
 							</div>
 
-							<form:form action="/myBooks/saveReaderBook" modelAttribute="readerBook" method="POST">
+							<form:form action="/myBooks/saveReaderBook"
+								modelAttribute="readerBook" method="POST">
 								<c:choose>
 									<c:when test="${readerBook.id == 0}">
 										<br>Add this book to your books
@@ -71,12 +74,13 @@
 									</c:otherwise>
 								</c:choose>
 
-								<select class="rounded" name="shelves" onchange="this.form.submit()">
+								<select class="rounded" name="shelves"
+									onchange="this.form.submit()">
 									<option value="Read" label="Read" />
-									<option value="Currently Reading"
-										label="Currently Reading" />
+									<option value="Currently Reading" label="Currently Reading" />
 									<option value="Want To Read" label="Want to Read" />
-									<option value="0" label="Change State" selected="selected" disabled="disabled" hidden="true"/>
+									<option value="0" label="Change State" selected="selected"
+										disabled="disabled" hidden="true" />
 								</select>
 
 								<input type="hidden" name="bookId" value="${book.id}">
@@ -128,7 +132,8 @@
 							</c:forEach>
 						</div>
 					</td>
-					<td id="authorImg"><img src="data:image/jpeg;base64,${authorPic}"></td>
+					<td id="authorImg"><img
+						src="data:image/jpeg;base64,${authorPic}"></td>
 				</tr>
 			</table>
 		</div>
@@ -162,40 +167,77 @@
 
 						<tr>
 							<td>
-								<h4 class="inline">
-									<a class="blackRef" href="${profileLink}">${tempReview.reader.username}</a>
-								</h4> rated it ${tempReview.rating.rate}
+								<div style="float: left; width: 300px;">
+									<h4 class="inline">
+										<a class="blackRef" href="${profileLink}">${tempReview.reader.username}</a>
+									</h4>
+									rated it ${tempReview.rating.rate}
+								</div> <sec:authorize access="hasAuthority('ADMIN')">
+
+									<form action="/admin/adminAction">
+
+										<select class="dropDown" name="adminAction"
+											onchange="this.form.submit()">
+											<option value="deleteReview" label="Delete review" />
+											<option value="sendNotice" label="Send notice" />
+											<option value="0" label="Admin Actions" selected="selected"
+												disabled="disabled" hidden="true" />
+										</select> <input name="reviewId" type="hidden" value="${tempReview.id}" />
+										<input name="readerId" type="hidden" value="${tempReview.reader.id}" />
+
+									</form>
+								</sec:authorize>
 							</td>
+
 						</tr>
 						<tr>
 							<td id="reviewTitleTd">
-								${fn:substring(tempReview.text,0,500)}
-								<c:choose>
-								<c:when test="${fn:length(tempReview.text) > 500}">
+								${fn:substring(tempReview.text,0,500)} <c:if
+									test="${fn:length(tempReview.text) > 500}">
 									<a class="moreDesc" href="${reviewLink}">...see review</a>
-								</c:when>
-								</c:choose> 
+								</c:if>
 							</td>
 						</tr>
 						<tr>
 							<td id="spaceUnder">
-							<div style="float:left;">
-							Likes ${tempReview.likes.size()}
-							<sec:authorize
-									access="isFullyAuthenticated()">
-									<form:form action="/bookActions/dropLike" method="POST"
-										id="likeForm">
-										<input type="hidden" name="reviewId" value="${tempReview.id}" />
-										<input type="hidden" name="bookId" value="${book.id}" />
-										<input class="like" type="submit" value="Like" />
-									</form:form>
-								</sec:authorize> 
-							</div>
-							<div style="float:left; margin-left:10px;">
-								<a class="blackRef" href="${reviewLink}">see review</a>
-							</div>
-							
-							<div style="clear:both;"></div>
+								<div style="float: left;">
+									Likes ${tempReview.likes.size()}
+									<sec:authorize access="isFullyAuthenticated()">
+										<form:form action="/bookActions/dropLike" method="POST"
+											id="likeForm">
+											<input type="hidden" name="reviewId" value="${tempReview.id}" />
+											<input type="hidden" name="bookId" value="${book.id}" />
+											<input class="like" type="submit" value="Like" />
+										</form:form>
+									</sec:authorize>
+								</div>
+								<div style="float: left; margin-left: 10px;">
+									<a class="blackRef" href="${reviewLink}">see review</a>
+								</div>
+
+								<div class="readerActions">
+
+									<sec:authorize access="isFullyAuthenticated()">
+										<sec:authentication property="principal.username"
+											var="username" />
+
+										<c:if test="${username == tempReview.reader.username}">
+
+											<c:url var="deleteReview" value="/bookActions/deleteReview">
+												<c:param name="reviewId" value="${tempReview.id}" />
+											</c:url>
+
+											<a
+												onclick="return confirm('Are you sure you want to delete this review?');"
+												class="blackRef" href="${deleteReview}">Delete review</a>
+
+										</c:if>
+
+									</sec:authorize>
+
+								</div>
+
+								<div style="clear: both;"></div>
 							</td>
 						</tr>
 					</c:forEach>

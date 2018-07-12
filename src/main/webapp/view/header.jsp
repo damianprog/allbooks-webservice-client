@@ -33,16 +33,20 @@
 						<c:url var="showMyBooks" value="/myBooks/showMyBooks">
 							<c:param name="readerId" value="${sessionScope.readerId}"></c:param>
 						</c:url>
-						<a class="blackRefNon" href="${showMyBooks}">My Books</a>
-					</sec:authorize></td>
 
+						<a class="blackRefNon" href="${showMyBooks}">My Books</a>
+
+					</sec:authorize></td>
 
 				<td class="pageRef"><sec:authorize
-						access="hasAuthority('ADMIN')">
-						<c:url var="addBook" value="/admin/addBookPage">
-						</c:url>
-						<a class="blackRefNon" href="${addBook}">Add Book</a>
+						access="isFullyAuthenticated()">
+						<a class="blackRefNon" href="/loggedReader/showNotificationsPage">Notifications</a>
 					</sec:authorize></td>
+
+				<sec:authorize access="hasAuthority('ADMIN')">
+					<td class="pageRef"><a class="blackRefNon" href="/admin/showAddBook">Admin</a></td>
+
+				</sec:authorize>
 
 				<sec:authorize access="isFullyAuthenticated()">
 					<td id="loginPart"><c:url var="showProfile"
@@ -61,15 +65,16 @@
 						<td>
 							<table id="mainLogin">
 								<tr>
-									<td><input type="text" placeholder="Login" class="inputBox"
-										required="required" name="username" /></td>
+									<td><input type="text" placeholder="Login"
+										class="inputBox" required="required" name="username" /></td>
 									<td><input type="password" placeholder="Password"
 										class="inputBox" required="required" name="password" /></td>
 									<td><input class="signInHeader" type="submit"
 										value="Sign In" /></td>
 								</tr>
 								<tr>
-									<td id="cbMain"><input type="checkbox" name="remember-me"/> Remember me</td>
+									<td id="cbMain"><input type="checkbox" name="remember-me" />
+										Remember me</td>
 									<td id="cbMainForgot"><a href="/readerAccount/forgot">Forgot
 											it?</a></td>
 								</tr>
@@ -82,9 +87,9 @@
 
 
 	</div>
-	
-	<div style="clear:both;"></div>
-	
+
+	<div style="clear: both;"></div>
+
 </body>
 
 </html>

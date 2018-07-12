@@ -3,7 +3,6 @@ package com.allbooks.webapp.controller;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Arrays;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -23,11 +22,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.allbooks.webapp.entity.Book;
-import com.allbooks.webapp.entity.Comment;
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.service.BookService;
-import com.allbooks.webapp.service.CommentService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
@@ -121,7 +117,6 @@ public class ReaderController {
 		return "saved";
 	}
 
-	// temporary method
 	@GetMapping("/deleteReview")
 	public String deleteReview(@RequestParam("bookName") String bookName, @RequestParam("reviewId") int reviewId,
 			HttpSession session, RedirectAttributes ra) {

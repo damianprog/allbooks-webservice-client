@@ -27,22 +27,29 @@ public class SendMail {
 
 		String methodMapping = "";
 		String token = mailData.getToken();
-
+		MimeMessage mail = null;
+		
 		Reader reader = mailData.getReader();
 
-		switch (mailData.getTokenType()) {
+		switch (mailData.getMailType()) {
 
 		case REGISTRATION_CONFIRM:
 			tokenService.createVerificationToken(reader, token);
 			methodMapping = "/readerAccount/registrationConfirm";
+			mail = mailBuilder.createTokenMail(mailData, methodMapping);
 			break;
 		case CHANGE_PASSWORD:
 			tokenService.createPasswordToken(reader, token);
 			methodMapping = "/readerAccount/changePasswordPage";
+			mail = mailBuilder.createTokenMail(mailData, methodMapping);
 			break;
+		case BAN_INFORMATION:
+			mail = mailBuilder.createSimpleMail(mailData);
+			break;
+			
 		}
 
-		MimeMessage mail = mailBuilder.createMail(mailData, methodMapping);
+		 
 
 		mailSender.send(mail);
 	}

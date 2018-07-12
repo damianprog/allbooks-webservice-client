@@ -1,0 +1,31 @@
+body {
+	background-image: url("/css/images/dust_scratches.png");
+	font-family: 'Roboto', sans-serif;
+	font-size: 17px;
+	color: black;
+}
+
+#container {
+	width: 1000px;
+	margin: 0 auto;
+}
+
+#noticeContainer{
+	
+	width:650px;
+}
+
+#noticeTextArea{
+	
+	border-radius:5px;
+	width:517px;
+	height:142px;
+	
+}
+
+#send{
+	margin-top:20px;
+	background-color:#fdd05f;
+	color:black;
+	border-radius:5px;
+}

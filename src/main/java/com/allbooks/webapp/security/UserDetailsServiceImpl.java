@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.Role;
 import com.allbooks.webapp.service.ReaderService;
+import com.allbooks.webapp.utils.reader.BanChecker;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -23,6 +24,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
 	private ReaderService readerService;
 
+	@Autowired
+	private BanChecker banChecker;
+	
 	@Autowired
 	private HttpSession httpSession;
 
@@ -35,7 +39,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		if (isUserInDb == true) {
 			reader = readerService.getReaderByUsername(username);
 			
-			if (reader.isEnabled() == false)
+			if (reader.isEnabled() == false || banChecker.isReaderBanned(reader.getId()) == true)
 				throw new UsernameNotFoundException(username);
 			else {
 				Set<GrantedAuthority> grantedAuthorities = new HashSet<>();

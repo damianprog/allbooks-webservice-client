@@ -17,44 +17,68 @@ body {
 	border-radius: 5px;
 }
 
-#editReview{
-	width:40px;
-	margin-top:10px;
+#reviewHeader{
+	float:left;
+	width:500px;
 }
 
-#like{
+.adminActions{
+	float:left;
+}
+
+#deleteComment{
+	float:left;
+	margin-left:10px;
+}
+
+#editReview {
+	margin-top: 10px;
+	float:left;
+}
+
+#like {
 	background-color: #3b5998;
 	border-radius: 5px;
-	font-size:15px;
+	font-size: 15px;
 	color: white;
 }
 
 #reviewLikes {
-	margin-left:400px;	
+	margin-left: 400px;
 }
 
-#editReviewTextArea{
-	width:516px;
-	height:198px;
+#editReviewTextArea {
+	width: 516px;
+	height: 198px;
 }
 
-#reviewText{
-	width:600px;
+#reviewText {
+	width: 600px;
 }
 
-#editReviewButton{
-	cursor:pointer;
-	width:100px;
+#editReviewButton {
+	cursor: pointer;
 }
 
-.submit{
-	background-color:#fdd05f;
+#deleteReview{
+	float:left;
+	margin-top: 10px;
+	margin-left: 10px;
+}
+
+.blackRefNon{
 	color:black;
-	border-radius:5px;
+	text-decoration:none;
 }
 
-textarea{
-	border-radius:5px;
+.submit {
+	background-color: #fdd05f;
+	color: black;
+	border-radius: 5px;
+}
+
+textarea {
+	border-radius: 5px;
 }
 
 #like {
@@ -108,8 +132,8 @@ textarea{
 	color: #00635d;
 }
 
-#commentLabel{
-	padding-top:10px;
+#commentLabel {
+	padding-top: 10px;
 }
 
 #imgReview {
@@ -121,3 +145,13 @@ textarea{
 	padding-left: 20px;
 }
 
+.commentUserName {
+	width: 300px;
+}
+
+.commentHeader {
+	float: left;
+	width: 300px;
+}
+
+.

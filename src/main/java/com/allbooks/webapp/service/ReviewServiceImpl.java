@@ -88,4 +88,10 @@ public class ReviewServiceImpl implements ReviewService {
 		return reviews;
 	}
 
+	@Override
+	public void deleteReviewByIdAndReaderId(int reviewId, int readerId) {
+		
+		reviewWebservice.deleteReviewByIdAndReaderId(reviewId,readerId);
+	}
+
 }

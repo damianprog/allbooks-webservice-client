@@ -7,18 +7,20 @@ import com.allbooks.webapp.entity.Review;
 
 public interface ReviewService {
 
-	public void submitReview(Review review);
+	void submitReview(Review review);
 
-	public List<Review> getBookReviews(int bookId);
-	
-	public Map<String,Integer> ratingsAndReviewsQuantity(int bookId);
-	
-	public Review getReviewById(int reviewId);
-	
-	public void updateReview(Review review);
+	List<Review> getBookReviews(int bookId);
 
-	public void deleteReviewById(int reviewId);
-	
-	public List<Review> getReviewsByReaderId(int readerId);
-	
+	Map<String, Integer> ratingsAndReviewsQuantity(int bookId);
+
+	Review getReviewById(int reviewId);
+
+	void updateReview(Review review);
+
+	void deleteReviewById(int reviewId);
+
+	void deleteReviewByIdAndReaderId(int reviewId, int readerId);
+
+	List<Review> getReviewsByReaderId(int readerId);
+
 }

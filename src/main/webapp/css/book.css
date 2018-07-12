@@ -17,6 +17,11 @@ body {
 	overflow: hidden;
 }
 
+.deleteReview{
+	float:left;
+	margin-left:250px;
+}
+
 #authorDescription {
 	height: 188px;
 	display: block;
@@ -33,6 +38,11 @@ body {
 
 .rounded {
 	border-radius: 5px;
+}
+
+.dropDown{
+	border-radius: 5px;
+	float:left;
 }
 
 .like {
@@ -131,4 +141,9 @@ button {
 #reviewLikes {
 	text-align: right;
 	width: 500px;
+}
+
+.readerActions{
+	float:left;
+	margin-left:10px;
 }

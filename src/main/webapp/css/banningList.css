@@ -1,0 +1,32 @@
+body{
+	background-image: url("/css/images/dust_scratches.png");
+	font-family: 'Roboto', sans-serif;
+	font-size:15px;
+	color:black;	
+}
+
+#container 
+{
+	width:1100px;
+     margin:0 auto;
+}
+
+#banningContainer{
+	width:600px;
+}
+
+.blackRef{
+	color:black;
+}
+
+#banningListTable td:not(:first-child){
+	padding-left:15px;
+}
+
+#banningListTable th:not(:first-child){
+	padding-left:15px;
+}
+
+#banningListTable th{
+	text-align:left;
+}

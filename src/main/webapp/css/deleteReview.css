@@ -1,0 +1,45 @@
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size: 17px;
+	color: black;
+}
+
+#container {
+	width: 1000px;
+	margin: 0 auto;
+}
+
+.blackRef {
+	color: black;
+}
+
+#imgReview {
+	float: left;
+}
+
+#reviewDesc {
+	float: left;
+	padding-left: 20px;
+}
+
+#reviewText{
+	width:600px;
+}
+
+textarea{
+	border-radius:5px;
+}
+
+#reasonTextArea{
+	
+	width:517px;
+	height:142px;
+	
+}
+
+#remove{
+	margin-top:20px;
+	background-color:#fdd05f;
+	color:black;
+	border-radius:5px;
+}

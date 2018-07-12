@@ -131,14 +131,9 @@ public class BookActionsController {
 			@RequestParam("bookId") int bookId, @ModelAttribute("review") Review review, RedirectAttributes ra)
 			throws IOException {
 
-//		ReaderBook readerBook = postReviewHelper.getReaderBook(readerBookId, shelves);
-
 		Rating rating = postReviewHelper.getRating(ratingId, rate);
 
 		saveService.saveRating(bookActionDataObjectFactory.createRatingData(rating, bookId));
-
-//		saveService.saveReaderBook(
-//				bookActionDataObjectFactory.createReaderBookData(readerBook, bookId, isItUpdateReaderBook));
 
 		saveService.saveReview(bookActionDataObjectFactory.createReviewData(review, bookId));
 
@@ -200,6 +195,35 @@ public class BookActionsController {
 
 	}
 
+	@GetMapping("/deleteReview")
+	public String deleteReview(@RequestParam("reviewId") int reviewId,RedirectAttributes ra,HttpSession session) {
+		
+		int readerId = (int) session.getAttribute("readerId");
+		
+		Review review = reviewService.getReviewById(reviewId);
+		
+		reviewService.deleteReviewByIdAndReaderId(reviewId, readerId);
+		
+		ra.addAttribute("bookId", review.getBook().getId());
+		
+		return "redirect:/reader/showBook";
+		
+	}
+	
+	@GetMapping("/deleteComment")
+	public String deleteComment(@RequestParam("commentId") int commentId,RedirectAttributes ra,HttpSession session) {
+		
+		int readerId = (int) session.getAttribute("readerId");
+		
+		Comment comment = commentService.getCommentById(commentId);
+		
+		commentService.deleteCommentByIdAndReaderId(commentId,readerId);
+		
+		ra.addAttribute("reviewId",comment.getReview().getId());
+		
+		return "redirect:/bookActions/reviewPage";
+	}
+	
 	@PostMapping("/editComment")
 	public String editComment(@RequestParam("reviewId") int reviewId, @RequestParam("commentId") int commentId,
 			@RequestParam("commentText") String commentText, Model theModel, HttpSession session, Principal principal,
@@ -216,5 +240,5 @@ public class BookActionsController {
 		return "redirect:/bookActions/reviewPage";
 
 	}
-
+	
 }

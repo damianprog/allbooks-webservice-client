@@ -12,7 +12,6 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.Token;
 import com.allbooks.webapp.utils.entity.MailData;
 
 @Component
@@ -30,18 +29,36 @@ public class MailBuilder {
 	@Value("${spring.mail.username}")
 	private String myEmail;
 	
-	public MimeMessage createMail(MailData mailData,String methodMapping) throws MessagingException {
+	private String recipentAddress;
+	
+	public MimeMessage createTokenMail(MailData mailData,String methodMapping) throws MessagingException {
 		
 		Reader reader = mailData.getReader();
 		
 		String token = mailData.getToken();
 		
-		String recipentAddress = reader.getEmail();
+		this.recipentAddress = reader.getEmail();
 		String confirmationUrl = urlName + methodMapping + "?token=" + token + "&readerId="
 				+ reader.getId();
 
+		return createMimeMessage(mailData,confirmationUrl);
+		
+	}
+
+	public MimeMessage createSimpleMail(MailData mailData) throws MessagingException {
+		
+		Reader reader = mailData.getReader();
+		
+		this.recipentAddress = reader.getEmail();
+		
+		return createMimeMessage(mailData,"localhost:8080/reader/main");
+		
+	}
+	
+	private MimeMessage createMimeMessage(MailData mailData,String url) throws MessagingException {
+		
 		Context context = new Context();
-		context.setVariable("url", confirmationUrl);
+		context.setVariable("url", url);
 		context.setVariable("subjectHeader", mailData.getSubjectHeader());
 		context.setVariable("subjectMessage", mailData.getSubjectMessage());
 

@@ -6,13 +6,16 @@ import com.allbooks.webapp.entity.Comment;
 
 public interface CommentService {
 
-	public void submitComment(Comment comment);
+	void submitComment(Comment comment);
 
-	public List<Comment> getCommentsByReaderIdAndBookId(int readerId,int bookId);
-	
-	public List<Comment> getReviewComments(int reviewId);
+	List<Comment> getCommentsByReaderIdAndBookId(int readerId, int bookId);
 
-	public Comment getCommentById(int commentId);
+	List<Comment> getReviewComments(int reviewId);
 
-	
+	Comment getCommentById(int commentId);
+
+	void deleteCommentById(int commentId);
+
+	void deleteCommentByIdAndReaderId(int commentId, int readerId);
+
 }
