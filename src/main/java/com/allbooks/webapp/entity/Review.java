@@ -2,11 +2,10 @@ package com.allbooks.webapp.entity;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Review {
+public class Review implements ReaderPost{
 
 	private int id;
 
@@ -16,14 +15,11 @@ public class Review {
 
 	private List<Like> likes;
 
-	private Reader reader;
+	private Reader postingReader;
 
 	private Rating rating;
 
 	private Book book;
-
-	@JsonIgnore
-	private byte[] profilePic;
 
 	public Rating getRating() {
 		return rating;
@@ -33,20 +29,12 @@ public class Review {
 		this.rating = rating;
 	}
 
-	public Reader getReader() {
-		return reader;
+	public Reader getPostingReader() {
+		return postingReader;
 	}
 
-	public void setReader(Reader reader) {
-		this.reader = reader;
-	}
-
-	public byte[] getProfilePic() {
-		return profilePic;
-	}
-
-	public void setProfilePic(byte[] profilePic) {
-		this.profilePic = profilePic;
+	public void setPostingReader(Reader reader) {
+		this.postingReader = reader;
 	}
 
 	public Review() {

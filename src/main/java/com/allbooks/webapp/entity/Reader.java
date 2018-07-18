@@ -7,7 +7,6 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 
-import com.allbooks.webapp.validators.ProfilePhotoUploadConstraint;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -28,7 +27,9 @@ public class Reader {
 
 	private Set<Role> roles;
 
-	private ProfilePhoto profilePhoto;
+	private byte[] profilePhoto;
+
+	private String encodedProfilePhoto;
 
 	private List<Reader> friends;
 
@@ -54,11 +55,11 @@ public class Reader {
 		this.friends = friends;
 	}
 
-	public ProfilePhoto getProfilePhoto() {
+	public byte[] getProfilePhoto() {
 		return profilePhoto;
 	}
 
-	public void setProfilePhoto(ProfilePhoto profilePhoto) {
+	public void setProfilePhoto(byte[] profilePhoto) {
 		this.profilePhoto = profilePhoto;
 	}
 
@@ -108,6 +109,14 @@ public class Reader {
 
 	public void setDetails(Details details) {
 		this.details = details;
+	}
+
+	public String getEncodedProfilePhoto() {
+		return encodedProfilePhoto;
+	}
+
+	public void setEncodedProfilePhoto(String encodedProfilePhoto) {
+		this.encodedProfilePhoto = encodedProfilePhoto;
 	}
 
 	@Override

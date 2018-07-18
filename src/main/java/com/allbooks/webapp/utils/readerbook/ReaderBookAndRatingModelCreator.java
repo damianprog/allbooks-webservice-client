@@ -7,9 +7,9 @@ import org.springframework.ui.ModelMap;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.factories.ModelMapFactory;
+import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderBookService;
-import com.allbooks.webapp.utils.SecurityContextService;
 
 @Component
 public class ReaderBookAndRatingModelCreator {

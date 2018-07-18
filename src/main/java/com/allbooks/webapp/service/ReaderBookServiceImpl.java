@@ -1,6 +1,8 @@
 package com.allbooks.webapp.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +15,14 @@ import com.allbooks.webapp.enumeration.ShelvesStates;
 import com.allbooks.webapp.webservice.ReaderBookWebservice;
 
 @Service
-public class ReaderBookServiceImpl implements ReaderBookService{
+public class ReaderBookServiceImpl implements ReaderBookService {
 
 	@Autowired
 	private ReaderBookWebservice readerBookWebservice;
-	
+
 	@Autowired
 	private ReaderService readerService;
-	
+
 	@Override
 	public void saveReaderBook(ReaderBook readerBook) {
 
@@ -43,7 +45,7 @@ public class ReaderBookServiceImpl implements ReaderBookService{
 		return readerBooksList;
 
 	}
-	
+
 	@Override
 	public void deleteReaderBookById(int bookId, String username) {
 
@@ -57,9 +59,9 @@ public class ReaderBookServiceImpl implements ReaderBookService{
 
 		return readerBookWebservice.getReaderBookById(readerBookId);
 	}
-	
+
 	@Override
-	public void saveReadDate(String dateRead, int bookId, int id) {
+	public void saveReadDate(Date dateRead, int bookId, int id) {
 
 		Reader reader = readerService.getReaderById(id);
 		ReaderBook readerBook = readerBookWebservice.getReaderBook(bookId, id);
@@ -71,20 +73,25 @@ public class ReaderBookServiceImpl implements ReaderBookService{
 
 	@Override
 	public List<ReaderBook> getReaderBooksByShelves(int readerId, ShelvesStates shelvesStates) {
-		
-		return Arrays.asList(readerBookWebservice.getReaderBooksByShelves(readerId,shelvesStates));
-		
+
+		return new ArrayList<ReaderBook>(
+				Arrays.asList(readerBookWebservice.getReaderBooksByShelves(readerId, shelvesStates)));
+
 	}
 
 	@Override
 	public Page<ReaderBook> getReaderBooksPages(int readerId, int page) {
-		return readerBookWebservice.getReaderBooksPages(readerId,page);
+		return readerBookWebservice.getReaderBooksPages(readerId, page);
 	}
 
 	@Override
 	public Page<ReaderBook> getReaderBooksByShelvesPages(int readerId, ShelvesStates shelvesStates, int page) {
-		return readerBookWebservice.getReaderBooksByShelvesPages(readerId,shelvesStates,page);
+		return readerBookWebservice.getReaderBooksByShelvesPages(readerId, shelvesStates, page);
 	}
 
-	
+	@Override
+	public List<ReaderBook> get10LatestReaderBooks() {
+		return Arrays.asList(readerBookWebservice.get10LatestReaderBooks());
+	}
+
 }

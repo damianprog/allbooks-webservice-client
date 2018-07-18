@@ -22,66 +22,48 @@
 	<div id="container">
 		<jsp:include page='/view/header.jsp' />
 
-		<c:url var="bookPageRef" value="/reader/showBook">
-			<c:param name="bookId" value="${review.book.id}" />
-		</c:url>
+		<h3>Comment</h3>
 
-		<div id="reviewDiv">
-			<div id="header">
-				<table>
-					<tr>
-						<td>
-							<h3>${review.reader.username}'sReviews>
-								${review.book.fullTitle}</h3>
-						</td>
-					</tr>
-				</table>
+		<div id="commentAuthorPhoto">
+			<img
+				src="data:image/jpeg;base64,${comment.postingReader.encodedProfilePhoto}">
+		</div>
+
+		<div id="comment">
+
+			<c:url var="readerProfileRef" value="/profile/showProfile">
+				<c:param name="readerId" value="${comment.postingReader.id}" />
+			</c:url>
+
+			<div id="postingReaderUsername">
+				<a class="blackRef" href="${readerProfileRef}">${comment.postingReader.username}</a>
 			</div>
-			<div id="imgReview">
-				<a class="blackRef" href="${bookPageRef}"><img
-					src="data:image/jpeg;base64,${bookPic}"></a> <br>
 
-			</div>
-			<div id="reviewDesc">
-
-				<h4 style="margin-top: -5px; margin-bottom: -2px;">
-					<a class="blackRef" href="${bookPageRef}">${review.book.fullTitle}</a>
-				</h4>
-				by ${authorName}<br> ${review.reader.username}'s Review<br>
-				<div id="reviewText">
-					<p>${review.text }</p>
-				</div>
-				
-				<div id="comment">
-					
-					<h3>Comment</h3>
-					
-					${comment.text}
-					
-				</div>
-				
-				<div id="explanation">
-
-				Reason
-
-					<form action="/admin/deleteComment" method="GET">
-						<textarea id="reasonTextArea" name="reasonText"
-							required="required"></textarea>
-						<br> <input type="hidden" name="commentId"
-							value="${comment.id}" /><input id="remove" type="submit"
-							value="Remove">
-					</form>
-
-				</div>
-
-			</div>
+			<div id="commentText">${comment.text}</div>
 
 		</div>
 
-		<div style="clear: both">
+		<div style="clear: both"></div>
+
+		<div id="explanation">
+
+			Reason
+
+			<form action="/admin/deleteComment" method="GET">
+				<textarea id="reasonTextArea" name="reasonText" required="required"></textarea>
+				<br> <input type="hidden" name="commentType"
+					value="${commentType}" />
+					<input type="hidden" name="commentId"
+					value="${comment.id}" /><input id="remove" type="submit"
+					value="Remove">
+			</form>
 
 		</div>
+
 	</div>
+
+
+	<div style="clear:both"></div>
 </body>
 
 

@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Reader;
+import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.utils.photos.Base64Encoder;
 import com.allbooks.webapp.utils.photos.BookPicsEncoder;
 import com.allbooks.webapp.utils.photos.MultipartImageConverter;
@@ -45,9 +46,9 @@ public class PhotoServiceImpl implements PhotoService {
 	}
 
 	@Override
-	public List<Book> encodeBookPics(List<Book> books) throws IOException {
+	public List<Book> encodeBookPics(List<Book> books,int width,int height) throws IOException {
 
-		return bookPicsEncoder.encode(books);
+		return bookPicsEncoder.encode(books,width,height);
 	}
 
 	@Override
@@ -64,7 +65,7 @@ public class PhotoServiceImpl implements PhotoService {
 	}
 
 	@Override
-	public byte[] resize(byte[] bookPicBytes, int width, int height) throws IOException {
+	public byte[] resize(byte[] bookPicBytes, int width, int height) {
 
 		return resizePhoto.resize(bookPicBytes, width, height);
 	}
@@ -72,6 +73,16 @@ public class PhotoServiceImpl implements PhotoService {
 	@Override
 	public Reader createProfilePhotoForReader(MultipartFile multipartFile,Reader reader) throws IOException {
 		return profilePhotoCreator.createPhotoForReader(multipartFile, reader);
+	}
+
+	@Override
+	public void encodeAndResizeBookPhotoInReaderBooks(List<ReaderBook> readerBooksList,int width,int height) {
+
+		for(ReaderBook rb : readerBooksList) {
+			byte[] resizedPhoto = resizePhoto.resize(rb.getBook().getBookPhoto(), width, height);
+			rb.getBook().setEncodedBookPhoto(getEncodedImage(resizedPhoto));
+		}
+		
 	}
 
 }

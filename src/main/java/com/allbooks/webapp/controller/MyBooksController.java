@@ -2,6 +2,9 @@ package com.allbooks.webapp.controller;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -108,11 +111,13 @@ public class MyBooksController {
 
 	@PostMapping("/updateDateRead")
 	public String updateDateRead(@RequestParam("bookName") String bookName, @RequestParam("dateRead") String dateRead,
-			HttpSession session, Model theModel, Principal principal, RedirectAttributes ra) {
+			HttpSession session, Model theModel, Principal principal, RedirectAttributes ra) throws ParseException {
 
+		Date thedate = new SimpleDateFormat("yyyy-MM-dd").parse(dateRead);
+		
 		int bookId = bookService.getBookId(bookName);
 		Reader reader = readerService.getReaderByUsername(principal.getName());
-		readerBookService.saveReadDate(dateRead, bookId, reader.getId());
+		readerBookService.saveReadDate(thedate, bookId, reader.getId());
 
 		ra.addAttribute("readerId", reader.getId());
 
@@ -132,11 +137,13 @@ public class MyBooksController {
 
 	@PostMapping("/saveReaderBook")
 	public String readState(@RequestParam Map<String, String> params,
-			@ModelAttribute("readerBook") ReaderBook readerBook, @RequestParam("bookId") int bookId,
+			@RequestParam("readerBookId") int readerBookId, @RequestParam("bookId") int bookId,
 			@RequestParam("shelves") String shelves,
 			@RequestParam("isItUpdateReaderBook") boolean isItUpdateReaderBook, HttpSession session,
 			Principal principal, RedirectAttributes ra) throws IOException {
 
+		ReaderBook readerBook = readerBookService.getReaderBookById(readerBookId);
+		
 		readerBook.setShelvesStates(ShelvesStates.enumValueOf(shelves));
 		
 		saveService.saveReaderBook(

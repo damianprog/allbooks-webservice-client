@@ -17,15 +17,18 @@ body {
 	overflow: hidden;
 }
 
-.deleteReview{
-	float:left;
-	margin-left:250px;
+.deleteReview {
+	float: left;
+	margin-left: 250px;
 }
 
-#authorDescription {
-	height: 188px;
-	display: block;
-	overflow: hidden;
+.reviewAuthorPhoto {
+	float: left;
+	width: 90px;
+}
+
+.reviewTable {
+	float: left;
 }
 
 .moreDesc {
@@ -40,9 +43,9 @@ body {
 	border-radius: 5px;
 }
 
-.dropDown{
+.dropDown {
 	border-radius: 5px;
-	float:left;
+	float: left;
 }
 
 .like {
@@ -59,7 +62,7 @@ body {
 }
 
 .inline {
-	display:inline;
+	display: inline;
 }
 
 #img {
@@ -72,7 +75,7 @@ body {
 }
 
 #rating {
-	font-size: 15px;
+	margin-top: 10px;
 }
 
 button {
@@ -102,7 +105,7 @@ button {
 
 #communityReviews {
 	margin-top: 20px;
-	width: 660px;
+	width: 760px;
 }
 
 #likeForm {
@@ -116,6 +119,11 @@ button {
 #reviewTitleTd {
 	padding-top: 10px;
 	padding-bottom: 10px;
+	width: 600px;
+	overflow-wrap: break-word;
+}
+
+.reviewText {
 	width: 600px;
 }
 
@@ -143,7 +151,37 @@ button {
 	width: 500px;
 }
 
-.readerActions{
-	float:left;
+.readerActions {
+	float: left;
+	margin-left: 10px;
+}
+
+#bookActionsAndPhoto {
+	float: left;
+	width:213px;
+}
+
+#middle {
+	float: left;
 	margin-left:10px;
+	width:450px;
+}
+
+#right {
+	float: left;
+	width: 210px;
+	margin-left: 50px;
+	font-size: 15px;
+}
+
+#authorDescription {
+	height: 198px;
+	display: block;
+	overflow: hidden;
+	float: left;
+}
+
+#authorPhoto {
+	float: left;
+	margin-left: 10px;
 }

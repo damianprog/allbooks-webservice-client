@@ -3,13 +3,14 @@ package com.allbooks.webapp.service;
 import java.util.List;
 import java.util.Map;
 
+import com.allbooks.webapp.entity.ReaderPost;
 import com.allbooks.webapp.entity.Review;
 
 public interface ReviewService {
 
 	void submitReview(Review review);
 
-	List<Review> getBookReviews(int bookId);
+	List<ReaderPost> getBookReviews(int bookId);
 
 	Map<String, Integer> ratingsAndReviewsQuantity(int bookId);
 

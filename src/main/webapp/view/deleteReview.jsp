@@ -31,7 +31,7 @@
 				<table>
 					<tr>
 						<td>
-							<h3>${review.reader.username}'sReviews>
+							<h3>${review.postingReader.username}'sReviews>
 								${review.book.fullTitle}</h3>
 						</td>
 					</tr>
@@ -47,7 +47,7 @@
 				<h4 style="margin-top: -5px; margin-bottom: -2px;">
 					<a class="blackRef" href="${bookPageRef}">${review.book.fullTitle}</a>
 				</h4>
-				by ${authorName}<br> ${review.reader.username}'s Review<br>
+				by ${authorName}<br> ${review.postingReader.username}'s Review<br>
 				<div id="reviewText">
 					<p>${review.text }</p>
 				</div>

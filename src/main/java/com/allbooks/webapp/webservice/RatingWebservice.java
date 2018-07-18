@@ -13,5 +13,7 @@ public interface RatingWebservice {
 	public int getReaderRating(String username, String bookName);
 
 	public Rating getRatingById(int ratingId);
+
+	public Rating[] get10LatestRatings();
 	
 }

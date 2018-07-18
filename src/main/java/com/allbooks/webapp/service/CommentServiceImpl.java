@@ -7,7 +7,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.allbooks.webapp.entity.ReaderPost;
 import com.allbooks.webapp.entity.Comment;
+import com.allbooks.webapp.utils.bookactions.Sorter;
 import com.allbooks.webapp.webservice.CommentWebservice;
 
 @Service
@@ -16,17 +18,20 @@ public class CommentServiceImpl implements CommentService{
 	@Autowired
 	private CommentWebservice commentWebservice;
 	
+	@Autowired
+	private Sorter sorter;
+	
 	@Override
 	public void submitComment(Comment comment) {
 		commentWebservice.submitComment(comment);
 	}
 
 	@Override
-	public List<Comment> getReviewComments(int reviewId) {
+	public List<ReaderPost> getReviewComments(int reviewId) {
 
-		List<Comment> commentsList = Arrays.asList(commentWebservice.getReviewComments(reviewId));
+		List<ReaderPost> commentsList = Arrays.asList(commentWebservice.getReviewComments(reviewId));
 
-		commentsList.sort(Comparator.comparingInt(Comment::getId).reversed());
+		sorter.sortBookActionPostsDescending(commentsList);
 
 		return commentsList;
 	}

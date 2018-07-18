@@ -3,7 +3,7 @@ package com.allbooks.webapp.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Comment {
+public class Comment implements ReaderPost {
 
 	private int id;
 
@@ -11,7 +11,7 @@ public class Comment {
 
 	private Rating rating;
 
-	private Reader reader;
+	private Reader postingReader;
 
 	private Review review;
 
@@ -41,12 +41,12 @@ public class Comment {
 		this.rating = rating;
 	}
 
-	public Reader getReader() {
-		return reader;
+	public Reader getPostingReader() {
+		return postingReader;
 	}
 
-	public void setReader(Reader reader) {
-		this.reader = reader;
+	public void setPostingReader(Reader postingReader) {
+		this.postingReader = postingReader;
 	}
 
 	public Review getReview() {

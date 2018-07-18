@@ -18,9 +18,9 @@ import com.allbooks.webapp.Application;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.factories.ModelMapFactory;
+import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderBookService;
-import com.allbooks.webapp.utils.SecurityContextService;
 import com.allbooks.webapp.utils.readerbook.ReaderBookAndRatingModelCreator;
 
 @RunWith(SpringRunner.class)

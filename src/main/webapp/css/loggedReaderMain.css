@@ -1,0 +1,108 @@
+body{
+	background-image: url("/css/images/dust_scratches.png");
+	font-family: 'Roboto', sans-serif;
+	font-size:12px;
+	color:black;	
+}
+
+#container 
+{
+	width:1100px;
+     margin:0 auto;
+}
+
+#leftSideContainer{
+	float:left;
+	width:297px;
+}
+
+#searchBookImage{
+	float:left;
+}
+
+#searchBookDesc{
+	float:left;
+	margin-top:20px;
+	margin-left:10px;
+}
+
+.mainInputBox{
+	border-radius:5px;
+	width:230px;
+	height:32px;
+}
+
+#search{
+	background-color:#6B6B6B;
+	color:white;
+	border-radius:5px;
+	height:32px;
+	margin-top:10px;
+}
+
+.leftSideHr{
+	margin-top:25px;
+	margin-bottom:25px;
+}
+
+#readingChallangeDesc{
+	font-size:14px;
+}
+
+#readingChallangeImage{
+	padding-top:10px;
+	float:left;
+}
+
+#readingChallangeActions{
+	float:left;
+	margin-left:10px;
+	margin-top:10px;
+}
+
+#numberOfBooks{
+	width:60px;
+	height:27px;
+	margin-top:10px;
+	margin-bottom:10px;
+	border-radius:5px;
+}
+
+#startChallange{
+	margin-top:10px;
+	background-color:#6B6B6B;
+	color:white;
+	border-radius:5px;
+	height:26px;
+}
+
+#wantToReadImage{
+	float:left;
+}
+
+#wantToReadDesc{
+	float:left;
+	font-size:15px;
+	margin-top:20px;
+	margin-left:10px;
+}
+
+.blueLink {
+	color: #00635d;
+	text-decoration:none;
+}
+
+#middleContainer{
+	float:left;
+	width:540px;
+}
+
+.whiteContainer{
+	width:540px;
+	height:320px;
+	background-color:white;
+	border-radius:5px;
+	border:1px solid #aaaaaa;
+	margin-left:20px;
+	margin-top:20px;
+}

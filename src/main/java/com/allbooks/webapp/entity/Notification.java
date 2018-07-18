@@ -1,7 +1,8 @@
 package com.allbooks.webapp.entity;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -14,16 +15,14 @@ public class Notification {
 
 	private String text;
 
-	private String date;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date date;
 
 	public Notification(Reader reader, String text) {
 
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-		LocalDateTime now = LocalDateTime.now();
-
 		this.reader = reader;
 		this.text = text;
-		this.date = dtf.format(now);
+		this.date = new Date();
 
 	}
 
@@ -55,11 +54,11 @@ public class Notification {
 		this.text = text;
 	}
 
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 

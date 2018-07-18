@@ -21,12 +21,15 @@ import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Comment;
 import com.allbooks.webapp.entity.Notification;
 import com.allbooks.webapp.entity.Reader;
+import com.allbooks.webapp.entity.ReaderPost;
+import com.allbooks.webapp.entity.ReadingChallangeComment;
 import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.service.BanService;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.CommentService;
 import com.allbooks.webapp.service.NotificationService;
 import com.allbooks.webapp.service.ReaderService;
+import com.allbooks.webapp.service.ReadingChallangeCommentService;
 import com.allbooks.webapp.service.ReviewService;
 import com.allbooks.webapp.utils.admin.BanningExecutor;
 import com.allbooks.webapp.utils.admin.PostsRemover;
@@ -53,16 +56,19 @@ public class AdminController {
 
 	@Autowired
 	private NotificationService notificationService;
-	
+
 	@Autowired
 	private BanningExecutor banningExecutor;
 
 	@Autowired
 	private BanService banService;
-	
+
 	@Autowired
 	private PostsRemover postsRemover;
-	
+
+	@Autowired
+	private ReadingChallangeCommentService challangeCommentService;
+
 	@GetMapping("/showAddBook")
 	public String addBook(Model theModel) {
 
@@ -91,6 +97,7 @@ public class AdminController {
 			@RequestParam(value = "reviewId", required = false) Integer reviewId,
 			@RequestParam(value = "commentId", required = false) Integer commentId,
 			@RequestParam(value = "readerId", required = false) Integer readerId,
+			@RequestParam(value = "commentType", required = false) String commentType,
 			@RequestParam("adminAction") String adminAction) {
 
 		switch (adminAction) {
@@ -100,6 +107,7 @@ public class AdminController {
 			return "redirect:/admin/showDeleteReview";
 		case "deleteComment":
 			ra.addAttribute("commentId", commentId);
+			ra.addAttribute("commentType", commentType);
 			return "redirect:/admin/showDeleteComment";
 		case "sendNotice":
 			ra.addAttribute("readerId", readerId);
@@ -137,39 +145,78 @@ public class AdminController {
 			RedirectAttributes ra) {
 
 		Review review = reviewService.getReviewById(reviewId);
-		
-		postsRemover.deleteReview(reviewId,reasonText);
-		
+
+		postsRemover.deleteReview(reviewId, reasonText);
+
 		ra.addAttribute("bookId", review.getBook().getId());
 
 		return "redirect:/reader/showBook";
 	}
 
 	@GetMapping("/showDeleteComment")
-	public String deleteComment(@RequestParam("commentId") int commentId, Model theModel) {
+	public String showDeleteComment(@RequestParam("commentId") int commentId,
+			@RequestParam("commentType") String commentType, Model theModel) {
 
-		Comment comment = commentService.getCommentById(commentId);
+		ReaderPost comment;
 
-		Review review = comment.getReview();
+		if (commentType.equals("REVIEW_COMMENT"))
+			comment = commentService.getCommentById(commentId);
+		else
+			comment = challangeCommentService.getCommentById(commentId);
 
-		theModel.addAttribute("bookPic", photoService.getEncodedImage(review.getBook().getBookPhoto()));
+		byte[] readerPhoto = comment.getPostingReader().getProfilePhoto();
 
+		String encodedReaderPhoto = photoService.getEncodedImage(photoService.resize(readerPhoto, 80, 80));
+
+		comment.getPostingReader().setEncodedProfilePhoto(encodedReaderPhoto);
+
+		theModel.addAttribute("commentType", commentType);
 		theModel.addAttribute("comment", comment);
-		theModel.addAttribute("review", review);
 
 		return "deleteComment";
 	}
 
 	@GetMapping("/deleteComment")
 	public String deleteComment(@RequestParam("commentId") int commentId, @RequestParam("reasonText") String reasonText,
-			Model theModel, RedirectAttributes ra) {
+			@RequestParam("commentType") String commentType, Model theModel, RedirectAttributes ra) {
 
+		ra.addAttribute("commentId",commentId);
+		ra.addAttribute("reasonText",reasonText);
+		
+		switch (commentType) {
+		case "REVIEW_COMMENT":
+			return "redirect:/admin/deleteReviewComment";
+			
+		case "CHALLANGE_COMMENT":
+			return "redirect:/admin/deleteReadingChallangeComment";
+		}
+
+		return "redirect:/reader/main";
+
+	}
+
+	@GetMapping("/deleteReviewComment")
+	public String deleteReviewComment(@RequestParam("commentId") int commentId,
+			@RequestParam("reasonText") String reasonText, RedirectAttributes ra) {
 		Comment comment = commentService.getCommentById(commentId);
+
+		postsRemover.deleteComment(commentId, reasonText);
 
 		ra.addAttribute("reviewId", comment.getReview().getId());
 
 		return "redirect:/bookActions/reviewPage";
+	}
 
+	@GetMapping("/deleteReadingChallangeComment")
+	public String deleteReadingChallangeComment(@RequestParam("commentId") int commentId,
+			@RequestParam("reasonText") String reasonText, Model theModel, RedirectAttributes ra) {
+		ReadingChallangeComment challangeComment = challangeCommentService.getCommentById(commentId);
+
+		postsRemover.deleteReadingChallangeComment(commentId, reasonText);
+
+		ra.addAttribute("readerId", challangeComment.getChallangeReader().getId());
+
+		return "redirect:/loggedReader/showReadingChallange";
 	}
 
 	@GetMapping("/sendNotice")
@@ -211,17 +258,17 @@ public class AdminController {
 
 		return "redirect:/reader/main";
 	}
-	
+
 	@GetMapping("/showBanningList")
-	public String showBanningList(Model theModel,@RequestParam(defaultValue = "1") int page) {
-		
+	public String showBanningList(Model theModel, @RequestParam(defaultValue = "1") int page) {
+
 		Page<Ban> bansPage = banService.getBans(page);
-		
-		theModel.addAttribute("bans",bansPage.getContent());
-		theModel.addAttribute("bansPage",bansPage);
-		theModel.addAttribute("currentPage",page);
-		
+
+		theModel.addAttribute("bans", bansPage.getContent());
+		theModel.addAttribute("bansPage", bansPage);
+		theModel.addAttribute("currentPage", page);
+
 		return "banningList";
 	}
-	
+
 }

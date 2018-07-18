@@ -19,7 +19,7 @@ public class ResizePhoto {
 	@Autowired
 	private FileFactory fileFactory;
 	
-	public byte[] resize(byte[] bookPicBytes, int width, int height) throws IOException {
+	public byte[] resize(byte[] bookPicBytes, int width, int height) {
 
 		InputStream inputStream = fileFactory.getByteArrayInputStream(bookPicBytes);
 		byte[] bookPic = {};
@@ -36,7 +36,11 @@ public class ResizePhoto {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			inputStream.close();
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return bookPic;

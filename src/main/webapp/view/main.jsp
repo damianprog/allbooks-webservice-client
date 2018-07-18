@@ -14,7 +14,7 @@
 <link type="text/css" rel="stylesheet" href="/css/style.css" />
 <link href="https://fonts.googleapis.com/css?family=Roboto|Spectral+SC"
 	rel="stylesheet">
-	
+
 </head>
 
 <body>
@@ -92,12 +92,13 @@
 									<img src="/css/images/camus.jpg">
 								</div>
 								<div id="wrappedQuotes">
-									"Don't walk in front of me... I may not follow Don't walk behind
-									me... I may not lead Walk beside me... just be my friend"
+									"Don't walk in front of me... I may not follow Don't walk
+									behind me... I may not lead Walk beside me... just be my
+									friend"
 									<p>~ Albert Camus</p>
 								</div>
 							</div>
-							
+
 							<div class="mySlides">
 								<div style="float: left">
 									<img src="/css/images/zappa.jpg">
@@ -107,7 +108,7 @@
 									<p>~ Frank Zappa</p>
 								</div>
 							</div>
-							
+
 							<div class="mySlides">
 								<div style="float: left">
 									<img src="/css/images/west.jpg">
@@ -148,6 +149,14 @@
 				<td>
 
 					<h3>Search and browse books</h3>
+
+					<div id="searchDiv">
+						<form action="/reader/searchBooks">
+							<input id="searchBar" name="phrase" placeholder="Search books">
+							<input id="searchButton" type="submit" value="Search">
+
+						</form>
+					</div>
 
 					<div id="categoriesBox" style="">
 						<div class="categoriesPart">

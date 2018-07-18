@@ -1,9 +1,9 @@
 package com.allbooks.webapp.service;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.allbooks.webapp.entity.Notification;
@@ -21,8 +21,8 @@ public class NotificationServiceImpl implements NotificationService{
 	}
 
 	@Override
-	public List<Notification> getNotificationsByReaderId(int readerId) {
-		return Arrays.asList(notificationWebservice.getNotificationsByReaderId(readerId));
+	public Page<Notification> getNotificationsByReaderId(int readerId,int page) {
+		return notificationWebservice.getNotificationsByReaderId(readerId,page);
 	}
 
 	@Override

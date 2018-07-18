@@ -7,11 +7,13 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.allbooks.webapp.entity.Notification;
+import com.allbooks.webapp.utils.entity.NotificationHelperPage;
 
 @Service
 public class NotificationWebserviceImpl implements NotificationWebservice {
@@ -44,14 +46,17 @@ public class NotificationWebserviceImpl implements NotificationWebservice {
 	}
 
 	@Override
-	public Notification[] getNotificationsByReaderId(int readerId) {
+	public Page<Notification> getNotificationsByReaderId(int readerId,int page) {
 
 		Map<String, Integer> params = new HashMap<>();
 		params.put("readerId", readerId);
+		params.put("page", page);
 
-		return restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/notifications" + accessTokenParameter,
-				Notification[].class, params);
+		NotificationHelperPage responseEntity = restTemplate.getForObject(
+				serviceUrlName + "/readers/{readerId}/notifications/pages/{page}" + accessTokenParameter, NotificationHelperPage.class,
+				params);
 		
+		return responseEntity;
 	}
 
 	@Override

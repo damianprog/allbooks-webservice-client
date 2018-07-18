@@ -1,12 +1,14 @@
 package com.allbooks.webapp.webservice;
 
+import org.springframework.data.domain.Page;
+
 import com.allbooks.webapp.entity.Notification;
 
 public interface NotificationWebservice {
 
 	Notification getNotificationById(int notificationId);
 
-	Notification[] getNotificationsByReaderId(int readerId);
+	Page<Notification> getNotificationsByReaderId(int readerId,int page);
 
 	void deleteNotificationById(int notificationId);
 

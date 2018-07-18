@@ -7,11 +7,11 @@ import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.entity.ReviewData;
+import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
-import com.allbooks.webapp.utils.SecurityContextService;
 
 @Component
 public class ReviewSaver {
@@ -44,7 +44,7 @@ public class ReviewSaver {
 		Review review = reviewData.getReview();
 
 		review.setBook(book);
-		review.setReader(reader);
+		review.setPostingReader(reader);
 		review.setRating(ratingService.getReaderRatingObject(readerId, bookId));
 
 		reviewService.submitReview(review);

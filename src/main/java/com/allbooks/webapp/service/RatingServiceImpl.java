@@ -1,5 +1,8 @@
 package com.allbooks.webapp.service;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +87,11 @@ public class RatingServiceImpl implements RatingService{
 	@Override
 	public Rating getRatingById(int ratingId) {
 		return ratingWebservice.getRatingById(ratingId);
+	}
+
+	@Override
+	public List<Rating> get10LatestRatings() {
+		return Arrays.asList(ratingWebservice.get10LatestRatings());
 	}
 	
 }

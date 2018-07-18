@@ -26,9 +26,9 @@
 		<jsp:include page='/view/header.jsp' />
 		<hr>
 		<div>
-			<table>
-				<tr>
-					<td id="img"><img src="data:image/jpeg;base64,${bookPic}">
+		
+		<div id="bookActionsAndPhoto">
+					<img src="data:image/jpeg;base64,${bookPic}">
 						<br> <sec:authorize access="isFullyAuthenticated()">
 
 							<div id="rating">
@@ -40,10 +40,10 @@
 										</c:when>
 										<c:otherwise>
 
-											<div id="yourRate">Your rate ${rating.rate}</div>
+											Your rate ${rating.rate}
 										</c:otherwise>
 									</c:choose>
-
+									<br>
 									<form:select id="selectRate" class="rounded" path="rate"
 										onchange="this.form.submit()">
 										<form:option value="1" label="1" />
@@ -59,8 +59,7 @@
 								</form:form>
 							</div>
 
-							<form:form action="/myBooks/saveReaderBook"
-								modelAttribute="readerBook" method="POST">
+							<form action="/myBooks/saveReaderBook" method="POST">
 								<c:choose>
 									<c:when test="${readerBook.id == 0}">
 										<br>Add this book to your books
@@ -68,12 +67,11 @@
 									</c:when>
 									<c:otherwise>
 										<br>Current State:${readerBook.shelvesStates.shelveState()}
-										<form:hidden path="id" />
-										<form:hidden path="dateAdded" />
-										<input type="hidden" name="isItUpdateReaderBook" value="true">
+										<input type="hidden" name="readerBookId" value="${readerBook.id}"/>
+										<input type="hidden" name="isItUpdateReaderBook" value="true"/>
 									</c:otherwise>
 								</c:choose>
-
+								<br>
 								<select class="rounded" name="shelves"
 									onchange="this.form.submit()">
 									<option value="Read" label="Read" />
@@ -84,11 +82,14 @@
 								</select>
 
 								<input type="hidden" name="bookId" value="${book.id}">
-							</form:form>
+							</form>
 						</sec:authorize> <sec:authorize access="!isFullyAuthenticated()">
 							<a href="/login">Sign In</a> to Rate this book!
-							</sec:authorize></td>
-					<td id="desc">
+							</sec:authorize>
+							</div>
+							
+						<div id="middle">	
+							
 						<h3 class="inline">${book.fullTitle}</h3>
 						<p id="credit">by ${book.reviewAuthor} (AllBooks Author)</p>
 						<table>
@@ -113,11 +114,16 @@
 							${book.coverType}, ${book.pages} pages<br> Published
 							${book.publishDate} by ${book.publishCompany}
 						</div>
-					</td>
-					<td id="aboutAuthor">
+						
+						</div>
+						
+						<div id="right">
+						<div id="authorDescription">
 						<h4 class="inline">About ${book.author}</h4>
 						<hr>
-						<div id="authorDescription">${book.aboutAuthor}</div> <br /> <c:choose>
+						${book.aboutAuthor}</div>
+						<div style="clear:both"></div>
+						 <br /> <c:choose>
 							<c:when test="${book.aboutAuthor.length() > 290}">
 								<a class="moreDesc" href="#" data-value="authorDescription">More...</a>
 							</c:when>
@@ -131,11 +137,12 @@
 								</p>
 							</c:forEach>
 						</div>
-					</td>
-					<td id="authorImg"><img
-						src="data:image/jpeg;base64,${authorPic}"></td>
-				</tr>
-			</table>
+					</div>
+					<div id="authorPhoto">
+							<img src="data:image/jpeg;base64,${authorPic}">
+						</div>
+					
+					
 		</div>
 
 		<div id="communityReviews">
@@ -154,22 +161,28 @@
 			<hr>
 
 			<div id="allReviews">
-				<table>
-					<c:forEach var="tempReview" items="${bookReviews}">
+				<c:forEach var="tempReview" items="${bookReviews}">
+
+					<div class="reviewAuthorPhoto">
+						<img
+							src="data:image/jpeg;base64,${tempReview.postingReader.encodedProfilePhoto}">
+					</div>
+
+					<table class="reviewTable">
 
 						<c:url var="reviewLink" value="/bookActions/reviewPage">
 							<c:param name="reviewId" value="${tempReview.id}" />
 						</c:url>
 
 						<c:url var="profileLink" value="/profile/showProfile">
-							<c:param name="readerId" value="${tempReview.reader.id}" />
+							<c:param name="readerId" value="${tempReview.postingReader.id}" />
 						</c:url>
 
 						<tr>
 							<td>
 								<div style="float: left; width: 300px;">
 									<h4 class="inline">
-										<a class="blackRef" href="${profileLink}">${tempReview.reader.username}</a>
+										<a class="blackRef" href="${profileLink}">${tempReview.postingReader.username}</a>
 									</h4>
 									rated it ${tempReview.rating.rate}
 								</div> <sec:authorize access="hasAuthority('ADMIN')">
@@ -183,7 +196,8 @@
 											<option value="0" label="Admin Actions" selected="selected"
 												disabled="disabled" hidden="true" />
 										</select> <input name="reviewId" type="hidden" value="${tempReview.id}" />
-										<input name="readerId" type="hidden" value="${tempReview.reader.id}" />
+										<input name="readerId" type="hidden"
+											value="${tempReview.postingReader.id}" />
 
 									</form>
 								</sec:authorize>
@@ -192,10 +206,12 @@
 						</tr>
 						<tr>
 							<td id="reviewTitleTd">
-								${fn:substring(tempReview.text,0,500)} <c:if
+								<div class="reviewText">${fn:substring(tempReview.text,0,500)} <c:if
 									test="${fn:length(tempReview.text) > 500}">
 									<a class="moreDesc" href="${reviewLink}">...see review</a>
+									
 								</c:if>
+								</div>
 							</td>
 						</tr>
 						<tr>
@@ -221,7 +237,7 @@
 										<sec:authentication property="principal.username"
 											var="username" />
 
-										<c:if test="${username == tempReview.reader.username}">
+										<c:if test="${username == tempReview.postingReader.username}">
 
 											<c:url var="deleteReview" value="/bookActions/deleteReview">
 												<c:param name="reviewId" value="${tempReview.id}" />
@@ -240,8 +256,10 @@
 								<div style="clear: both;"></div>
 							</td>
 						</tr>
-					</c:forEach>
-				</table>
+
+					</table>
+					
+				</c:forEach>
 			</div>
 
 		</div>

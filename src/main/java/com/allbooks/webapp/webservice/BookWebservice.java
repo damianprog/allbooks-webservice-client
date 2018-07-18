@@ -6,12 +6,14 @@ import com.allbooks.webapp.entity.Book;
 
 public interface BookWebservice {
 
-	public Book getBook(int bookId);
+	Book getBook(int bookId);
 
-	public Book getBookByName(String bookname);
+	Book getBookByName(String bookname);
 
-	public void saveBook(Book book);
+	void saveBook(Book book);
 
-	public Page<Book> getBooksByCategory(String category, int page);
+	Page<Book> getBooksByCategory(String category, int page);
+
+	Book[] getBooksByPhrase(String phrase);
 
 }

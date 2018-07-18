@@ -27,6 +27,24 @@ body {
 	color: #00635D;
 }
 
+#searchBar{
+	border-radius:5px;
+	border:1px solid #aaaaaa;
+	width:200px;
+	height:32px;
+}
+
+#searchDiv{
+	padding-bottom:15px;
+}
+
+#searchButton{
+	background-color:#6B6B6B;
+	color:white;
+	border-radius:5px;
+	height:32px;
+}
+
 #meet {
 	padding-top: 30px;
 	padding-left: 50px;

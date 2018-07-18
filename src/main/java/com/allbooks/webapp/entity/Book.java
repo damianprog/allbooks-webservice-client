@@ -39,14 +39,14 @@ public class Book {
 
 	private String category;
 
-	private String encodedBookPic;
+	private String encodedBookPhoto;
 
-	public String getEncodedBookPic() {
-		return encodedBookPic;
+	public String getEncodedBookPhoto() {
+		return encodedBookPhoto;
 	}
 
-	public void setEncodedBookPic(String encodedBookPic) {
-		this.encodedBookPic = encodedBookPic;
+	public void setEncodedBookPhoto(String encodedBookPhoto) {
+		this.encodedBookPhoto = encodedBookPhoto;
 	}
 
 	public String getCategory() {

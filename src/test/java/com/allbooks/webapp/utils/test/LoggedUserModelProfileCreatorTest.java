@@ -19,9 +19,9 @@ import com.allbooks.webapp.Application;
 import com.allbooks.webapp.entity.Pending;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.factories.ModelMapFactory;
+import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.FriendsService;
 import com.allbooks.webapp.service.PendingService;
-import com.allbooks.webapp.utils.SecurityContextService;
 import com.allbooks.webapp.utils.model.LoggedReaderModelProfileCreator;
 
 @RunWith(SpringRunner.class)

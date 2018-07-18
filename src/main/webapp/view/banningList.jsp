@@ -22,6 +22,7 @@
 
 		<div id="banningContainer">
 
+		<div style="padding-bottom:10px;">Page: ${currentPage}</div>
 			<table id="banningListTable">
 
 				<tr>

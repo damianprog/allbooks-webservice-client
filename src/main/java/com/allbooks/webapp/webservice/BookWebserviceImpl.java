@@ -1,6 +1,7 @@
 package com.allbooks.webapp.webservice;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -8,11 +9,13 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.allbooks.webapp.entity.Book;
+import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.utils.entity.HelperPage;
 
 @Service
@@ -75,6 +78,19 @@ public class BookWebserviceImpl implements BookWebservice {
 				params);
 
 		return responseEntity;
+	}
+
+	@Override
+	public Book[] getBooksByPhrase(String phrase) {
+		
+		Map<String,String> params = new HashMap<>();
+		params.put("phrase", phrase);
+		
+		ResponseEntity<Book[]> responseEntity = restTemplate.getForEntity(
+				serviceUrlName + "/books/search/{phrase}" + accessTokenParameter, Book[].class, params);
+
+		return responseEntity.getBody();
+		
 	}
 
 }

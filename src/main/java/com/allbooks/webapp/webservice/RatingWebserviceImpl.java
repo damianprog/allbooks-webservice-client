@@ -82,4 +82,11 @@ public class RatingWebserviceImpl implements RatingWebservice {
 
 	}
 
+	@Override
+	public Rating[] get10LatestRatings() {
+		ResponseEntity<Rating[]> responseEntity = restTemplate.getForEntity(
+				serviceUrlName + "/ratings/latest" + accessTokenParameter, Rating[].class);
+		return responseEntity.getBody();
+	}
+
 }

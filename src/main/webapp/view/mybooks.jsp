@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 
 <html>
@@ -104,7 +105,7 @@
 						</c:url>
 						<tr>
 							<td><img
-								src="data:image/jpeg;base64,${tempReaderBook.encodedBookPic}" /></td>
+								src="data:image/jpeg;base64,${tempReaderBook.book.encodedBookPhoto}" /></td>
 							<td><a class="titleRef" href="${titleRef}">${tempReaderBook.book.fullTitle}</a></td>
 							<td>${tempReaderBook.book.author}</td>
 							<td>${tempReaderBook.overallRating}</td>
@@ -128,7 +129,8 @@
 									</c:when>
 								</c:choose>
 							</td>
-							<td>${tempReaderBook.dateRead}<c:choose>
+							<td><fmt:formatDate pattern = "yyyy-MM-dd" 
+         					value = "${tempReaderBook.dateRead}" /><c:choose>
 									<c:when test="${isItMyBooks == true}">
 										<form method="POST" action="/myBooks/updateDateRead"
 											id="dateReadForm">
@@ -140,7 +142,8 @@
 									</c:when>
 								</c:choose>
 							</td>
-							<td>${tempReaderBook.dateAdded}</td>
+							<td><fmt:formatDate pattern = "yyyy-MM-dd" 
+         					value = "${tempReaderBook.dateAdded}" /></td>
 							<c:url var="delete" value="/myBooks/deleteReaderBook">
 								<c:param name="bookId" value="${tempReaderBook.book.id}"></c:param>
 							</c:url>

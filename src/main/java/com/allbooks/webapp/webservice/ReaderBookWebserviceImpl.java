@@ -141,4 +141,15 @@ public class ReaderBookWebserviceImpl implements ReaderBookWebservice {
 		return responseEntity;
 	}
 
+	@Override
+	public ReaderBook[] get10LatestReaderBooks() {
+		
+		ResponseEntity<ReaderBook[]> responseEntity = restTemplate.getForEntity(
+				serviceUrlName + "/readerbooks/latest" + accessTokenParameter,
+				ReaderBook[].class);
+		
+		return responseEntity.getBody();
+		
+	}
+
 }

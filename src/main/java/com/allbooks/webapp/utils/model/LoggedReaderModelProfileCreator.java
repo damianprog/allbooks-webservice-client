@@ -6,9 +6,9 @@ import org.springframework.ui.ModelMap;
 
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.factories.ModelMapFactory;
+import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.FriendsService;
 import com.allbooks.webapp.service.PendingService;
-import com.allbooks.webapp.utils.SecurityContextService;
 
 @Component
 public class LoggedReaderModelProfileCreator {

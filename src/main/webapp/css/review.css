@@ -54,6 +54,16 @@ body {
 
 #reviewText {
 	width: 600px;
+	overflow-wrap: break-word;
+}
+
+.commentAuthorPhoto{
+	float:left;
+	width:90px;
+}
+
+.commentTable{
+	float:left;
 }
 
 #editReviewButton {
@@ -149,9 +159,19 @@ textarea {
 	width: 300px;
 }
 
+.comment{
+	float:left;
+	width:510px;
+	padding-bottom:20px;
+	word-wrap:break-word;
+}
+
 .commentHeader {
 	float: left;
 	width: 300px;
 }
 
-.
+.commentText{
+	margin-top:5px;
+	margin-bottom:10px;
+}

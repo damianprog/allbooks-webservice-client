@@ -11,12 +11,12 @@ import com.allbooks.webapp.entity.CommentData;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.Review;
+import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.CommentService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
-import com.allbooks.webapp.utils.SecurityContextService;
 
 @Component
 public class SubmitComment {
@@ -54,7 +54,7 @@ public class SubmitComment {
 
 		Review review = reviewService.getReviewById(commentData.getReviewId());
 
-		comment.setReader(reader);
+		comment.setPostingReader(reader);
 		comment.setRating(rating);
 		comment.setReview(review);
 		comment.setBook(book);

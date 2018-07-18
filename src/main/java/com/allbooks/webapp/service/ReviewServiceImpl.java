@@ -9,10 +9,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.allbooks.webapp.entity.ReaderPost;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.utils.bookactions.Sorter;
-import com.allbooks.webapp.utils.webservice.UtilsWebservice;
 import com.allbooks.webapp.webservice.ReviewWebservice;
 
 @Service
@@ -34,17 +34,15 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public List<Review> getBookReviews(int bookId) {
+	public List<ReaderPost> getBookReviews(int bookId) {
 
-		List<Review> reviewList = Arrays.asList(reviewWebservice.getBookReviews(bookId));
+		List<ReaderPost> reviewList = Arrays.asList(reviewWebservice.getBookReviews(bookId));
 
-		if (reviewList != null)
-			sorter.sortReviewsDescending(reviewList);
+		sorter.sortBookActionPostsDescending(reviewList);
 
 		return reviewList;
 	}
 
-	// external method for counting stuff??
 	@Override
 	public Map<String, Integer> ratingsAndReviewsQuantity(int bookId) {
 

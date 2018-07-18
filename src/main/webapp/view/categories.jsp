@@ -7,7 +7,7 @@
 <html>
 
 <head>
-<title>Join</title>
+<title>Categories</title>
 <link type="text/css" rel="stylesheet" href="/css/categories.css" />
 <link href="https://fonts.googleapis.com/css?family=Roboto|Spectral+SC"
 	rel="stylesheet">
@@ -45,7 +45,7 @@
 				</c:url>
 				<tr>
 					<td><a href="${bookSite}"> <img
-							src="data:image/jpeg;base64,${tempBook.encodedBookPic}" />
+							src="data:image/jpeg;base64,${tempBook.encodedBookPhoto}" />
 					</a></td>
 					<td id="bookDesc">
 						<h4 id="bookTitle">

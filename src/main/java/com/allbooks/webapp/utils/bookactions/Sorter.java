@@ -5,16 +5,14 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.allbooks.webapp.entity.Review;
+import com.allbooks.webapp.entity.ReaderPost;
 
 @Component
 public class Sorter {
 
-	public List<Review> sortReviewsDescending(List<Review> reviewList){
+	public void sortBookActionPostsDescending(List<ReaderPost> list){
 		
-		reviewList.sort(Comparator.comparingInt(Review::getId).reversed());
-		
-		return reviewList;
+		list.sort(Comparator.comparingInt(ReaderPost::getId).reversed());
 		
 	}	
 }

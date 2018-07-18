@@ -17,13 +17,13 @@ public class BookPicsEncoder {
 	@Autowired
 	private ResizePhoto resizePhoto;
 	
-	public List<Book> encode(List<Book> books) throws IOException{
+	public List<Book> encode(List<Book> books,int width,int height) throws IOException{
 		
 		for(Book book:books) {
 			
-			byte[] bookPicResized =  resizePhoto.resize(book.getBookPhoto(), 115, 180);
+			byte[] bookPicResized =  resizePhoto.resize(book.getBookPhoto(), width, height);
 			
-			book.setEncodedBookPic(base64Encoder.getEncodedImage(bookPicResized));
+			book.setEncodedBookPhoto(base64Encoder.getEncodedImage(bookPicResized));
 			
 		}
 		

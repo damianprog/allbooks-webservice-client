@@ -15,6 +15,7 @@
 <link href="https://fonts.googleapis.com/css?family=Roboto|Spectral+SC"
 	rel="stylesheet">
 <script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/editCommentBox.js"></script>
 </head>
 
 <body>
@@ -26,7 +27,7 @@
 	<sec:authorize access="isFullyAuthenticated()">
 		<sec:authentication property="principal.username" var="username" />
 
-		<c:if test="${username == review.reader.username}">
+		<c:if test="${username == review.postingReader.username}">
 
 			<c:set var="isItLoggedReaderReview" value="true"></c:set>
 
@@ -45,7 +46,7 @@
 				<table>
 					<tr>
 						<td>
-							<h3>${review.reader.username}'sReviews>
+							<h3>${review.postingReader.username}'sReviews>
 								${review.book.fullTitle}</h3>
 						</td>
 					</tr>
@@ -93,7 +94,7 @@
 					<h4 style="margin-top: -5px; margin-bottom: -2px;">
 						<a class="blackRef" href="${bookPageRef}">${review.book.fullTitle}</a>
 					</h4>
-					by ${authorName}<br> ${review.reader.username}'s Review
+					by ${authorName}<br> ${review.postingReader.username}'s Review
 				</div>
 
 				<div class="adminActions">
@@ -107,8 +108,8 @@
 								<option value="sendNotice" label="Send notice" />
 								<option value="0" label="Admin Actions" selected="selected"
 									disabled="disabled" hidden="true" />
-							</select> <input name="reviewId" type="hidden" value="${review.id}" />
-							<input name="readerId" type="hidden" value="${review.reader.id}" />
+							</select> <input name="reviewId" type="hidden" value="${review.id}" /> <input
+								name="readerId" type="hidden" value="${review.postingReader.id}" />
 
 						</form>
 					</sec:authorize>
@@ -122,7 +123,7 @@
 				</div>
 				<div id="editReviewBox">
 
-					<form action="/bookActions/editReview" method="POST">
+					<form action="/readerPost/editReview" method="POST">
 						<textarea id="editReviewTextArea" name="reviewText"
 							required="required">${review.text}</textarea>
 						<br> <input type="hidden" name="reviewId"
@@ -157,7 +158,7 @@
 					</div>
 
 					<div id="deleteReview">
-						<c:url var="deleteReview" value="/bookActions/deleteReview">
+						<c:url var="deleteReview" value="/readerPost/deleteReview">
 							<c:param name="reviewId" value="${tempReview.id}" />
 						</c:url>
 
@@ -178,91 +179,99 @@
 			</div>
 
 			<div id="allComments">
-				<table>
-					<c:forEach var="tempComment" items="${reviewComments}"
-						varStatus="status">
+				<c:forEach var="tempComment" items="${reviewComments}"
+					varStatus="status">
 
-						<tr>
-							<td>
-								<div class="commentHeader">
-									<h4 style="display: inline;">${tempComment.reader.username}</h4>
-									<c:if test="${tempComment.rating != null}">
+					<div class="commentAuthorPhoto">
+						<img
+							src="data:image/jpeg;base64,${tempComment.postingReader.encodedProfilePhoto}">
+					</div>
+
+
+					<div class="comment">
+						<div class="commentHeader">
+							<h4 style="display: inline;">${tempComment.postingReader.username}</h4>
+							<c:if test="${tempComment.rating != null}">
 								 rated it
 								${tempComment.rating.rate}
 							</c:if>
-								</div>
-								<div class="adminActions">
+						</div>
+					
 
-									<form action="/admin/adminAction">
+					<sec:authorize access="hasAuthority('ADMIN')">
+						<div class="adminActions">
 
-										<select class="rounded" name="adminAction"
-											onchange="this.form.submit()">
-											<option value="deleteComment" label="Delete comment" />
-											<option value="sendNotice" label="Send notice" />
-											<option value="0" label="Admin Actions" selected="selected"
-												disabled="disabled" hidden="true" />
-										</select> <input name="commentId" type="hidden"
-											value="${tempComment.id}" />
-											<input name="readerId" type="hidden"
-											value="${tempComment.reader.id}" />
+							<form action="/admin/adminAction">
 
-									</form>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td style="padding-bottom: 15px;">
-								<div class="commentText${status.count}">
-									${tempComment.text}</div>
-								<div class="editCommentBox${status.count}">
+								<select class="rounded" name="adminAction"
+									onchange="this.form.submit()">
+									<option value="deleteComment" label="Delete comment" />
+									<option value="sendNotice" label="Send notice" />
+									<option value="0" label="Admin Actions" selected="selected"
+										disabled="disabled" hidden="true" />
+								</select> <input name="commentId" type="hidden" value="${tempComment.id}" />
+								<input type="hidden" name="commentType" value="REVIEW_COMMENT" />
+								<input name="readerId" type="hidden"
+									value="${tempComment.postingReader.id}" />
 
-									<form action="/bookActions/editComment" method="POST">
-										<textarea style="height: 100px; width: 400px;"
-											class="editCommentTextArea${status.count}" name="commentText"
-											required="required">${tempComment.text}</textarea>
-										<br> <input type="hidden" name="commentId"
-											value="${tempComment.id}" /> <input type="hidden"
-											name="reviewId" value="${review.id}" /> <input
-											class="submit" type="submit" value="Submit">
-									</form>
+							</form>
+						</div>
+					</sec:authorize>
 
-								</div>
+					
+					<div style="clear:both"></div>
 
-							</td>
-						</tr>
-						<c:if test="${username == tempComment.reader.username}">
-							<tr>
+					<div class="commentText">
+						<div class="commentText${status.count}">${tempComment.text}</div>
+					</div>
+					<div class="editCommentBox">
+						<div class="editCommentBox${status.count}">
 
-								<td style="padding-bottom: 15px;">
-									<div class="editCommentButton${status.count}"
-										style="cursor: pointer;float:left;"
-										onclick="showEditCommentBox(${status.count})">Edit</div> <c:url
-										var="removeCommentRef" value="/bookActions/deleteComment">
-										<c:param name="commentId" value="${tempComment.id}" />
-									</c:url>
+							<form action="/readerPost/editComment" method="POST">
+								<textarea style="height: 100px; width: 400px;"
+									class="editCommentTextArea${status.count}" name="commentText"
+									required="required">${tempComment.text}</textarea>
+								<br> <input type="hidden" name="commentId"
+									value="${tempComment.id}" /> <input type="hidden"
+									name="reviewId" value="${review.id}" /> <input class="submit"
+									type="submit" value="Submit">
+							</form>
 
-									<div id="deleteComment">
-										<a	class="blackRefNon"
-											onclick="return confirm('Are you sure you want to delete this comment?');"
-											href="${removeCommentRef}">Delete</a>
-									</div>
-								</td>
+						</div>
+					</div>
 
-							</tr>
-						</c:if>
-					</c:forEach>
-				</table>
+
+
+					<c:if test="${username == tempComment.postingReader.username}">
+
+						<div class="editCommentButton${status.count}"
+							style="cursor: pointer; float: left;"
+							onclick="showEditCommentBox(${status.count})">Edit</div>
+						<c:url var="removeCommentRef" value="/readerPost/deleteComment">
+							<c:param name="commentId" value="${tempComment.id}" />
+
+						</c:url>
+
+						<div id="deleteComment">
+							<a class="blackRefNon"
+								onclick="return confirm('Are you sure you want to delete this comment?');"
+								href="${removeCommentRef}">Delete</a>
+						</div>
+
+					</c:if>
+					</div>
+					<div style="clear: both;"></div>
+				</c:forEach>
 			</div>
 
 			<sec:authorize access="isFullyAuthenticated()">
-				<form:form action="/bookActions/postComment"
-					modelAttribute="comment" method="POST">
+				<form:form action="/readerPost/postComment" modelAttribute="comment"
+					method="POST">
 					<input type="hidden" name="reviewId" value="${review.id}" />
 					<input type="hidden" name="bookId" value="${review.book.id}" />
 					Comment<br>
 					<form:textarea id="reviewBox" path="text" required="required" />
 					<br>
-					<input type="hidden" name="bookName" value="magnusChase" />
 					<input class="submit" type="submit" value="Submit">
 				</form:form>
 			</sec:authorize>
@@ -275,44 +284,11 @@
 </body>
 
 <script type="text/javascript">
+var commentsListSize = ${reviewComments.size()};
 
-	function showEditCommentBox(index){
-		if ($('.commentText' + index).is(':visible')) {
-			$('.commentText'+ index).hide();
-			$('.editCommentBox'+ index).show();
-			$(".editCommentButton"+ index).text("Cancel edit");
-		} else {
-			$('.editCommentBox'+ index).hide();
-			$('.commentText'+ index).show();
-			$(".editCommentButton"+ index).text("Edit");
-		}
-	}
-
-	$(document).ready(function() {
-
-		$('#editReviewBox').hide();
-
-		$("#editReviewButton").click(function() {
-
-			if ($('#reviewText').is(':visible')) {
-				$('#reviewText').hide();
-				$('#editReviewBox').show();
-				$("#editReviewButton").text("Cancel edit");
-			} else {
-				$('#editReviewBox').hide();
-				$('#reviewText').show();
-				$("#editReviewButton").text("Edit");
-			}
-
-		});
-		
-		var commentsListSize = ${reviewComments.size()};
-		
-		for(i=1;i<=commentsListSize;i++)
-			$('.editCommentBox' + i).hide();
-		
-
-	});
+for(i=1;i<=commentsListSize;i++)
+	$('.editCommentBox' + i).hide();
 </script>
+
 
 </html>

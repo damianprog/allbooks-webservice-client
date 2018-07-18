@@ -1,6 +1,6 @@
 package com.allbooks.webapp.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 import com.allbooks.webapp.entity.Notification;
 
@@ -8,7 +8,7 @@ public interface NotificationService {
 
 	Notification getNotificationById(int notificationId);
 	
-	List<Notification> getNotificationsByReaderId(int readerId);
+	Page<Notification> getNotificationsByReaderId(int readerId,int page);
 	
 	void deleteNotificationById(int notificationId);
 	

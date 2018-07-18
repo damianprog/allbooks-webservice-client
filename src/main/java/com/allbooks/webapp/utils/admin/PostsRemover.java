@@ -7,9 +7,11 @@ import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Comment;
 import com.allbooks.webapp.entity.Notification;
 import com.allbooks.webapp.entity.Reader;
+import com.allbooks.webapp.entity.ReadingChallangeComment;
 import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.service.CommentService;
 import com.allbooks.webapp.service.NotificationService;
+import com.allbooks.webapp.service.ReadingChallangeCommentService;
 import com.allbooks.webapp.service.ReviewService;
 
 @Service
@@ -17,49 +19,69 @@ public class PostsRemover {
 
 	@Autowired
 	private ReviewService reviewService;
-	
+
 	@Autowired
 	private CommentService commentService;
-	
+
 	@Autowired
 	private NotificationService notificationService;
-	
-	public void deleteReview(int reviewId,String reasonText) {
-		
+
+	@Autowired
+	private ReadingChallangeCommentService challangeCommentService;
+
+	public void deleteReview(int reviewId, String reasonText) {
+
 		Review review = reviewService.getReviewById(reviewId);
 
-		Reader reader = review.getReader();
+		Reader reader = review.getPostingReader();
 
 		Book book = review.getBook();
 
 		String reviewDeleteInfo = "Your review: '" + review.getTitle() + "' of book: '" + book.getMiniTitle()
 				+ "' has been removed.Reason: " + reasonText;
-		
+
 		saveNotification(reader, reviewDeleteInfo);
-		
+
 		reviewService.deleteReviewById(reviewId);
 	}
-	
-	public void deleteComment(int commentId,String reasonText) {
+
+	public void deleteComment(int commentId, String reasonText) {
 		Comment comment = commentService.getCommentById(commentId);
 
-		Reader reader = comment.getReader();
+		Reader reader = comment.getPostingReader();
 
 		Book book = comment.getBook();
 
 		String commentDeleteInfo = "Your comment to review: '" + comment.getReview().getTitle() + "' of book: '"
 				+ book.getMiniTitle() + "' has been removed.Reason: " + reasonText;
-		
+
 		saveNotification(reader, commentDeleteInfo);
-		
+
 		commentService.deleteCommentById(commentId);
 	}
-	
-	private void saveNotification(Reader reader,String deleteInfo) {
+
+	public void deleteReadingChallangeComment(int commentId, String reasonText) {
+
+		ReadingChallangeComment challangeComment = challangeCommentService.getCommentById(commentId);
+
+		Reader postingReader = challangeComment.getPostingReader();
+
+		Reader challangeReader = challangeComment.getChallangeReader();
+
+		String commentDeleteInfo = "Your comment to Reading challange of reader: " + challangeReader.getUsername()
+				+ " has been removed.Reason: " + reasonText;
 		
+		saveNotification(postingReader,commentDeleteInfo);
+		
+		challangeCommentService.deleteCommentById(commentId);
+
+	}
+
+	private void saveNotification(Reader reader, String deleteInfo) {
+
 		Notification notification = new Notification(reader, deleteInfo);
 
 		notificationService.saveNotification(notification);
 	}
-	
+
 }

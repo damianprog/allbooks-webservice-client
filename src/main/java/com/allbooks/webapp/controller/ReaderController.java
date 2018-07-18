@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,6 +28,8 @@ import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
+import com.allbooks.webapp.utils.bookactions.ReaderPostsWithPreparedReadersPhotoGetter;
+import com.allbooks.webapp.utils.model.MainPageModelCreator;
 import com.allbooks.webapp.utils.readerbook.ReaderBookAndRatingModelCreator;
 import com.allbooks.webapp.utils.service.PhotoServiceImpl;
 import com.allbooks.webapp.utils.service.SaveService;
@@ -46,7 +49,7 @@ public class ReaderController {
 
 	@Autowired
 	private ReviewService reviewService;
-
+	
 	@Autowired
 	private SaveService saveService;
 
@@ -56,13 +59,24 @@ public class ReaderController {
 	@Autowired
 	private ReaderBookAndRatingModelCreator readerBookAndRatingModelCreator;
 
+	@Autowired
+	private ReaderPostsWithPreparedReadersPhotoGetter reviewsReaderPhotoPreparer;
+
+	@Autowired
+	private MainPageModelCreator mainPageModelCreator;
+	
 	@GetMapping("/main")
-	public String mainPage(Model theModel, HttpSession session, HttpServletRequest request) {
-
-		Reader reader = new Reader();
-		theModel.addAttribute("reader", reader);
-
-		return "main";
+	public String mainPage(Model theModel,HttpServletRequest request) {
+		
+		ModelMap modelMap = mainPageModelCreator.createModel();
+		
+		theModel.addAllAttributes(modelMap);
+		
+		if((boolean)modelMap.get("isAuthenticated"))
+			return "loggedReaderMain";
+		else
+			return "main";
+		
 	}
 
 	@GetMapping("/join")
@@ -95,7 +109,7 @@ public class ReaderController {
 		theModel.addAttribute("authorPic", photoService.getEncodedImage(book.getAuthorPhoto()));
 		theModel.addAttribute("quantity", reviewService.ratingsAndReviewsQuantity(bookId));
 		theModel.addAttribute("overallRating", ratingService.getOverallRating(bookId));
-		theModel.addAttribute("bookReviews", reviewService.getBookReviews(bookId));
+		theModel.addAttribute("bookReviews", reviewsReaderPhotoPreparer.getPreparedBookReviews(bookId));
 		theModel.addAttribute("book", book);
 
 		return "book";
@@ -134,7 +148,7 @@ public class ReaderController {
 
 		Page<Book> booksPage = bookService.getBooksByCategory(category, page);
 
-		theModel.addAttribute("books", photoService.encodeBookPics(booksPage.getContent()));
+		theModel.addAttribute("books", photoService.encodeBookPics(booksPage.getContent(),115,180));
 		theModel.addAttribute("booksPage", booksPage);
 		theModel.addAttribute("currentPage", page);
 		theModel.addAttribute("category", category);
@@ -142,4 +156,13 @@ public class ReaderController {
 		return "categories";
 	}
 
+	@GetMapping("/searchBooks")
+	public String searchBooks(Model theModel,@RequestParam(value = "phrase",required = false) String phrase) throws IOException {
+		
+		if(phrase != null)
+			theModel.addAttribute("books",photoService.encodeBookPics(bookService.getBooksByPhrase(phrase),115,180));
+		
+		return "searchBooks";
+	}
+	
 }

@@ -47,7 +47,7 @@ public class ProfileController {
 	private FriendsUtilsService friendsUtilsService;
 
 	@Autowired
-	private ReaderBooksUtilsService readerBooksService;
+	private ReaderBooksUtilsService readerBooksUtilsService;
 
 	@Autowired
 	private PhotoServiceImpl photoService;
@@ -67,10 +67,10 @@ public class ProfileController {
 
 		Reader reader = readerService.getReaderById(readerId);
 
-		Map<String, Integer> readerBooksQuantitiesMap = readerBooksService.getReaderBooksQuantities(reader.getId());
+		Map<String, Integer> readerBooksQuantitiesMap = readerBooksUtilsService.getReaderBooksQuantities(reader.getId());
 
 		if (reader.getProfilePhoto() != null)
-			theModel.addAttribute("profilePic", photoService.getEncodedImage(reader.getProfilePhoto().getPic()));
+			theModel.addAttribute("profilePic", photoService.getEncodedImage(reader.getProfilePhoto()));
 
 		List<Reader> friends = friendsService.getReaderFriends(reader.getId());
 
@@ -79,7 +79,7 @@ public class ProfileController {
 		theModel.addAttribute("read", readerBooksQuantitiesMap.get("read"));
 		theModel.addAttribute("currentlyReading", readerBooksQuantitiesMap.get("currentlyReading"));
 		theModel.addAttribute("wantToRead", readerBooksQuantitiesMap.get("wantToRead"));
-		theModel.addAttribute("currentlyReadingList", readerBooksService.getCurrentlyReadingBooks(readerId));
+		theModel.addAttribute("currentlyReadingList", readerBooksUtilsService.getCurrentlyReadingBooks(readerId));
 		theModel.addAttribute("reader", reader);
 		theModel.addAttribute("friendsNum", friends.size());
 		theModel.addAttribute("friends", friends);

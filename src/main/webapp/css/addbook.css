@@ -57,4 +57,10 @@ body{
 
 #submit{
 	margin-top:50px;
+	background-color:#fdd05f;
+	color:black;
+	border-radius:5px;
+	font-weight:bold;
+	width:70px;
+	height:30px;
 }

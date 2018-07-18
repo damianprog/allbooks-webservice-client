@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.allbooks.webapp.entity.ProfilePhoto;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.utils.service.PhotoService;
 
@@ -14,20 +13,13 @@ import com.allbooks.webapp.utils.service.PhotoService;
 public class ProfilePhotoCreator {
 
 	@Autowired
-	PhotoService photoService;
+	private PhotoService photoService;
 	
 	public Reader createPhotoForReader(MultipartFile mf,Reader reader) throws IOException {
 		
 		byte[] bytes = photoService.convertMultipartImage(mf, 200, 250);
-
-		ProfilePhoto profilePhoto = reader.getProfilePhoto();
-
-		if (profilePhoto == null) 
-			profilePhoto = new ProfilePhoto(bytes);
-		 else
-			 profilePhoto.setPic(bytes);
 		
-		reader.setProfilePhoto(profilePhoto);
+		reader.setProfilePhoto(bytes);
 		
 		return reader;
 	}

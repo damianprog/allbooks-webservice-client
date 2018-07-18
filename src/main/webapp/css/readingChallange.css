@@ -1,0 +1,116 @@
+body{
+	background-image: url("/css/images/dust_scratches.png");
+	font-family: 'Roboto', sans-serif;
+	font-size:12px;
+	color:black;	
+}
+
+#container 
+{
+	width:1100px;
+     margin:0 auto;
+}
+
+#readingChallangeContainer{
+	width:600px;
+}
+
+#readingChallangeLogo{
+	width:1000px;
+	height:128px;
+	background-color:#FA604A;
+}
+
+#openBookImg{
+	margin-left:30px;
+	float:left;
+}
+
+#whiteLogo{
+	float:left;
+	color:white;
+	font-size:54px;
+	font-weight:bold;
+	margin-left:30px;
+	margin-top:30px;	
+}
+
+.readBookPhoto{
+	float:left;
+	padding-right:15px;
+	padding-top:15px;
+}
+
+#challangeInfoHeader{
+	font-size:24px;
+	margin-top:30px;
+}
+
+#readerPhoto{
+	float:left;
+}
+
+#challangeInfo{
+	margin-top:15px;
+	margin-left:15px;
+	float:left;
+}
+
+#hrSpace{
+	margin-top:15px;
+	margin-bottom:15px;
+}
+
+#currentYearBooksHeader{
+	font-weight:bold;
+}
+
+#commentBox {
+	width: 600px;
+	height: 150px;
+	border-radius:5px;
+}
+
+.submit{
+	background-color: #fdd05f;
+	color: black;
+	border-radius: 5px;
+}
+
+.commentAuthorPhoto{
+	float:left;
+	width:90px;
+}
+
+.commentTable{
+	float:left;
+}
+
+.adminActions{
+	float:left;
+}
+
+.rounded{
+	border-radius:5px;
+}
+
+.commentHeader{
+	float:left;
+	width:300px;
+}
+
+.deleteComment{
+	float:left;
+	margin-left:10px;
+}
+
+.comment{
+	float:left;
+	width:510px;
+	padding-bottom:20px;
+}
+
+.commentText{
+	margin-top:5px;
+	margin-bottom:10px;
+}

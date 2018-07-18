@@ -1,21 +1,25 @@
 package com.allbooks.webapp.service;
 
+import java.util.List;
+
 import com.allbooks.webapp.entity.Rating;
 
 public interface RatingService {
 
-	public Rating getReaderRatingObject(int readerId,int bookId);
+	Rating getReaderRatingObject(int readerId, int bookId);
 
-	public Rating submitRating(Rating rating);
+	Rating submitRating(Rating rating);
 
-	public Rating[] getBookRatings(int bookId);
+	Rating[] getBookRatings(int bookId);
+
+	double getOverallRating(int bookId);
+
+	int getReaderRating(String username, String bookName);
+
+	Rating getLoggedReaderRatingObject(int bookId);
+
+	Rating getRatingById(int ratingId);
 	
-	public double getOverallRating(int bookId);
+	List<Rating> get10LatestRatings();
 
-	public int getReaderRating(String username, String bookName);
-
-	public Rating getLoggedReaderRatingObject(int bookId);
-
-	public Rating getRatingById(int ratingId);
-	
 }

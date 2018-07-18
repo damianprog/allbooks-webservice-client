@@ -111,8 +111,8 @@ padding-bottom:10px;
 	width:200px;
 }
 
-#topDesc{
-	display:inline;
+.topDesc{
+	font-weight:bold;
 }
 
 .underFirstTable{
@@ -131,10 +131,6 @@ padding-bottom:10px;
 	float:left;
 }
 
-table.currentlyReadingBooks td{
-	vertical-align:top;
-}
-
 #friendsInvites{
 	min-height:249px;
 	width:250px;
@@ -147,4 +143,19 @@ table.currentlyReadingBooks td{
 #deleteForm{
 	display:inline;
 	margin-left:10px;
+}
+
+.currentBookPhoto{
+	float:left;
+}
+
+.currentBookDetails{
+	float:left;
+	margin-left:15px;
+	width:535px;
+	padding-bottom:15px;
+}
+
+.currentBookDescription{
+	margin-top:15px;
 }

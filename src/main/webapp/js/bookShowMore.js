@@ -25,7 +25,7 @@ $(document).ready(function() {
 
 		else if (value == 'authorDescription' && method == 'Less...') {
 			$('#authorDescription').css({
-				'height' : '188px'
+				'height' : '198px'
 			})
 			$(currentButton).text('More...');
 		}

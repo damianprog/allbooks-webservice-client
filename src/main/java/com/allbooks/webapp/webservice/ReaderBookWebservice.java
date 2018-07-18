@@ -7,22 +7,24 @@ import com.allbooks.webapp.enumeration.ShelvesStates;
 
 public interface ReaderBookWebservice {
 
-	public void saveReaderBook(ReaderBook readerBook);
+	void saveReaderBook(ReaderBook readerBook);
 
-	public ReaderBook getReaderBook(int bookId, int userId);
+	ReaderBook getReaderBook(int bookId, int userId);
 
-	public ReaderBook[] getReaderBooks(int id);
-	
-	public ReaderBook getReaderBookById(int readerBookId);
-	
-	public void updateReaderBook(ReaderBook readerBook);
-	
-	public void deleteReaderBookByReaderIdAndBookId(int readerId,int bookId);
+	ReaderBook[] getReaderBooks(int id);
 
-	public ReaderBook[] getReaderBooksByShelves(int readerId, ShelvesStates shelvesStates);
+	ReaderBook getReaderBookById(int readerBookId);
 
-	public Page<ReaderBook> getReaderBooksPages(int readerId, int page);
+	void updateReaderBook(ReaderBook readerBook);
 
-	public Page<ReaderBook> getReaderBooksByShelvesPages(int readerId, ShelvesStates shelvesStates, int page);
-	
+	void deleteReaderBookByReaderIdAndBookId(int readerId, int bookId);
+
+	ReaderBook[] getReaderBooksByShelves(int readerId, ShelvesStates shelvesStates);
+
+	Page<ReaderBook> getReaderBooksPages(int readerId, int page);
+
+	Page<ReaderBook> getReaderBooksByShelvesPages(int readerId, ShelvesStates shelvesStates, int page);
+
+	ReaderBook[] get10LatestReaderBooks();
+
 }

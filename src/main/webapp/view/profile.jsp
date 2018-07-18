@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 
 <html>
@@ -152,26 +152,34 @@
 
 			</div>
 			<div class="underFirstTable">
-				<h4 id="topDesc">${reader.username}is currently reading</h4>
+				<h4 id="topDesc">${reader.username}&nbsp;is currently reading</h4>
 				<hr>
-				<table class="currentlyReadingBooks">
+				
 					<c:forEach var="tempBook" items="${currentlyReadingList}">
+					
+					<div class="currentBookPhoto">
+						<a href="${bookSite}"> <img
+									src="data:image/jpeg;base64,${tempBook.book.encodedBookPhoto}" />
+							</a>
+					</div>
+					
+					<div class="currentBookDetails">
+					
 						<c:url var="bookSite" value="/reader/showBook">
 							<c:param name="bookId" value="${tempBook.book.id}" />
 						</c:url>
-						<tr>
-							<td><a href="${bookSite}"> <img
-									src="data:image/jpeg;base64,${tempBook.encodedBookPic}" />
-							</a></td>
-							<td>${reader.username}is currently reading<br>
-								<h4 id="topDesc">
+							${reader.username}&nbsp;is currently reading
+								<div class="topDesc">
 									<a class="blackRef" href="${bookSite}">${tempBook.book.fullTitle}</a>
-								</h4> <br> by ${tempBook.book.author}<br> bookshelves:
+								</div> by ${tempBook.book.author}<br> bookshelves:
 								${tempBook.shelvesStates.shelveState()}
-							</td>
-						</tr>
+							
+							<div class="currentBookDescription">
+								${fn:substring(tempBook.book.description,0,300)}...	
+							</div>
+					</div>
+					<div style="clear:both"></div>			
 					</c:forEach>
-				</table>
 			</div>
 			<div class="underFirstTable">
 				<h4>${reader.username}'s recent reviews</h4>
@@ -184,7 +192,7 @@
 								<c:url var="reviewLink" value="/bookActions/reviewPage">
 									<c:param name="reviewId" value="${tempReview.id}" />
 									<c:param name="readerLogin"
-										value="${tempReview.reader.username}" />
+										value="${tempReview.postingReader.username}" />
 									<c:param name="bookId" value="${tempReview.book.id}" />
 									<c:param name="readerRating" value="${tempReview.rating.rate}" />
 									<c:param name="fullBookName"

@@ -2,6 +2,7 @@ package com.allbooks.webapp.service;
 
 import java.util.List;
 
+import com.allbooks.webapp.entity.ReaderPost;
 import com.allbooks.webapp.entity.Comment;
 
 public interface CommentService {
@@ -10,7 +11,7 @@ public interface CommentService {
 
 	List<Comment> getCommentsByReaderIdAndBookId(int readerId, int bookId);
 
-	List<Comment> getReviewComments(int reviewId);
+	List<ReaderPost> getReviewComments(int reviewId);
 
 	Comment getCommentById(int commentId);
 

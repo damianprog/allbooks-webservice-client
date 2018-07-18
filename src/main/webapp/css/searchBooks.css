@@ -1,0 +1,51 @@
+body{
+	background-image: url("/css/images/dust_scratches.png");
+	font-family: 'Roboto', sans-serif;
+	font-size:12px;
+	color:black;	
+}
+
+#container 
+{
+	width:1100px;
+     margin:0 auto;
+}
+
+
+#greyContainer{
+	background-color:#eeeeee;
+	height:79px;
+	width:600px;
+}
+
+#searchBar{
+	width:484px;
+	height:30px;
+	border-radius:5px;
+	border:1px solid #aaaaaa;
+	margin-top:20px;
+	margin-left:20px;
+}
+
+#search{
+	background-color:#6B6B6B;
+	color:white;
+	border-radius:5px;
+	height:32px;
+}
+
+.blackRef{
+	color:black;
+}
+
+.bookDesc{
+	vertical-align:text-top;
+}
+
+#booksTable{
+	margin-top:20px;
+}
+
+.bookTitle{
+	display: inline;
+}

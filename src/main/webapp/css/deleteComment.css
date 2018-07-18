@@ -22,32 +22,49 @@ body {
 	padding-left: 20px;
 }
 
-#reviewText{
-	width:600px;
+#reviewText {
+	width: 600px;
 }
 
-textarea{
-	border-radius:5px;
+textarea {
+	border-radius: 5px;
 }
 
-#reasonTextArea{
-	
-	width:517px;
-	height:142px;
-	
+#reasonTextArea {
+	width: 517px;
+	height: 142px;
 }
 
-#remove{
-	margin-top:20px;
-	background-color:#fdd05f;
-	color:black;
-	border-radius:5px;
+#remove {
+	margin-top: 20px;
+	background-color: #fdd05f;
+	color: black;
+	border-radius: 5px;
 }
 
-#comment{
-	width:500px;
+#comment {
+	width: 500px;
+	float: left;
+	margin-left: 15px;
+	word-wrap: break-word;
 }
 
-#explanation{
-	margin-top:20px;
+#explanation {
+	margin-top: 20px;
+}
+
+#commentAuthorPhoto {
+	float: left;
+}
+
+#postingReaderUsername {
+	font-weight: bold;
+}
+
+#commentText {
+	margin-top: 10px;
+}
+
+.blackRef {
+	color: black;
 }

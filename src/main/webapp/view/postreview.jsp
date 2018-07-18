@@ -21,7 +21,7 @@
 		<jsp:include page='/view/header.jsp' />
 
 		<div>
-			<form:form action="/bookActions/postReview" modelAttribute="review"
+			<form:form action="/readerPost/postReview" modelAttribute="review"
 				method="POST">
 				<table>
 					<tr>

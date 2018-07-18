@@ -17,31 +17,31 @@ public class CurrentlyReadingBooksGetter {
 
 	@Autowired
 	private ReaderBookService readerBookService;
-	
+
 	@Autowired
 	private PhotoService photoService;
-	
+
 	@Autowired
 	private ListFactory listFactory;
-	
+
 	public List<ReaderBook> getByReaderId(int readerId) {
-		
+
 		List<ReaderBook> readerBooks = readerBookService.getReaderBooks(readerId);
-		
+
 		Iterator<ReaderBook> iter = readerBooks.iterator();
-		
+
 		List<ReaderBook> currentlyReadingBooks = listFactory.createArrayList();
-		
+
 		iter.forEachRemaining(e -> {
-			//TODO
-			if(e.getShelvesStates().equals(ShelvesStates.CURRENTLY_READING)) {
-				e.setEncodedBookPic(photoService.getEncodedImage(e.getBookPic()));
+			if (e.getShelvesStates().equals(ShelvesStates.CURRENTLY_READING)) {
+				e.getBook().setEncodedBookPhoto(
+						photoService.getEncodedImage(photoService.resize(e.getBook().getBookPhoto(), 120, 200)));
 				currentlyReadingBooks.add(e);
 			}
-			
+
 		});
-		
+
 		return currentlyReadingBooks;
 	}
-	
+
 }

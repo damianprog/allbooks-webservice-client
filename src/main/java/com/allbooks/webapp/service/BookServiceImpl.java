@@ -1,5 +1,8 @@
 package com.allbooks.webapp.service;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -55,6 +58,11 @@ public class BookServiceImpl implements BookService {
 	public Page<Book> getBooksByCategory(String category, int page) {
 
 		return bookWebservice.getBooksByCategory(category, page);
+	}
+
+	@Override
+	public List<Book> getBooksByPhrase(String phrase) {
+		return Arrays.asList(bookWebservice.getBooksByPhrase(phrase));
 	}
 
 }
