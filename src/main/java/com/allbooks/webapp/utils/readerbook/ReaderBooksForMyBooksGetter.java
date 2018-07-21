@@ -1,7 +1,5 @@
 package com.allbooks.webapp.utils.readerbook;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -33,7 +31,7 @@ public class ReaderBooksForMyBooksGetter {
 		else
 			readerBooks = readerBookService.getReaderBooksByShelvesPages(readerId, shelvesStates, page);
 
-		photoService.encodeAndResizeBookPhotoInReaderBooks(readerBooks.getContent(), 100, 160);
+		photoService.encodeAndResizeBookPhotoInBookChildren(readerBooks.getContent(), 100, 160);
 
 		for (ReaderBook tempReaderBook : readerBooks) 
 			tempReaderBook.setOverallRating(ratingService.getOverallRating(tempReaderBook.getBook().getId()));

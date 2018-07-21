@@ -16,13 +16,9 @@ import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderBookService;
 import com.allbooks.webapp.service.ReaderService;
-import com.allbooks.webapp.utils.LocalDateGetter;
 
 @Component
 public class ReaderBookSaver {
-
-	@Autowired
-	private LocalDateGetter localDateGetter;
 
 	@Autowired
 	private SecurityContextService contextService;

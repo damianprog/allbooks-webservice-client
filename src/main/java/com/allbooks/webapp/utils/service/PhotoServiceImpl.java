@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.allbooks.webapp.entity.Book;
+import com.allbooks.webapp.entity.BookChild;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
+import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.utils.photos.Base64Encoder;
 import com.allbooks.webapp.utils.photos.BookPicsEncoder;
 import com.allbooks.webapp.utils.photos.MultipartImageConverter;
@@ -76,13 +78,12 @@ public class PhotoServiceImpl implements PhotoService {
 	}
 
 	@Override
-	public void encodeAndResizeBookPhotoInReaderBooks(List<ReaderBook> readerBooksList,int width,int height) {
-
-		for(ReaderBook rb : readerBooksList) {
-			byte[] resizedPhoto = resizePhoto.resize(rb.getBook().getBookPhoto(), width, height);
-			rb.getBook().setEncodedBookPhoto(getEncodedImage(resizedPhoto));
+	public void encodeAndResizeBookPhotoInBookChildren(List<? extends BookChild> reviewsList, int width, int height) {
+		for(BookChild bc : reviewsList) {
+			byte[] resizedPhoto = resizePhoto.resize(bc.getBook().getBookPhoto(), width, height);
+			bc.getBook().setEncodedBookPhoto(getEncodedImage(resizedPhoto));
 		}
 		
 	}
-
+	
 }

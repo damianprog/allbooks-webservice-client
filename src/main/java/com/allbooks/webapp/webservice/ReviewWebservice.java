@@ -18,4 +18,6 @@ public interface ReviewWebservice {
 
 	void deleteReviewByIdAndReaderId(int reviewId, int readerId);
 
+	Review[] getLatestReaderReviews(int readerId);
+
 }

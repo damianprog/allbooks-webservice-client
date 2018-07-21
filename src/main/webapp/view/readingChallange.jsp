@@ -118,14 +118,18 @@
 				<c:forEach var="tempComment" items="${readingChallangeComments}"
 					varStatus="status">
 
+					<c:url var="profileRef" value="/profile/showProfile">
+						<c:param name="readerId" value="${tempComment.postingReader.id}"/>
+					</c:url>
+
 					<div class="commentAuthorPhoto">
-						<img
-							src="data:image/jpeg;base64,${tempComment.postingReader.encodedProfilePhoto}">
+						<a href="${profileRef}"><img
+							src="data:image/jpeg;base64,${tempComment.postingReader.encodedProfilePhoto}"></a>
 					</div>
 
 					<div class="comment">
 					<div class="commentHeader">
-						<h4 style="display: inline;">${tempComment.postingReader.username}</h4>
+						<h4 style="display: inline;"><a class="blackRef" href="${profileRef}">${tempComment.postingReader.username}</a></h4>
 
 					</div>
 					

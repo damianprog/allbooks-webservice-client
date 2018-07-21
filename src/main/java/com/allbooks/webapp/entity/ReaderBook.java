@@ -6,7 +6,7 @@ import com.allbooks.webapp.enumeration.ShelvesStates;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ReaderBook {
+public class ReaderBook implements BookChild {
 
 	private int id;
 
@@ -90,6 +90,13 @@ public class ReaderBook {
 
 	public void setReaderRating(Rating readerRating) {
 		this.readerRating = readerRating;
+	}
+
+	@Override
+	public String toString() {
+		return "ReaderBook [id=" + id + ", book=" + book + ", overallRating=" + overallRating + ", readerRating="
+				+ readerRating + ", reader=" + reader + ", shelvesStates=" + shelvesStates + ", dateRead=" + dateRead
+				+ ", dateAdded=" + dateAdded + "]";
 	}
 
 }

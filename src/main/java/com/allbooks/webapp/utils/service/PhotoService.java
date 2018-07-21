@@ -7,8 +7,8 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.allbooks.webapp.entity.Book;
+import com.allbooks.webapp.entity.BookChild;
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.ReaderBook;
 
 public interface PhotoService {
 
@@ -24,6 +24,5 @@ public interface PhotoService {
 
 	Reader createProfilePhotoForReader(MultipartFile multipartFile, Reader reader) throws IOException;
 
-	void encodeAndResizeBookPhotoInReaderBooks(List<ReaderBook> readerBooksList,int width,int height);
-	
+	void encodeAndResizeBookPhotoInBookChildren(List<? extends BookChild> list,int width,int height);
 }

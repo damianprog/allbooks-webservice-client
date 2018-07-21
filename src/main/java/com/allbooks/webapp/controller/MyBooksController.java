@@ -14,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -69,9 +68,10 @@ public class MyBooksController {
 		Map<String, Integer> readerBooksQuantitiesMap = readerBooksUtilsService.getReaderBooksQuantities(readerId);
 
 		ShelvesStates shelvesStates = ShelvesStates.enumValueOf(shelves);
-		
-		Page<ReaderBook> readerBooksPage = readerBooksForMyBooksGetter.getPreparedReaderBooks(readerId, shelvesStates,page);
-		
+
+		Page<ReaderBook> readerBooksPage = readerBooksForMyBooksGetter.getPreparedReaderBooks(readerId, shelvesStates,
+				page);
+
 		theModel.addAttribute("read", readerBooksQuantitiesMap.get("read"));
 		theModel.addAttribute("currentlyReading", readerBooksQuantitiesMap.get("currentlyReading"));
 		theModel.addAttribute("wantToRead", readerBooksQuantitiesMap.get("wantToRead"));
@@ -95,7 +95,7 @@ public class MyBooksController {
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 
 		ReaderBook readerBook = readerBookService.getReaderBookById(readerBookId);
-		
+
 		readerBook.setShelvesStates(ShelvesStates.enumValueOf(newShelves));
 
 		ReaderBookData readerBookData = bookActionDataObjectFactory.createReaderBookData(readerBook, bookId,
@@ -114,7 +114,7 @@ public class MyBooksController {
 			HttpSession session, Model theModel, Principal principal, RedirectAttributes ra) throws ParseException {
 
 		Date thedate = new SimpleDateFormat("yyyy-MM-dd").parse(dateRead);
-		
+
 		int bookId = bookService.getBookId(bookName);
 		Reader reader = readerService.getReaderByUsername(principal.getName());
 		readerBookService.saveReadDate(thedate, bookId, reader.getId());
@@ -137,15 +137,20 @@ public class MyBooksController {
 
 	@PostMapping("/saveReaderBook")
 	public String readState(@RequestParam Map<String, String> params,
-			@RequestParam("readerBookId") int readerBookId, @RequestParam("bookId") int bookId,
-			@RequestParam("shelves") String shelves,
+			@RequestParam(value = "readerBookId", required = false) Integer readerBookId,
+			@RequestParam("bookId") int bookId, @RequestParam("shelves") String shelves,
 			@RequestParam("isItUpdateReaderBook") boolean isItUpdateReaderBook, HttpSession session,
 			Principal principal, RedirectAttributes ra) throws IOException {
 
-		ReaderBook readerBook = readerBookService.getReaderBookById(readerBookId);
-		
+		ReaderBook readerBook;
+
+		if (isItUpdateReaderBook)
+			readerBook = readerBookService.getReaderBookById(readerBookId);
+		else
+			readerBook = new ReaderBook();
+
 		readerBook.setShelvesStates(ShelvesStates.enumValueOf(shelves));
-		
+
 		saveService.saveReaderBook(
 				bookActionDataObjectFactory.createReaderBookData(readerBook, bookId, isItUpdateReaderBook));
 

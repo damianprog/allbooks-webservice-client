@@ -91,7 +91,7 @@ public class ReaderBookServiceImpl implements ReaderBookService {
 
 	@Override
 	public List<ReaderBook> get10LatestReaderBooks() {
-		return Arrays.asList(readerBookWebservice.get10LatestReaderBooks());
+		return new ArrayList<ReaderBook>(Arrays.asList(readerBookWebservice.get10LatestReaderBooks()));
 	}
 
 }

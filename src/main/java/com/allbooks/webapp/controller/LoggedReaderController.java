@@ -10,21 +10,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.allbooks.webapp.entity.Notification;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.ReaderPost;
 import com.allbooks.webapp.entity.ReadingChallange;
-import com.allbooks.webapp.entity.ReadingChallangeComment;
 import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.NotificationService;
 import com.allbooks.webapp.service.ReaderService;
-import com.allbooks.webapp.service.ReadingChallangeCommentService;
 import com.allbooks.webapp.service.ReadingChallangeService;
 import com.allbooks.webapp.utils.bookactions.ReaderPostsWithPreparedReadersPhotoGetter;
 import com.allbooks.webapp.utils.readerbook.CurrentYearReadBooksGetter;
@@ -114,7 +110,7 @@ public class LoggedReaderController {
 
 		List<ReaderPost> readingChallangeComments = readerPostsGetter.getPreparedReadingChallangeComments(readerId);
 
-		photoService.encodeAndResizeBookPhotoInReaderBooks(currentYearBooks, 100, 150);
+		photoService.encodeAndResizeBookPhotoInBookChildren(currentYearBooks, 100, 150);
 
 		theModel.addAttribute("reader", reader);
 		theModel.addAttribute("readBooks", currentYearBooks);

@@ -24,4 +24,6 @@ public interface ReviewService {
 
 	List<Review> getReviewsByReaderId(int readerId);
 
+	List<Review> getLatestReaderReviews(int readerId);
+	
 }

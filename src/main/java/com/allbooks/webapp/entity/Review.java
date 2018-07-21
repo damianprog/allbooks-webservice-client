@@ -5,7 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Review implements ReaderPost{
+public class Review implements ReaderPost, BookChild {
 
 	private int id;
 
@@ -78,6 +78,12 @@ public class Review implements ReaderPost{
 
 	public void setBook(Book book) {
 		this.book = book;
+	}
+
+	@Override
+	public String toString() {
+		return "Review [id=" + id + ", text=" + text + ", title=" + title + ", likes=" + likes + ", postingReader="
+				+ postingReader + ", rating=" + rating + ", book=" + book + "]";
 	}
 
 }

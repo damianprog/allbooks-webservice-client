@@ -2,6 +2,7 @@ package com.allbooks.webapp.controller;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,12 +20,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.allbooks.webapp.entity.BookChild;
 import com.allbooks.webapp.entity.Details;
-import com.allbooks.webapp.entity.Notification;
 import com.allbooks.webapp.entity.Pending;
 import com.allbooks.webapp.entity.Reader;
+import com.allbooks.webapp.entity.ReaderBook;
+import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.service.FriendsService;
-import com.allbooks.webapp.service.NotificationService;
 import com.allbooks.webapp.service.PendingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
@@ -74,7 +76,11 @@ public class ProfileController {
 
 		List<Reader> friends = friendsService.getReaderFriends(reader.getId());
 
-		theModel.addAttribute("readerReviews", reviewService.getReviewsByReaderId(readerId));
+		List<Review> reviewsList = reviewService.getLatestReaderReviews(readerId);
+		
+		photoService.encodeAndResizeBookPhotoInBookChildren(reviewsList, 80,87);
+		
+		theModel.addAttribute("readerReviews",reviewsList);
 		theModel.addAttribute("details", reader.getDetails());
 		theModel.addAttribute("read", readerBooksQuantitiesMap.get("read"));
 		theModel.addAttribute("currentlyReading", readerBooksQuantitiesMap.get("currentlyReading"));

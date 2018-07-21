@@ -1,5 +1,6 @@
 package com.allbooks.webapp.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -9,8 +10,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.allbooks.webapp.entity.ReaderPost;
 import com.allbooks.webapp.entity.Rating;
+import com.allbooks.webapp.entity.ReaderPost;
 import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.utils.bookactions.Sorter;
 import com.allbooks.webapp.webservice.ReviewWebservice;
@@ -90,6 +91,11 @@ public class ReviewServiceImpl implements ReviewService {
 	public void deleteReviewByIdAndReaderId(int reviewId, int readerId) {
 		
 		reviewWebservice.deleteReviewByIdAndReaderId(reviewId,readerId);
+	}
+
+	@Override
+	public List<Review> getLatestReaderReviews(int readerId) {
+		return new ArrayList<Review>(Arrays.asList(reviewWebservice.getLatestReaderReviews(readerId)));
 	}
 
 }

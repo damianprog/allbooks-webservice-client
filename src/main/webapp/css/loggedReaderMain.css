@@ -106,3 +106,39 @@ body{
 	margin-left:20px;
 	margin-top:20px;
 }
+
+.postHeader{
+	margin-left:15px;
+	margin-top:10px;
+}
+
+.postBookPhoto{
+	margin-top:10px;
+	margin-left:10px;
+	float:left;
+}
+
+.currentBookDetails{
+	float:left;
+	margin-left:15px;
+	margin-top:10px;
+	padding-bottom:15px;
+}
+
+.currentBookDescription{
+	margin-top:15px;
+	width:365px;
+	
+}
+
+.topDesc{
+	font-weight:bold;
+}
+
+.blackRef{
+	color:black;
+}
+
+.blueLink{
+	color:#00635d;
+}

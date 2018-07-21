@@ -100,4 +100,16 @@ public class ReviewWebserviceImpl implements ReviewWebservice {
 		
 	}
 
+	@Override
+	public Review[] getLatestReaderReviews(int readerId) {
+
+		Map<String, Integer> params = new HashMap<>();
+		params.put("readerId", readerId);
+
+		ResponseEntity<Review[]> responseEntity = restTemplate.getForEntity(
+				serviceUrlName + "/readers/{readerId}/reviews/latest" + accessTokenParameter, Review[].class, params);
+		
+		return responseEntity.getBody();
+	}
+
 }

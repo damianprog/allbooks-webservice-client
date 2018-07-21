@@ -159,3 +159,13 @@ padding-bottom:10px;
 .currentBookDescription{
 	margin-top:15px;
 }
+
+.reviewBookPhoto{
+	float:left;
+	margin-top:20px;
+}
+
+.reviewTitle{
+	float:left;
+	margin-left:10px;
+}

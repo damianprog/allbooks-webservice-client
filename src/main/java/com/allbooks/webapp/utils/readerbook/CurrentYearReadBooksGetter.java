@@ -1,6 +1,8 @@
 package com.allbooks.webapp.utils.readerbook;
 
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,20 +22,22 @@ public class CurrentYearReadBooksGetter {
 		
 		List<ReaderBook> readBooks = readerBookService.getReaderBooksByShelves(readerId, ShelvesStates.READ);
 		
+		List<ReaderBook> currentYearBooks = new ArrayList<>();
+		
 		for(ReaderBook rb : readBooks) {
 			
-			if(rb.getDateRead() == null)
+			if(rb.getDateRead() == null) {
 				continue;
+			}
+
+			LocalDate localDate = rb.getDateRead().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(rb.getDateRead());
-			
-			if(calendar.get(Calendar.YEAR) != 2018) {
-				readBooks.remove(rb);
+			if(localDate.getYear() == 2018) {
+				currentYearBooks.add(rb);
 			}
 		}
 		
-		return readBooks;
+		return currentYearBooks;
 		
 	}
 	

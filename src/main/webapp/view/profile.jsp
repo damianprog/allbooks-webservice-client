@@ -182,13 +182,21 @@
 					</c:forEach>
 			</div>
 			<div class="underFirstTable">
-				<h4>${reader.username}'s recent reviews</h4>
+				<h4>${reader.username}'s&nbsp;recent reviews</h4>
 				<hr>
 				<c:choose>
 					<c:when test="${!empty readerReviews}">
-						<table>
-							<c:forEach var="tempReview" items="${readerReviews}" begin="0"
-								end="2">
+					<c:forEach var="tempReview" items="${readerReviews}" begin="0" end="2">
+						
+						<c:url var="bookPage" value="/reader/showBook">
+									<c:param name="bookId" value="${tempReview.book.id}" />
+								</c:url>
+						
+						<div class="reviewBookPhoto">
+							<a href="${bookPage}"><img src="data:image/jpeg;base64,${tempReview.book.encodedBookPhoto}"></a>
+						</div>
+						
+						<table class="reviewTitle">
 								<c:url var="reviewLink" value="/bookActions/reviewPage">
 									<c:param name="reviewId" value="${tempReview.id}" />
 									<c:param name="readerLogin"
@@ -199,9 +207,7 @@
 										value="${tempReview.book.fullTitle}" />
 									<c:param name="authorName" value="${tempReview.book.author}" />
 								</c:url>
-								<c:url var="bookPage" value="/reader/showBook">
-									<c:param name="bookId" value="${tempReview.book.id}" />
-								</c:url>
+								
 								<tr>
 									<td>
 										<h4>
@@ -211,8 +217,12 @@
 											${tempReview.title}</a>
 									</td>
 								</tr>
-							</c:forEach>
+							
 						</table>
+						
+						<div style="clear:both"></div>
+						
+						</c:forEach>
 					</c:when>
 					<c:otherwise>${reader.username} has no any recent reviews</c:otherwise>
 				</c:choose>
@@ -254,7 +264,6 @@
 			</c:choose>
 			<div id="friendsList">
 				<h4 id="topDesc">${reader.username}'s friends(${friendsNum})</h4>
-				<br>
 				<hr>
 				<c:choose>
 					<c:when test="${empty friends}">
@@ -267,7 +276,7 @@
 									<c:param name="readerId" value="${tempFriends.id}" />
 								</c:url>
 								<tr>
-									<td>Friend's name: <a class="blackRef"
+									<td> <a class="blackRef"
 										href="${friendProfile}"> ${tempFriends.username} </a>
 										</td>
 										<td> <c:choose>

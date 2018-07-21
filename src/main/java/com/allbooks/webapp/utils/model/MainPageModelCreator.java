@@ -1,6 +1,7 @@
 package com.allbooks.webapp.utils.model;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,11 +10,13 @@ import org.springframework.ui.ModelMap;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.ReadingChallange;
+import com.allbooks.webapp.enumeration.ShelvesStates;
 import com.allbooks.webapp.security.SecurityContextService;
-import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderBookService;
 import com.allbooks.webapp.service.ReadingChallangeService;
 import com.allbooks.webapp.utils.readerbook.CurrentYearReadBooksGetter;
+import com.allbooks.webapp.utils.service.PhotoService;
+import com.allbooks.webapp.utils.service.ReaderBooksUtilsService;
 
 @Component
 public class MainPageModelCreator {
@@ -25,7 +28,7 @@ public class MainPageModelCreator {
 	private ReaderBookService readerBookService;
 
 	@Autowired
-	private RatingService ratingService;
+	private PhotoService photoService;
 
 	@Autowired
 	private ReadingChallangeService readingChallangeService;
@@ -33,6 +36,9 @@ public class MainPageModelCreator {
 	@Autowired
 	private CurrentYearReadBooksGetter currentYearReadBooksGetter;
 
+	@Autowired
+	private ReaderBooksUtilsService readerBooksUtilsService;
+	
 	public ModelMap createModel() {
 
 		ModelMap modelMap = new ModelMap();
@@ -60,8 +66,22 @@ public class MainPageModelCreator {
 				modelMap.addAttribute("readingChallange", readingChallange);
 			}
 
-			modelMap.addAttribute("latestReaderbooks", readerBookService.get10LatestReaderBooks());
-			modelMap.addAttribute("latestRatings", ratingService.get10LatestRatings());
+			List<ReaderBook> latestReaderBooks = readerBookService.get10LatestReaderBooks();
+
+			photoService.encodeAndResizeBookPhotoInBookChildren(latestReaderBooks, 135, 210);
+
+			List<ReaderBook> wantToReadBooks = readerBookService.getReaderBooksByShelves(readerId,
+					ShelvesStates.WANT_TO_READ);
+			
+			photoService.encodeAndResizeBookPhotoInBookChildren(wantToReadBooks, 96, 120);
+			
+			Map<String, Integer> readerBooksQuantitiesMap = readerBooksUtilsService.getReaderBooksQuantities(readerId);
+			
+			modelMap.addAttribute("read", readerBooksQuantitiesMap.get("read"));
+			modelMap.addAttribute("currentlyReading", readerBooksQuantitiesMap.get("currentlyReading"));
+			modelMap.addAttribute("wantToRead", readerBooksQuantitiesMap.get("wantToRead"));
+			modelMap.addAttribute("wantToReadBooks",wantToReadBooks);
+			modelMap.addAttribute("latestReaderbooks", latestReaderBooks);
 			modelMap.addAttribute("isAuthenticated", true);
 			modelMap.addAttribute("loggedReaderId", readerId);
 
