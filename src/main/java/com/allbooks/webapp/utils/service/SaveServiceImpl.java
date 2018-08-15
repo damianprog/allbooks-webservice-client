@@ -47,9 +47,9 @@ public class SaveServiceImpl implements SaveService {
 	}
 
 	@Override
-	public void saveReader(Reader reader) {
+	public Reader saveReader(Reader reader) {
 		
-		readerSaver.save(reader);
+		return readerSaver.save(reader);
 
 	}
 

@@ -1,6 +1,7 @@
 package com.allbooks.webapp.controller;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -10,21 +11,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.allbooks.webapp.entity.FavoriteGenres;
 import com.allbooks.webapp.entity.Notification;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.ReaderPost;
 import com.allbooks.webapp.entity.ReadingChallange;
 import com.allbooks.webapp.security.SecurityContextService;
+import com.allbooks.webapp.service.FavoriteGenresService;
 import com.allbooks.webapp.service.NotificationService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReadingChallangeService;
 import com.allbooks.webapp.utils.bookactions.ReaderPostsWithPreparedReadersPhotoGetter;
 import com.allbooks.webapp.utils.readerbook.CurrentYearReadBooksGetter;
 import com.allbooks.webapp.utils.service.PhotoService;
+import com.google.gson.Gson;
 
 @Controller
 @RequestMapping("/loggedReader")
@@ -50,7 +56,10 @@ public class LoggedReaderController {
 
 	@Autowired
 	private ReaderPostsWithPreparedReadersPhotoGetter readerPostsGetter;
-	
+
+	@Autowired
+	private FavoriteGenresService favoriteGenresService;
+
 	@GetMapping("/showNotifications")
 	public String showNotificationsPage(Model theModel, Principal principal, HttpSession session,
 			@RequestParam(defaultValue = "1") int page) {
@@ -115,11 +124,58 @@ public class LoggedReaderController {
 		theModel.addAttribute("reader", reader);
 		theModel.addAttribute("readBooks", currentYearBooks);
 		theModel.addAttribute("readingChallange", readingChallange);
-		theModel.addAttribute("readingChallangeComments",readingChallangeComments);
-		
+		theModel.addAttribute("readingChallangeComments", readingChallangeComments);
+
 		return "readingChallange";
 	}
 
-	
+	@GetMapping("/showFavoriteGenres")
+	public String showFavoriteGenres(Model theModel,
+			@RequestParam(value = "savedAlert", defaultValue = "false") boolean savedAlert) {
+
+		int readerId = contextService.getLoggedReaderId();
+
+		FavoriteGenres favoriteGenres = favoriteGenresService.getFavoriteGenresByReaderId(readerId);
+
+		if (favoriteGenres != null) {
+
+			List<String> genres = Arrays.asList(favoriteGenres.getFavoriteGenres().split(","));
+
+			String jsonArray = new Gson().toJson(genres);
+
+			theModel.addAttribute("favoriteGenres", jsonArray);
+		}
+		
+		theModel.addAttribute("savedAlert",savedAlert);
+
+		return "favoriteGenres";
+	}
+
+	@PostMapping("/saveFavoriteGenres")
+	public String saveFavoriteGenres(Model theModel, RedirectAttributes ra,
+			@RequestParam("categoryChecked") List<String> categoriesChecked) {
+
+		FavoriteGenres fGenres;
+		
+		int readerId = contextService.getLoggedReaderId();
+
+		Reader reader = readerService.getReaderById(readerId);
+
+		fGenres = favoriteGenresService.getFavoriteGenresByReaderId(readerId);
+		
+		if(fGenres == null) {
+			fGenres = new FavoriteGenres();
+			fGenres.setReader(reader);
+		}
+		
+		fGenres.setFavoriteGenres(String.join(",", categoriesChecked));
+
+		favoriteGenresService.saveFavoriteGenres(fGenres);
+
+		ra.addAttribute("savedAlert", true);
+
+		return "redirect:/loggedReader/showFavoriteGenres";
+
+	}
 
 }

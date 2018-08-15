@@ -94,4 +94,20 @@ public class ReaderBookServiceImpl implements ReaderBookService {
 		return new ArrayList<ReaderBook>(Arrays.asList(readerBookWebservice.get10LatestReaderBooks()));
 	}
 
+	@Override
+	public List<ReaderBook> getReaderBooksByCategory(int readerId, String category) {
+		return new ArrayList<ReaderBook>(Arrays.asList(readerBookWebservice.getReaderBooksByCategory(readerId, category)));
+	}
+
+	@Override
+	public int[] getReaderBooksBooksIdsByReaderIdAndCategory(int readerId, String category) {
+		
+		int[] excludedIds = readerBookWebservice.getReaderBooksBooksIdsByReaderIdAndCategory(readerId,category);
+		
+		if(excludedIds.length == 0)
+			return new int[] {0};
+		
+		return excludedIds;
+	}
+
 }

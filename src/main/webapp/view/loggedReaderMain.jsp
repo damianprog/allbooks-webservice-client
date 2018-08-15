@@ -127,25 +127,27 @@
 			<hr class="leftSideHr">
 
 			<c:url var="showRead" value="/myBooks/showMyBooks">
-					<c:param name="shelves" value="Read" />
-					<c:param name="readerId" value="${loggedReaderId}" />
-				</c:url>
+				<c:param name="shelves" value="Read" />
+				<c:param name="readerId" value="${loggedReaderId}" />
+			</c:url>
 
-				<c:url var="showCurrentlyReading" value="/myBooks/showMyBooks">
-					<c:param name="shelves" value="Currently Reading" />
-					<c:param name="readerId" value="${loggedReaderId}" />
-				</c:url>
+			<c:url var="showCurrentlyReading" value="/myBooks/showMyBooks">
+				<c:param name="shelves" value="Currently Reading" />
+				<c:param name="readerId" value="${loggedReaderId}" />
+			</c:url>
 
-				<c:url var="showWantToRead" value="/myBooks/showMyBooks">
-					<c:param name="shelves" value="Want To Read" />
-					<c:param name="readerId" value="${loggedReaderId}" />
-				</c:url>
+			<c:url var="showWantToRead" value="/myBooks/showMyBooks">
+				<c:param name="shelves" value="Want To Read" />
+				<c:param name="readerId" value="${loggedReaderId}" />
+			</c:url>
 
 			<div id="bookShelves">
 				<h3>Bookshelves</h3>
 				<a class="blueLink" href="${showRead}">${read}&nbsp;Read</a><br>
-				<a class="blueLink" href="${showCurrentlyReading}"> ${currentlyReading}&nbsp;Currently Reading</a><br>
-				<a class="blueLink" href="${showWantToRead}"> ${wantToRead}&nbsp;Want to Read</a><br>
+				<a class="blueLink" href="${showCurrentlyReading}">
+					${currentlyReading}&nbsp;Currently Reading</a><br> <a
+					class="blueLink" href="${showWantToRead}">
+					${wantToRead}&nbsp;Want to Read</a><br>
 			</div>
 
 		</div>
@@ -157,12 +159,13 @@
 				<div class="whiteContainer">
 
 					<div class="postHeader">
-					
-					<c:url var="postingReaderProfileRef" value="/profile/showProfile">
-						<c:param name="readerId" value="${post.reader.id}"/>
-					</c:url>
-					
-						<a class="blackRef" href="${postingReaderProfileRef}"><span style="font-weight: bold">${post.reader.username}</span></a>&nbsp;has
+
+						<c:url var="postingReaderProfileRef" value="/profile/showProfile">
+							<c:param name="readerId" value="${post.reader.id}" />
+						</c:url>
+
+						<a class="blackRef" href="${postingReaderProfileRef}"><span
+							style="font-weight: bold">${post.reader.username}</span></a>&nbsp;has
 						added new bookshelf
 					</div>
 
@@ -195,8 +198,49 @@
 
 		</div>
 
-	</div>
+		<div id="rightSideContainer">
+			<div id="recommendationDiv">
 
+				<c:url var="recommendedBookPageRef" value="/reader/showBook">
+					<c:param name="bookId" value="${recommendedBook.id}" />
+				</c:url>
+
+				<h3>RECOMMENDATIONS</h3>
+				<div id="recommendedBookHeader">
+
+					<div id="recommendedBookPhoto">
+						<a href="${recommendedBookPageRef}"> <img
+							src="data:image/jpeg;base64,${recommendedBook.encodedBookPhoto}">
+						</a>
+					</div>
+
+					<div id="recommendedBookHeaderDesc">
+
+						<h4 style="display: inline">
+							<a class="blackRef" href="${recommendedBookPageRef}">${recommendedBook.miniTitle}</a>
+						</h4>
+						<br>
+						<div style="margin-top: 10px">
+							by ${recommendedBook.author}<br> <span
+								style="color: #767676;">${recommendedBookRating}</span>
+						</div>
+
+					</div>
+
+				</div>
+				<div style="clear: both">
+
+					<div id="recommendedBookDesc">
+						${fn:substring(recommendedBook.description,0,300)}... <a
+							class="blueLink" href="${recommendedBookPageRef}">Continue
+							reading</a>
+					</div>
+				</div>
+			</div>
+
+
+
+		</div>
 </body>
 
 </html>

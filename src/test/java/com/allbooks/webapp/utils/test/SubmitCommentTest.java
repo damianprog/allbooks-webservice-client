@@ -104,7 +104,7 @@ public class SubmitCommentTest {
 		verify(reviewServiceMock).getReviewById(reviewId);
 		
 		verify(commentMock).setRating(ratingMock);
-		verify(commentMock).setReader(readerMock);
+		verify(commentMock).setPostingReader(readerMock);
 		verify(commentMock).setReview(reviewMock);
 		verify(commentMock).setBook(bookMock);
 

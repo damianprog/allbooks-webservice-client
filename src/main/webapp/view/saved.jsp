@@ -30,7 +30,7 @@
 			<c:when test="${success == true }">
 				<h3>You've been successfully Registered</h3>
 				<p>The authentication link has been sent to given email</p>
-				<p><a href="/reader/main">Allbooks Home</a></p>
+				<p><a href="/reader/main">Allbooks home</a></p>
 			</c:when>
 			<c:when test="${success == false }">
 				<h3>This login is taken</h3>

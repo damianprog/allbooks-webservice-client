@@ -67,6 +67,7 @@
 						    <sec:authorize access="hasAuthority('ADMIN')">
 						    <a href="/admin/showAddBook">Admin</a>
 						    </sec:authorize>
+						    <a href="/loggedReader/showFavoriteGenres">Favorite genres</a>
 						    <a href="/logout">Logout</a>
 						  </div>
 						</div></td>

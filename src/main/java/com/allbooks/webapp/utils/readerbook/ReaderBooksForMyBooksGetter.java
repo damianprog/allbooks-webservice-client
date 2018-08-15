@@ -33,7 +33,7 @@ public class ReaderBooksForMyBooksGetter {
 
 		photoService.encodeAndResizeBookPhotoInBookChildren(readerBooks.getContent(), 100, 160);
 
-		for (ReaderBook tempReaderBook : readerBooks) 
+		for (ReaderBook tempReaderBook : readerBooks.getContent()) 
 			tempReaderBook.setOverallRating(ratingService.getOverallRating(tempReaderBook.getBook().getId()));
 
 		return readerBooks;

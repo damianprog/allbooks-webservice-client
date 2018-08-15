@@ -1,6 +1,6 @@
 package com.allbooks.webapp.utils.test;
 
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -11,13 +11,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.allbooks.webapp.Application;
+import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.ReaderBook;
+import com.allbooks.webapp.enumeration.ShelvesStates;
 import com.allbooks.webapp.factories.ListFactory;
 import com.allbooks.webapp.service.ReaderBookService;
 import com.allbooks.webapp.utils.readerbook.CurrentlyReadingBooksGetter;
@@ -44,13 +45,18 @@ public class CurrentlyReadingBooksGetterTest {
 	private ListFactory listFactory;
 	
 	@Mock
+	private Book bookMock;
+	
+	@Mock
 	private List<Object> currentlyReadingBooksMock;
 	
 	private int readerId = 1;
 		
-	private byte[] bookPic = {};
+	private byte[] bookPhoto = {};
 	
-	private String encodedBookPic = "";
+	private byte[] resizedBookPhoto = {};
+	
+	private String encodedBookPhoto = "";
 	
 	@Test
 	public void getByReaderIdTest() {
@@ -60,17 +66,20 @@ public class CurrentlyReadingBooksGetterTest {
 		
 		when(readerBookServiceMock.getReaderBooks(readerId)).thenReturn(readerBooks);
 		when(listFactory.createArrayList()).thenReturn(currentlyReadingBooksMock);
-		when(readerBookMock.getShelves()).thenReturn("Currently Reading");
-		when(readerBookMock.getBookPic()).thenReturn(bookPic);
-		when(photoServiceMock.getEncodedImage(bookPic)).thenReturn(encodedBookPic);
+		when(readerBookMock.getShelvesStates()).thenReturn(ShelvesStates.CURRENTLY_READING);
+		when(readerBookMock.getBook()).thenReturn(bookMock);
+		when(bookMock.getBookPhoto()).thenReturn(bookPhoto);
+		when(photoServiceMock.resize(bookPhoto,120,200)).thenReturn(resizedBookPhoto);
+		when(photoServiceMock.getEncodedImage(resizedBookPhoto)).thenReturn(encodedBookPhoto);
 		
 		currentlyReadingBooksGetter.getByReaderId(readerId);
 		
 		verify(readerBookServiceMock).getReaderBooks(readerId);
-		verify(readerBookMock).getShelves();
-		verify(readerBookMock).getBookPic();
-		verify(photoServiceMock).getEncodedImage(bookPic);
-		verify(readerBookMock).setEncodedBookPic(encodedBookPic);
+		verify(readerBookMock,times(2)).getBook();
+		verify(bookMock).getBookPhoto();
+		verify(photoServiceMock).resize(bookPhoto,120,200);
+		verify(photoServiceMock).getEncodedImage(resizedBookPhoto);
+		verify(bookMock).setEncodedBookPhoto(encodedBookPhoto);
 		verify(currentlyReadingBooksMock).add(readerBookMock);
 		
 	}

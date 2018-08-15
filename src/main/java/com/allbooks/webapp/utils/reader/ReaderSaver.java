@@ -17,10 +17,10 @@ public class ReaderSaver {
 	@Autowired
 	private ReaderService readerService;
 
-	public void save(Reader reader) {
+	public Reader save(Reader reader) {
 
 		Reader readerPass = readerService.saveReader(reader);
 		eventPublisher.publishEvent(new OnRegistrationCompleteEvent(readerPass));
-
+		return readerPass;
 	}
 }

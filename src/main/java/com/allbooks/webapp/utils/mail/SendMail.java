@@ -43,7 +43,7 @@ public class SendMail {
 			methodMapping = "/readerAccount/changePasswordPage";
 			mail = mailBuilder.createTokenMail(mailData, methodMapping);
 			break;
-		case BAN_INFORMATION:
+		case INFORMATION:
 			mail = mailBuilder.createSimpleMail(mailData);
 			break;
 			

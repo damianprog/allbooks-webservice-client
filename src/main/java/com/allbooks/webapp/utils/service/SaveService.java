@@ -9,9 +9,12 @@ import com.allbooks.webapp.entity.ReviewData;
 
 public interface SaveService {
 
-	public void saveRating(RatingData ratingData);
-	public void saveReaderBook(ReaderBookData readerBookData) throws IOException;
-	public void saveReview(ReviewData reviewData);
-	public void saveReader(Reader reader);
-	
+	void saveRating(RatingData ratingData);
+
+	void saveReaderBook(ReaderBookData readerBookData) throws IOException;
+
+	void saveReview(ReviewData reviewData);
+
+	Reader saveReader(Reader reader);
+
 }

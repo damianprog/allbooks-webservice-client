@@ -65,4 +65,9 @@ public class BookServiceImpl implements BookService {
 		return Arrays.asList(bookWebservice.getBooksByPhrase(phrase));
 	}
 
+	@Override
+	public Book getBookByCategoryExceptBooksWithIds(String category, int[] excludedIds) {
+		return bookWebservice.getBookByCategoryExceptBooksWithIds(category,excludedIds);
+	}
+
 }

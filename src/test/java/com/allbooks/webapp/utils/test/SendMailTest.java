@@ -60,20 +60,20 @@ public class SendMailTest {
 		
 		when(mailDataMock.getReader()).thenReturn(readerMock);
 		
-		when(mailDataMock.getTokenType()).thenReturn(MailType.REGISTRATION_CONFIRM);
+		when(mailDataMock.getMailType()).thenReturn(MailType.REGISTRATION_CONFIRM);
 		
-		when(mailBuilderMock.createMail(mailDataMock, methodMapping)).thenReturn(mimeMessageMock);
+		when(mailBuilderMock.createTokenMail(mailDataMock, methodMapping)).thenReturn(mimeMessageMock);
 		
 		sendMail.send(mailDataMock);
 		
 		verify(mailDataMock).getToken();
 		verify(mailDataMock).getReader();
-		verify(mailDataMock).getTokenType();
+		verify(mailDataMock).getMailType();
 		
 		verify(tokenServiceMock).createVerificationToken(readerMock, registrationToken);
 		
-		verify(mailBuilderMock).createMail(mailDataMock, methodMapping);
-
+		verify(mailBuilderMock).createTokenMail(mailDataMock, methodMapping);
+		
 		verify(mailSenderMock).send(mimeMessageMock);
 		
 		
@@ -89,23 +89,40 @@ public class SendMailTest {
 		when(mailDataMock.getToken()).thenReturn(passwordToken);
 		when(mailDataMock.getReader()).thenReturn(readerMock);
 		
-		when(mailDataMock.getTokenType()).thenReturn(MailType.CHANGE_PASSWORD);
+		when(mailDataMock.getMailType()).thenReturn(MailType.CHANGE_PASSWORD);
 		
-		when(mailBuilderMock.createMail(mailDataMock, methodMapping)).thenReturn(mimeMessageMock);
+		when(mailBuilderMock.createTokenMail(mailDataMock, methodMapping)).thenReturn(mimeMessageMock);
 		
 		sendMail.send(mailDataMock);
 		
 		verify(mailDataMock).getToken();
 		verify(mailDataMock).getReader();
-		verify(mailDataMock).getTokenType();
+		verify(mailDataMock).getMailType();
 		
 		verify(tokenServiceMock).createPasswordToken(readerMock, passwordToken);
 		
-		verify(mailBuilderMock).createMail(mailDataMock, methodMapping);
+		verify(mailBuilderMock).createTokenMail(mailDataMock, methodMapping);
 
 		verify(mailSenderMock).send(mimeMessageMock);
 		
+	}
+	
+	@Test
+	public void sendInformationMail() throws MessagingException {
 		
+		when(mailDataMock.getReader()).thenReturn(readerMock);
+		
+		when(mailDataMock.getMailType()).thenReturn(MailType.INFORMATION);
+		
+		when(mailBuilderMock.createSimpleMail(mailDataMock)).thenReturn(mimeMessageMock);
+		
+		sendMail.send(mailDataMock);
+
+		verify(mailDataMock).getReader();
+		verify(mailDataMock).getMailType();
+		
+		verify(mailBuilderMock).createSimpleMail(mailDataMock);
+		verify(mailSenderMock).send(mimeMessageMock);
 	}
 	
 }

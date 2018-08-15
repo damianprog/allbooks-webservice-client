@@ -136,8 +136,7 @@ public class MyBooksController {
 	}
 
 	@PostMapping("/saveReaderBook")
-	public String readState(@RequestParam Map<String, String> params,
-			@RequestParam(value = "readerBookId", required = false) Integer readerBookId,
+	public String readState(@RequestParam(value = "readerBookId", required = false) Integer readerBookId,
 			@RequestParam("bookId") int bookId, @RequestParam("shelves") String shelves,
 			@RequestParam("isItUpdateReaderBook") boolean isItUpdateReaderBook, HttpSession session,
 			Principal principal, RedirectAttributes ra) throws IOException {
@@ -154,7 +153,7 @@ public class MyBooksController {
 		saveService.saveReaderBook(
 				bookActionDataObjectFactory.createReaderBookData(readerBook, bookId, isItUpdateReaderBook));
 
-		ra.addAttribute("bookId", params.get("bookId"));
+		ra.addAttribute("bookId", bookId);
 
 		return "redirect:/reader/showBook";
 	}

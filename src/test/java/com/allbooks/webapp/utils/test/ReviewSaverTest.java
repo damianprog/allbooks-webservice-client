@@ -88,7 +88,7 @@ public class ReviewSaverTest {
 		verify(ratingServiceMock).getReaderRatingObject(readerId, bookId);
 		
 		verify(reviewMock).setBook(bookMock);
-		verify(reviewMock).setReader(readerMock);
+		verify(reviewMock).setPostingReader(readerMock);
 		verify(reviewMock).setRating(ratingMock);
 		
 	}

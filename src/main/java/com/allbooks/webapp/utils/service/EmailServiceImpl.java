@@ -59,7 +59,7 @@ public class EmailServiceImpl implements EmailService {
 
 		mailData.setReader(ban.getReader());
 		mailData.setSubject("Allbooks account ban information");
-		mailData.setMailType(MailType.BAN_INFORMATION);
+		mailData.setMailType(MailType.INFORMATION);
 		mailData.setSubjectHeader("Your Allbooks account has been banned");
 		mailData.setSubjectMessage("Your Allbooks account has been banned the ban expiration date is: "
 				+ expiryDate + "\n Reason: " + ban.getText());

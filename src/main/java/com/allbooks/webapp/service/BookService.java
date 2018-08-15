@@ -22,4 +22,6 @@ public interface BookService {
 
 	List<Book> getBooksByPhrase(String phrase);
 
+	Book getBookByCategoryExceptBooksWithIds(String category, int[] excludedIds);
+
 }

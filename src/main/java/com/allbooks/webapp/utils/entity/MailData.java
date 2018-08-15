@@ -19,7 +19,7 @@ public class MailData {
 	}
 
 	public enum MailType {
-		CHANGE_PASSWORD, REGISTRATION_CONFIRM,BAN_INFORMATION;
+		CHANGE_PASSWORD, REGISTRATION_CONFIRM,INFORMATION;
 	}
 
 	public Reader getReader() {

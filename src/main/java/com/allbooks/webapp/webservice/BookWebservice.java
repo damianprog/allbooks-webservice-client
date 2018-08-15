@@ -16,4 +16,6 @@ public interface BookWebservice {
 
 	Book[] getBooksByPhrase(String phrase);
 
+	Book getBookByCategoryExceptBooksWithIds(String category, int[] excludedIds);
+
 }

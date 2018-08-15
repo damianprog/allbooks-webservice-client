@@ -30,4 +30,8 @@ public interface ReaderBookService {
 	
 	List<ReaderBook> get10LatestReaderBooks();
 
+	List<ReaderBook> getReaderBooksByCategory(int readerId, String category);
+
+	int[] getReaderBooksBooksIdsByReaderIdAndCategory(int readerId, String category);
+	
 }

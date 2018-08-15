@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.allbooks.webapp.Application;
 import com.allbooks.webapp.entity.ReaderBook;
+import com.allbooks.webapp.enumeration.ShelvesStates;
 import com.allbooks.webapp.service.ReaderBookService;
 import com.allbooks.webapp.utils.readerbook.ReaderBooksQuantitiesGetter;
 
@@ -52,9 +53,9 @@ public class ReaderBookQuantitiesGetterTest {
 		
 		when(readerBookService.getReaderBooks(readerId)).thenReturn(readerBooks);
 		
-		when(readerBookMock1.getShelves()).thenReturn("Read");
-		when(readerBookMock2.getShelves()).thenReturn("Currently Reading");
-		when(readerBookMock3.getShelves()).thenReturn("Want To Read");
+		when(readerBookMock1.getShelvesStates()).thenReturn(ShelvesStates.READ);
+		when(readerBookMock2.getShelvesStates()).thenReturn(ShelvesStates.CURRENTLY_READING);
+		when(readerBookMock3.getShelvesStates()).thenReturn(ShelvesStates.WANT_TO_READ);
 		
 		Map<String,Integer> quantitiesMap = readerBooksQuantitiesGetter.getByReaderId(readerId);
 		

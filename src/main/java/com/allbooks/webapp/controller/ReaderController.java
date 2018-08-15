@@ -123,8 +123,8 @@ public class ReaderController {
 			return "join";
 
 		if (!readerService.isThisLoginTaken(reader.getUsername())) {
-			theModel.addAttribute("success", true);
 			saveService.saveReader(reader);
+			theModel.addAttribute("success", true);
 		} else
 			theModel.addAttribute("success", false);
 

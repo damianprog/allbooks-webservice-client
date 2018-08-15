@@ -235,9 +235,7 @@ public class AdminController {
 	@GetMapping("/showBan")
 	public String showBan(Model theModel) {
 
-		Ban ban = new Ban();
-
-		theModel.addAttribute("ban", ban);
+		theModel.addAttribute("ban", new Ban());
 
 		return "ban";
 	}

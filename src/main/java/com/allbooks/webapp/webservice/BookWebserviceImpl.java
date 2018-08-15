@@ -1,5 +1,6 @@
 package com.allbooks.webapp.webservice;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +92,25 @@ public class BookWebserviceImpl implements BookWebservice {
 
 		return responseEntity.getBody();
 		
+	}
+
+	@Override
+	public Book getBookByCategoryExceptBooksWithIds(String category, int[] excludedIds) {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		for(int i=0; i < excludedIds.length; i++) {
+			   sb.append(excludedIds[i]);
+			   if(i < excludedIds.length-1)
+			   sb.append(",");
+		}
+		
+		Map<String,String> params = new HashMap<>();
+		params.put("category", category);
+		params.put("excludedIds", sb.toString());
+		
+		return restTemplate.getForObject(serviceUrlName + "/books/categories/{category}/exclude/{excludedIds}" + accessTokenParameter,
+				Book.class, params);
 	}
 
 }
