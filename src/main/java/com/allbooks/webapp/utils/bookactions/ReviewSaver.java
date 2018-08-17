@@ -39,7 +39,7 @@ public class ReviewSaver {
 
 		Reader reader = readerService.getReaderById(readerId);
 
-		Book book = bookService.getBook(bookId);
+		Book book = bookService.getBookById(bookId);
 
 		Review review = reviewData.getReview();
 

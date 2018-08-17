@@ -14,4 +14,6 @@ public interface PendingWebservice {
 
 	public Pending getPendingByRecipentIdAndSenderId(int recipentId, int senderId);
 
+	public Pending[] getReaderAsSenderPendings(int readerId);
+
 }

@@ -45,7 +45,7 @@ public class ReaderBookSaver {
 
 		Rating rating = ratingService.getReaderRatingObject(readerId, readerBookData.getBookId());
 
-		Book book = bookService.getBook(readerBookData.getBookId());
+		Book book = bookService.getBookById(readerBookData.getBookId());
 
 		if (!readerBookData.isItUpdate())
 			readerBook.setDateAdded(new Date());

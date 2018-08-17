@@ -82,8 +82,12 @@ public class AdminController {
 			@RequestParam("authorPhotoTemp") MultipartFile mfAuthorPhoto, @ModelAttribute("book") Book book,
 			Model theModel) throws IOException {
 
-		book.setBookPhoto(photoService.convertMultipartImage(mfBookPhoto, 150, 228));
-		book.setAuthorPhoto(photoService.convertMultipartImage(mfAuthorPhoto, 50, 66));
+		byte[] bookPhotoBytes = photoService.convertMultipartImageToBytes(mfBookPhoto);
+
+		byte[] authorPhotoBytes = photoService.convertMultipartImageToBytes(mfAuthorPhoto);
+		
+		book.setBookPhoto(photoService.resize(bookPhotoBytes, 150, 228));
+		book.setAuthorPhoto(photoService.resize(authorPhotoBytes,50,66));
 
 		bookService.saveBook(book);
 

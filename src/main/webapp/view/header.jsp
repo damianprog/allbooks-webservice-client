@@ -64,6 +64,7 @@
   					property="principal.username" /></div>
 						  <div id="myDropdown" class="dropdown-content">
 						    <a href="${showProfile}">Profile</a>
+						    <a href="/loggedReader/showFriends">Friends</a>
 						    <sec:authorize access="hasAuthority('ADMIN')">
 						    <a href="/admin/showAddBook">Admin</a>
 						    </sec:authorize>

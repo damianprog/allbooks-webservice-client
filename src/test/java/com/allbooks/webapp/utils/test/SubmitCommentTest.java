@@ -87,7 +87,7 @@ public class SubmitCommentTest {
 
 		when(commentDataMock.getBookId()).thenReturn(bookId);
 
-		when(bookServiceMock.getBook(bookId)).thenReturn(bookMock);
+		when(bookServiceMock.getBookById(bookId)).thenReturn(bookMock);
 
 		when(ratingServiceMock.getReaderRatingObject(readerId,bookId)).thenReturn(ratingMock);
 
@@ -99,7 +99,7 @@ public class SubmitCommentTest {
 		verify(contextServiceMock).getLoggedReaderId();
 		verify(readerServiceMock).getReaderById(readerId);
 		verify(commentDataMock).getBookId();
-		verify(bookServiceMock).getBook(bookId);
+		verify(bookServiceMock).getBookById(bookId);
 		verify(ratingServiceMock).getReaderRatingObject(readerId,bookId);
 		verify(reviewServiceMock).getReviewById(reviewId);
 		

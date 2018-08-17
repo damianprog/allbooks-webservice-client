@@ -6,16 +6,20 @@ import com.allbooks.webapp.entity.Pending;
 
 public interface PendingService {
 
-	public List<Pending> getFriendsInvites(int id);
-	
-	public void savePending(Pending pending);
+	List<Pending> getFriendsInvitesByReaderId(int readerId);
 
-	public Pending getPending(int reader1Id, int reader2Id);
+	void savePending(Pending pending);
 
-	public boolean checkPending(int reader1Id, int reader2Id);
+	Pending getPending(int reader1Id, int reader2Id);
 
-	public void deletePending(int pendingIdInt);
+	boolean checkPending(int reader1Id, int reader2Id);
 
-	public boolean isItSenderProfile(int recipentId, int senderId);
+	void deletePending(int pendingIdInt);
+
+	boolean isItSenderProfile(int recipentId, int senderId);
+
+	List<Pending> getReaderAsSenderPendings(int readerId);
+
+	Pending getPendingByRecipentIdAndSenderId(int recipentId,int senderId);
 	
 }

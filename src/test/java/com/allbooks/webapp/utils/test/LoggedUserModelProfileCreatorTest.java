@@ -100,7 +100,7 @@ public class LoggedUserModelProfileCreatorTest {
 		when(securityContextServiceMock.getLoggedReaderId()).thenReturn(loggedReaderId);
 		when(currentReaderMock.getId()).thenReturn(currentReaderId);
 
-		when(pendingServiceMock.getFriendsInvites(currentReaderId)).thenReturn(friendsInvitesMock);
+		when(pendingServiceMock.getFriendsInvitesByReaderId(currentReaderId)).thenReturn(friendsInvitesMock);
 		
 		creator.createModel(currentReaderMock);
 		

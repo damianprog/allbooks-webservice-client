@@ -27,28 +27,21 @@
 			<div id="image">
 				<table id="picTable">
 					<tr>
-						<td><c:choose>
-								<c:when test="${empty profilePic}">
-									<img src="/css/images/regularProfileImage.jpg">
-								</c:when>
-								<c:otherwise>
-									<img src="data:image/jpeg;base64,${profilePic}">
-								</c:otherwise>
-							</c:choose></td>
+						<td>
+									<img src="data:image/jpeg;base64,${profilePic}"></td>
 					</tr>
 					<c:choose>
 						<c:when test="${reader.username == principalName}">
 							<tr>
 								<td>
-								<div id="uploadPhotoLabel">
-									Upload profile photo
-								</div>
-								
-								<div id="extensionError"></div>
+									<div id="uploadPhotoLabel">Upload profile photo</div>
+
+									<div id="extensionError"></div>
 									<form method="POST" action="/profile/profileUpload"
 										enctype="multipart/form-data" id="uploadForm">
-										<input type="file" name="file" required="required" accept=".jpg" id="photoInput"/> <br /> <input
-											type="submit" value="Submit" id="photoSubmit"/>
+										<input type="file" name="file" required="required"
+											accept=".jpg" id="photoInput" /> <br /> <input type="submit"
+											value="Submit" id="photoSubmit" />
 									</form>
 								</td>
 							</tr>
@@ -68,12 +61,10 @@
 								profile)</a>
 						</c:when>
 
-						<c:when test="${not empty invite}">
+						<c:when test="${isItOtherReaderProfile == true}">
 							<c:url var="friendUrl" value="/profile/inviteFriend">
 								<c:param name="recipentId" value="${reader.id}" />
-								<c:param name="senderId" value="${sessionScope.readerId}" />
-								<c:param name="recipentLogin" value="${reader.username}" />
-								<c:param name="senderLogin" value="${principal.username}" />
+								<c:param name="pageName" value="profile" />
 							</c:url>
 							<c:choose>
 								<c:when test="${pending == false}">
@@ -152,51 +143,53 @@
 
 			</div>
 			<div class="underFirstTable">
-				<h4 id="topDesc">${reader.username}&nbsp;is currently reading</h4>
+				<h4 id="topDesc">${reader.username}&nbsp;iscurrently reading</h4>
 				<hr>
-				
-					<c:forEach var="tempBook" items="${currentlyReadingList}">
-					
+
+				<c:forEach var="tempBook" items="${currentlyReadingList}">
+
 					<div class="currentBookPhoto">
 						<a href="${bookSite}"> <img
-									src="data:image/jpeg;base64,${tempBook.book.encodedBookPhoto}" />
-							</a>
+							src="data:image/jpeg;base64,${tempBook.book.encodedBookPhoto}" />
+						</a>
 					</div>
-					
+
 					<div class="currentBookDetails">
-					
+
 						<c:url var="bookSite" value="/reader/showBook">
 							<c:param name="bookId" value="${tempBook.book.id}" />
 						</c:url>
-							${reader.username}&nbsp;is currently reading
-								<div class="topDesc">
-									<a class="blackRef" href="${bookSite}">${tempBook.book.fullTitle}</a>
-								</div> by ${tempBook.book.author}<br> bookshelves:
-								${tempBook.shelvesStates.shelveState()}
-							
-							<div class="currentBookDescription">
-								${fn:substring(tempBook.book.description,0,300)}...	
-							</div>
+						${reader.username}&nbsp;is currently reading
+						<div class="topDesc">
+							<a class="blackRef" href="${bookSite}">${tempBook.book.fullTitle}</a>
+						</div>
+						by ${tempBook.book.author}<br> bookshelves:
+						${tempBook.shelvesStates.shelveState()}
+
+						<div class="currentBookDescription">
+							${fn:substring(tempBook.book.description,0,300)}...</div>
 					</div>
-					<div style="clear:both"></div>			
-					</c:forEach>
+					<div style="clear: both"></div>
+				</c:forEach>
 			</div>
 			<div class="underFirstTable">
-				<h4>${reader.username}'s&nbsp;recent reviews</h4>
+				<h4>${reader.username}'s&nbsp;recentreviews</h4>
 				<hr>
 				<c:choose>
 					<c:when test="${!empty readerReviews}">
-					<c:forEach var="tempReview" items="${readerReviews}" begin="0" end="2">
-						
-						<c:url var="bookPage" value="/reader/showBook">
-									<c:param name="bookId" value="${tempReview.book.id}" />
-								</c:url>
-						
-						<div class="reviewBookPhoto">
-							<a href="${bookPage}"><img src="data:image/jpeg;base64,${tempReview.book.encodedBookPhoto}"></a>
-						</div>
-						
-						<table class="reviewTitle">
+						<c:forEach var="tempReview" items="${readerReviews}" begin="0"
+							end="2">
+
+							<c:url var="bookPage" value="/reader/showBook">
+								<c:param name="bookId" value="${tempReview.book.id}" />
+							</c:url>
+
+							<div class="reviewBookPhoto">
+								<a href="${bookPage}"><img
+									src="data:image/jpeg;base64,${tempReview.book.encodedBookPhoto}"></a>
+							</div>
+
+							<table class="reviewTitle">
 								<c:url var="reviewLink" value="/bookActions/reviewPage">
 									<c:param name="reviewId" value="${tempReview.id}" />
 									<c:param name="readerLogin"
@@ -207,7 +200,7 @@
 										value="${tempReview.book.fullTitle}" />
 									<c:param name="authorName" value="${tempReview.book.author}" />
 								</c:url>
-								
+
 								<tr>
 									<td>
 										<h4>
@@ -217,11 +210,11 @@
 											${tempReview.title}</a>
 									</td>
 								</tr>
-							
-						</table>
-						
-						<div style="clear:both"></div>
-						
+
+							</table>
+
+							<div style="clear: both"></div>
+
 						</c:forEach>
 					</c:when>
 					<c:otherwise>${reader.username} has no any recent reviews</c:otherwise>
@@ -231,31 +224,32 @@
 		<div id="rightSide">
 			<c:choose>
 				<c:when test="${reader.username == principalName}">
-					<div id="friendsInvites">
-						<h4 id="topDesc">Friends Invites</h4>
+					<div id="friendsRequests">
+						<div class="topDesc">Friends Requests</div>
 						<hr>
 						<c:choose>
-							<c:when test="${empty friendsInvites}">
+							<c:when test="${empty friendsRequests}">
 			You have no friends requests
 			</c:when>
 							<c:otherwise>
-								<c:forEach var="tempPending" items="${friendsInvites}">
-								<div class="pendingDiv">
-									<c:url var="senderProfile" value="/profile/showProfile">
-										<c:param name="readerId" value="${tempPending.sender.id}" />
-									</c:url>
-									<a href="${senderProfile}">${tempPending.sender.username}</a> Has sent you a friends request!
-				<form method="POST" action="/profile/acceptOrAbort">
-										<select name="acceptOrAbort">
-											<option value="accept">Accept</option>
-											<option value="abort">Abort</option>
-										</select> <input type="hidden" name="recipentId" value="${reader.id}">
-										<input type="hidden" name="senderId"
-											value="${tempPending.sender.id}"> <input
-											type="hidden" name="pendingId" value="${tempPending.id}">
-										<input type="submit" value="Submit" />
-									</form>
-								</div>
+								<c:forEach var="tempPending" items="${friendsRequests}">
+									<div class="pendingDiv">
+										<c:url var="senderProfile" value="/profile/showProfile">
+											<c:param name="readerId" value="${tempPending.sender.id}" />
+										</c:url>
+										<a class="blackRef" href="${senderProfile}">${tempPending.sender.username}</a>
+										Has sent you a friends request!
+										<form method="POST" action="/profile/acceptOrAbort">
+											<select name="acceptOrAbort">
+												<option value="accept">Accept</option>
+												<option value="abort">Abort</option>
+											</select> <input type="hidden" name="senderId"
+												value="${tempPending.sender.id}"> <input
+												type="hidden" name="pendingId" value="${tempPending.id}">
+											<input type="hidden" name="pageName" value="profile">
+											<input type="submit" value="Submit" />
+										</form>
+									</div>
 								</c:forEach>
 							</c:otherwise>
 						</c:choose>
@@ -263,7 +257,8 @@
 				</c:when>
 			</c:choose>
 			<div id="friendsList">
-				<h4 id="topDesc">${reader.username}'s friends(${friendsNum})</h4>
+				<div class="topDesc">${reader.username}'s
+					friends(${friendsNum})</div>
 				<hr>
 				<c:choose>
 					<c:when test="${empty friends}">
@@ -276,32 +271,76 @@
 									<c:param name="readerId" value="${tempFriends.id}" />
 								</c:url>
 								<tr>
-									<td> <a class="blackRef"
-										href="${friendProfile}"> ${tempFriends.username} </a>
-										</td>
-										<td> <c:choose>
+									<td><a class="blackRef" href="${friendProfile}">
+											${tempFriends.username} </a></td>
+									<td><c:choose>
 											<c:when test="${reader.username == principalName }">
 												<form:form action="/profile/deleteFriends" method="DELETE"
 													class="deleteForm">
 													<input type="hidden" name="friendId"
 														value="${tempFriends.id}">
-													<input type="hidden" name="readerId" value="${reader.id}">
-													<input class="delete" type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this friend?');"/>
+													<input type="hidden" name="pageName" value="profile">
+													<input class="delete" type="submit" value="Delete"
+														onclick="return confirm('Are you sure you want to delete this friend?');" />
 												</form:form>
 											</c:when>
-										</c:choose>
-									</td>
+										</c:choose></td>
 								</tr>
 							</c:forEach>
 						</table>
 					</c:otherwise>
 				</c:choose>
 			</div>
+
+			<c:if test="${reader.username == principalName}">
+
+				<div id="readingChallange">
+
+					<h3>2018 Reading Challange</h3>
+					<div id="readingChallangeDesc">Challenge yourself to read
+						more this year!</div>
+
+					<div id="readingChallangeImage">
+						<img src="/css/images/books.png">
+					</div>
+
+					<div id="readingChallangeActions">
+
+						<c:choose>
+							<c:when test="${empty readingChallange}">
+								<form action="/loggedReader/readingChallange">
+									<span>I want to read</span><br> <input
+										name="numberOfBooks" id="numberOfBooks" type="number" min="0"><br>
+									<span>books in 2018</span><br> <input id="startChallange"
+										type="submit" value="Start Challange">
+								</form>
+							</c:when>
+							<c:otherwise>
+
+								<c:url var="readingChallangeRef"
+									value="/loggedReader/showReadingChallange">
+									<c:param name="readerId" value="${loggedReaderId}" />
+								</c:url>
+								<div style="font-size: 28px;">${currentNumberOfBooks}</div>
+							books completed<br>
+								<div style="margin-top: 10px; font-size: 14px; color: #767676;">You're
+									on track!</div>
+								<div style="margin-top: 5px;">${currentNumberOfBooks}/${readingChallange.numberOfBooks}
+									(${readingProgressPercentage} &#37;)</div>
+								<div>
+									<a class="blueLink" href="${readingChallangeRef}">view
+										challange</a>
+								</div>
+							</c:otherwise>
+						</c:choose>
+					</div>
+				</div>
+			</c:if>
 		</div>
 	</div>
 	<script src="/js/profileShowMore.js"></script>
 	<script src="/js/photoUpload.js"></script>
-	
+
 </body>
 
 </html>

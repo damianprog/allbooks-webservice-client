@@ -2,6 +2,7 @@ package com.allbooks.webapp.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +42,14 @@ public class RecommendationGetter {
 		
 		FavoriteGenres fGenres = favoriteGenresService.getFavoriteGenresByReaderId(readerId);
 		
+		if(fGenres == null)
+			return null;
+		
 		List<String> fGenresList = Arrays.asList(fGenres.getFavoriteGenres().split(","));
 		
 		Book foundBook = null;
+		
+		Collections.shuffle(fGenresList);
 		
 		for(String category : fGenresList) {	
 			

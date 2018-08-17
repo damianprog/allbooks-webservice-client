@@ -73,7 +73,7 @@ public class RatingSaverTest {
 		when(ratingDataMock.getRating()).thenReturn(ratingMock);
 		when(readerServiceMock.getReaderById(readerId)).thenReturn(readerMock);
 		when(ratingDataMock.getBookId()).thenReturn(bookId);
-		when(bookServiceMock.getBook(bookId)).thenReturn(bookMock);
+		when(bookServiceMock.getBookById(bookId)).thenReturn(bookMock);
 		when(ratingServiceMock.submitRating(ratingMock)).thenReturn(ratingMock);
 		
 		ratingSaver.save(ratingDataMock);
@@ -82,7 +82,7 @@ public class RatingSaverTest {
 		verify(ratingDataMock).getRating();
 		verify(readerServiceMock).getReaderById(readerId);
 		verify(ratingDataMock).getBookId();
-		verify(bookServiceMock).getBook(bookId);
+		verify(bookServiceMock).getBookById(bookId);
 		verify(ratingMock).setReader(readerMock);
 		verify(ratingMock).setBook(bookMock);
 		verify(readerBookRatingUpdaterMock).update(ratingMock);

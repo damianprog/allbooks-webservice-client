@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import com.allbooks.webapp.entity.Friends;
 import com.allbooks.webapp.entity.Pending;
 import com.allbooks.webapp.entity.Reader;
+import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.FriendsService;
 import com.allbooks.webapp.service.PendingService;
-import com.allbooks.webapp.service.ProfileService;
 import com.allbooks.webapp.service.ReaderService;
 
 @Service
@@ -25,6 +25,9 @@ public class FriendsUtilsServiceImpl implements FriendsUtilsService {
 	@Autowired
 	private FriendsService friendsService;
 	
+	@Autowired
+	private SecurityContextService contextService;
+	
 	@Override
 	public Pending createPending(Map<String, String> params) {
 
@@ -32,7 +35,7 @@ public class FriendsUtilsServiceImpl implements FriendsUtilsService {
 		
 		Reader recipent = readerService.getReaderById(Integer.parseInt(params.get("recipentId"))); 
 
-		Reader sender = readerService.getReaderById(Integer.parseInt(params.get("senderId"))); 
+		Reader sender = readerService.getReaderById(contextService.getLoggedReaderId());
 		
 		pending.setRecipent(recipent);
 		pending.setSender(sender);
@@ -44,9 +47,9 @@ public class FriendsUtilsServiceImpl implements FriendsUtilsService {
 	public void acceptOrAbort(Map<String, String> params) {
 		
 		int senderIdInt = Integer.valueOf(params.get("senderId"));
-		int recipentIdInt = Integer.valueOf(params.get("recipentId"));
 		int pendingIdInt = Integer.valueOf(params.get("pendingId"));
-
+		int recipentIdInt = contextService.getLoggedReaderId();
+		
 		Reader sender = readerService.getReaderById(senderIdInt);
 
 		Reader recipent = readerService.getReaderById(recipentIdInt);

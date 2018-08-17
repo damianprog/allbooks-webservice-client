@@ -52,10 +52,9 @@ public class MultipartImageConverterTest {
 		when(multipartToFileMock.convert(multipartFileMock)).thenReturn(convFileMock);
 		when(fileFactory.fileToBytes(convFileMock)).thenReturn(convFile);
 		
-		multipartImageConverter.convert(multipartFileMock, 100, 100);
+		multipartImageConverter.convert(multipartFileMock);
 		
 		verify(multipartToFileMock).convert(multipartFileMock);
 		verify(fileFactory).fileToBytes(convFileMock);
-		verify(resizePhotoMock).resize(convFile,100,100);
 	}	
 }

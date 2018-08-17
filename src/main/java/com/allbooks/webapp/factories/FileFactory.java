@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public abstract class FileFactory {
 
-	public abstract byte[] fileToBytes(File file) throws IOException;
+	public abstract byte[] fileToBytes(File file);
 
 	public abstract File multipartFileGetOriginalFileName(MultipartFile multipartFile);
 

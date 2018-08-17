@@ -14,21 +14,16 @@ public class MultipartImageConverter {
 
 	@Autowired
 	private MultipartToFile multipartToFile;
-
-	@Autowired
-	private ResizePhoto resizePhoto;
 	
 	@Autowired
 	private FileFactory fileFactory;
 
-	public byte[] convert(MultipartFile mf, int width, int height) throws IOException {
+	public byte[] convert(MultipartFile mf) {
 
 		File convFile = multipartToFile.convert(mf);
 
-		byte[] convFileBytes = fileFactory.fileToBytes(convFile);
+		return fileFactory.fileToBytes(convFile);
 		
-		return resizePhoto.resize(convFileBytes, width, height);
-
 	}
 	
 

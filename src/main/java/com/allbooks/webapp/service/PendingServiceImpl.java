@@ -1,5 +1,6 @@
 package com.allbooks.webapp.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class PendingServiceImpl implements PendingService {
 	}
 	
 	@Override
-	public List<Pending> getFriendsInvites(int readerId) {
+	public List<Pending> getFriendsInvitesByReaderId(int readerId) {
 
 		return Arrays.asList(pendingWebservice.getReaderPendings(readerId));
 	}
@@ -53,12 +54,26 @@ public class PendingServiceImpl implements PendingService {
 	@Override
 	public boolean isItSenderProfile(int recipentId, int senderId) {
 		
-		Pending pending = pendingWebservice.getPendingByRecipentIdAndSenderId(recipentId,senderId);
+		Pending pending = getPendingByRecipentIdAndSenderId(recipentId,senderId);
 		
 		if(pending == null)
 			return false;
 		else
 			return true;
+	}
+
+	
+	
+	@Override
+	public List<Pending> getReaderAsSenderPendings(int readerId) {
+		return new ArrayList<Pending>(Arrays.asList(pendingWebservice.getReaderAsSenderPendings(readerId)));
+	}
+
+	@Override
+	public Pending getPendingByRecipentIdAndSenderId(int recipentId, int senderId) {
+		
+		return pendingWebservice.getPendingByRecipentIdAndSenderId(recipentId,senderId);
+		
 	}
 	
 }

@@ -28,8 +28,8 @@ import com.allbooks.webapp.factories.BookActionDataObjectFactory;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.ReviewService;
 import com.allbooks.webapp.utils.bookactions.LikesDropper;
-import com.allbooks.webapp.utils.bookactions.ReaderPostsWithPreparedReadersPhotoGetter;
 import com.allbooks.webapp.utils.model.LoggedReviewPageModelCreator;
+import com.allbooks.webapp.utils.photos.ReaderPostsWithPreparedReadersPhotoGetter;
 import com.allbooks.webapp.utils.readerbook.ReaderBookAndRatingModelCreator;
 import com.allbooks.webapp.utils.service.PhotoService;
 import com.allbooks.webapp.utils.service.SaveService;
@@ -104,7 +104,7 @@ public class BookActionsController {
 	public String postReviewPage(@RequestParam("bookId") int bookId, Model theModel, Principal principal)
 			throws IOException {
 
-		Book book = bookService.getBook(bookId);
+		Book book = bookService.getBookById(bookId);
 
 		byte[] bookPicBytes = photoService.resize(book.getBookPhoto(), 80, 120);
 

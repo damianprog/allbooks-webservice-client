@@ -15,13 +15,14 @@ public class ProfilePhotoCreator {
 	@Autowired
 	private PhotoService photoService;
 	
-	public Reader createPhotoForReader(MultipartFile mf,Reader reader) throws IOException {
+	@Autowired
+	private ResizePhoto resizePhoto;
+	
+	public void createPhotoForReader(MultipartFile mf,Reader reader) throws IOException {
 		
-		byte[] bytes = photoService.convertMultipartImage(mf, 200, 250);
+		byte[] bytes = photoService.convertMultipartImageToBytes(mf);
 		
-		reader.setProfilePhoto(bytes);
-		
-		return reader;
+		reader.setProfilePhoto(resizePhoto.resize(bytes, 200, 250));
 	}
 	
 }

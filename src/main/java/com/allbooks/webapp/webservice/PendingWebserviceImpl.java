@@ -81,4 +81,18 @@ public class PendingWebserviceImpl implements PendingWebservice {
 				params);
 	}
 
+	@Override
+	public Pending[] getReaderAsSenderPendings(int readerId) {
+
+		Map<String, Integer> params = new HashMap<String, Integer>();
+		params.put("readerId", readerId);
+
+		ResponseEntity<Pending[]> responseEntity = restTemplate.getForEntity(
+				serviceUrlName + "/readers/{readerId}/friends/senders/pendings" + accessTokenParameter, Pending[].class,
+				params);
+		
+		return responseEntity.getBody();
+
+	}
+
 }

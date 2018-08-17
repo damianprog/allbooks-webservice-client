@@ -2,6 +2,7 @@ package com.allbooks.webapp.utils.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.BookChild;
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.ReaderBook;
-import com.allbooks.webapp.entity.Review;
+import com.allbooks.webapp.factories.FileFactory;
 import com.allbooks.webapp.utils.photos.Base64Encoder;
 import com.allbooks.webapp.utils.photos.BookPicsEncoder;
 import com.allbooks.webapp.utils.photos.MultipartImageConverter;
@@ -40,6 +40,9 @@ public class PhotoServiceImpl implements PhotoService {
 
 	@Autowired
 	private ProfilePhotoCreator profilePhotoCreator;
+
+	@Autowired
+	private FileFactory fileFactory;
 	
 	@Override
 	public String getEncodedImage(byte[] theEncodedBase64) {
@@ -48,15 +51,15 @@ public class PhotoServiceImpl implements PhotoService {
 	}
 
 	@Override
-	public List<Book> encodeBookPics(List<Book> books,int width,int height) throws IOException {
+	public List<Book> encodeBookPics(List<Book> books, int width, int height) throws IOException {
 
-		return bookPicsEncoder.encode(books,width,height);
+		return bookPicsEncoder.encode(books, width, height);
 	}
 
 	@Override
-	public byte[] convertMultipartImage(MultipartFile mf, int width, int height) throws IOException {
+	public byte[] convertMultipartImageToBytes(MultipartFile mf) throws IOException {
 
-		return multipartImageConverter.convert(mf, width, height);
+		return multipartImageConverter.convert(mf);
 
 	}
 
@@ -73,17 +76,46 @@ public class PhotoServiceImpl implements PhotoService {
 	}
 
 	@Override
-	public Reader createProfilePhotoForReader(MultipartFile multipartFile,Reader reader) throws IOException {
-		return profilePhotoCreator.createPhotoForReader(multipartFile, reader);
+	public void createProfilePhotoForReader(MultipartFile multipartFile, Reader reader) throws IOException {
+		profilePhotoCreator.createPhotoForReader(multipartFile, reader);
 	}
 
 	@Override
 	public void encodeAndResizeBookPhotoInBookChildren(List<? extends BookChild> reviewsList, int width, int height) {
-		for(BookChild bc : reviewsList) {
+		for (BookChild bc : reviewsList) {
 			byte[] resizedPhoto = resizePhoto.resize(bc.getBook().getBookPhoto(), width, height);
 			bc.getBook().setEncodedBookPhoto(getEncodedImage(resizedPhoto));
 		}
+
+	}
+
+	@Override
+	public void setResizedAndEncodedPhotosInReaders(List<Reader> readers, int width, int height) {
+
+		Iterator<Reader> iter = readers.iterator();
+
+		iter.forEachRemaining(r -> {
+			r.setEncodedProfilePhoto(getEncodedImage(resize(r.getProfilePhoto(), width, height)));
+		});
+
+	}
+
+	@Override
+	public void encodeAndResizeReaderPhotoInReader(Reader reader, int width, int height) {
+
+		reader.setEncodedProfilePhoto(getEncodedImage(resize(reader.getProfilePhoto(),width,height)));
 		
 	}
-	
+
+	public void createDefaultPhotoForReader(Reader reader) {
+		
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource("images/regularProfileImage.jpg").getFile());
+		
+		byte[] defaultProfilePhotoBytes = fileFactory.fileToBytes(file);
+		
+		reader.setProfilePhoto(defaultProfilePhotoBytes);
+		
+	}
+
 }

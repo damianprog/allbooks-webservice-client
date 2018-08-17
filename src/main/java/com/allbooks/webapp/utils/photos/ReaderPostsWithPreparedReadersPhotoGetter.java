@@ -1,15 +1,12 @@
-package com.allbooks.webapp.utils.bookactions;
+package com.allbooks.webapp.utils.photos;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.allbooks.webapp.entity.Comment;
 import com.allbooks.webapp.entity.ReaderPost;
-import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.service.CommentService;
 import com.allbooks.webapp.service.ReadingChallangeCommentService;
 import com.allbooks.webapp.service.ReviewService;

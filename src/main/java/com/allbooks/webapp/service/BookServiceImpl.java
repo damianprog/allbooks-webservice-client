@@ -36,7 +36,7 @@ public class BookServiceImpl implements BookService {
 	
 
 	@Override
-	public Book getBook(int bookId) {
+	public Book getBookById(int bookId) {
 
 		return bookWebservice.getBook(bookId);
 	}

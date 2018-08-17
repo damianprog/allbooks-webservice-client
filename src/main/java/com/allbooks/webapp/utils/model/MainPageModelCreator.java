@@ -10,14 +10,12 @@ import org.springframework.ui.ModelMap;
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
-import com.allbooks.webapp.entity.ReadingChallange;
 import com.allbooks.webapp.enumeration.ShelvesStates;
 import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderBookService;
-import com.allbooks.webapp.service.ReadingChallangeService;
+import com.allbooks.webapp.utils.ReadingChallangeBoxCreator;
 import com.allbooks.webapp.utils.RecommendationGetter;
-import com.allbooks.webapp.utils.readerbook.CurrentYearReadBooksGetter;
 import com.allbooks.webapp.utils.service.PhotoService;
 import com.allbooks.webapp.utils.service.ReaderBooksUtilsService;
 
@@ -34,10 +32,7 @@ public class MainPageModelCreator {
 	private PhotoService photoService;
 
 	@Autowired
-	private ReadingChallangeService readingChallangeService;
-
-	@Autowired
-	private CurrentYearReadBooksGetter currentYearReadBooksGetter;
+	private ReadingChallangeBoxCreator readingChallangeBoxCreator;
 
 	@Autowired
 	private ReaderBooksUtilsService readerBooksUtilsService;
@@ -62,18 +57,7 @@ public class MainPageModelCreator {
 
 			int readerId = securityContextService.getLoggedReaderId();
 
-			ReadingChallange readingChallange = readingChallangeService.getReadingChallangeByReaderId(readerId);
-
-			if (readingChallange != null) {
-
-				List<ReaderBook> readBooks = currentYearReadBooksGetter.getBooks(readerId);
-
-				int readingProgressPercentage = (readBooks.size() * 100) / readingChallange.getNumberOfBooks();
-
-				modelMap.addAttribute("readingProgressPercentage", readingProgressPercentage);
-				modelMap.addAttribute("currentNumberOfBooks", readBooks.size());
-				modelMap.addAttribute("readingChallange", readingChallange);
-			}
+			modelMap.addAllAttributes(readingChallangeBoxCreator.create());
 
 			List<ReaderBook> latestReaderBooks = readerBookService.get10LatestReaderBooks();
 
@@ -88,8 +72,10 @@ public class MainPageModelCreator {
 			
 			Book recommendedBook = recommendationGetter.getRecommendedBook();
 			
-			modelMap.addAttribute("recommendedBook", recommendedBook);
-			modelMap.addAttribute("recommendedBookRating", ratingService.getOverallRating(recommendedBook.getId()));
+			if(recommendedBook != null) {
+				modelMap.addAttribute("recommendedBook", recommendedBook);
+				modelMap.addAttribute("recommendedBookRating", ratingService.getOverallRating(recommendedBook.getId()));
+			}
 			
 			modelMap.addAttribute("read", readerBooksQuantitiesMap.get("read"));
 			modelMap.addAttribute("currentlyReading", readerBooksQuantitiesMap.get("currentlyReading"));

@@ -1,0 +1,85 @@
+body {
+	background-image: url("/css/images/dust_scratches.png");
+	font-family: 'Roboto', sans-serif;
+	font-size: 12px;
+	color: black;
+}
+
+#container {
+	width: 1100px;
+	margin: 0 auto;
+}
+
+.blackRef {
+	color: black;
+}
+
+.friendDiv {
+	margin-top: 20px;
+}
+
+.friendPhoto {
+	float: left;
+}
+
+.friendDetails {
+	float: left;
+	margin-left: 10px;
+}
+
+.delete {
+	background-color: #3b5998;
+	color: white;
+	border-radius: 7px;
+	cursor: pointer;
+	margin-left: 40px;
+}
+
+#mainContainer {
+	float: left;
+	width: 700px;
+}
+
+#rightContainer {
+	float: left;
+	margin-top: 43px;
+	margin-left: 10px;
+}
+
+.smallHeaders {
+	float: left;
+	padding-right: 20px;
+}
+
+#getLinkButton {
+	border-radius: 5px;
+	background-color: #D6D0C4;
+	width: 73px;
+	height: 32px;
+	cursor: pointer;
+	padding-top: 10px;
+	padding-left: 10px;
+}
+
+.nonDecRef {
+	color: black;
+	text-decoration: none;
+}
+
+.pendingDiv{
+	margin-top:10px;
+}
+
+#searchBox{
+	border-radius:5px;
+	border:1px solid #aaaaaa;
+	width:200px;
+	height:32px;
+}
+
+#searchButton{
+	background-color:#6B6B6B;
+	color:white;
+	border-radius:5px;
+	height:32px;
+}

@@ -19,8 +19,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileFactoryImpl extends FileFactory{
 
 	@Override
-	public byte[] fileToBytes(File file) throws IOException {
-		return Files.readAllBytes(file.toPath());
+	public byte[] fileToBytes(File file) {
+		try {
+			return Files.readAllBytes(file.toPath());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 	@Override
@@ -44,9 +50,13 @@ public class FileFactoryImpl extends FileFactory{
 	}
 
 	@Override
-	public ByteArrayOutputStream getByteArrayOutputStreamFromBufferedImage(BufferedImage resizedBookPic) throws IOException {
+	public ByteArrayOutputStream getByteArrayOutputStreamFromBufferedImage(BufferedImage resizedBookPic) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ImageIO.write(resizedBookPic, "jpg", baos);
+		try {
+			ImageIO.write(resizedBookPic, "jpg", baos);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		return baos;
 	}

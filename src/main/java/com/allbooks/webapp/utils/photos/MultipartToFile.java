@@ -16,12 +16,16 @@ public class MultipartToFile {
 	@Autowired
 	private FileFactory fileFactory;
 	
-	public File convert(MultipartFile multipartFile) throws IOException {
+	public File convert(MultipartFile multipartFile) {
 		File convFile = fileFactory.multipartFileGetOriginalFileName(multipartFile);
-		convFile.createNewFile();
-		FileOutputStream fos = fileFactory.createFileOutputStream(convFile);
-		fos.write(multipartFile.getBytes());
-		fos.close();
+		try {
+			convFile.createNewFile();
+			FileOutputStream fos = fileFactory.createFileOutputStream(convFile);
+			fos.write(multipartFile.getBytes());
+			fos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return convFile;
 	}
 	

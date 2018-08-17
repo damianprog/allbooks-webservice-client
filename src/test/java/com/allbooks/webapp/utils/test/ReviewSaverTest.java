@@ -72,7 +72,7 @@ public class ReviewSaverTest {
 		when(contextServiceMock.getLoggedReaderId()).thenReturn(readerId);
 		when(reviewDataMock.getBookId()).thenReturn(bookId);
 		when(readerServiceMock.getReaderById(readerId)).thenReturn(readerMock);
-		when(bookServiceMock.getBook(bookId)).thenReturn(bookMock);
+		when(bookServiceMock.getBookById(bookId)).thenReturn(bookMock);
 
 		when(reviewDataMock.getReview()).thenReturn(reviewMock);
 		when(ratingServiceMock.getReaderRatingObject(readerId, bookId)).thenReturn(ratingMock);
@@ -82,7 +82,7 @@ public class ReviewSaverTest {
 		verify(contextServiceMock).getLoggedReaderId();
 		verify(reviewDataMock).getBookId();
 		verify(readerServiceMock).getReaderById(readerId);
-		verify(bookServiceMock).getBook(bookId);
+		verify(bookServiceMock).getBookById(bookId);
 		
 		verify(reviewDataMock).getReview();
 		verify(ratingServiceMock).getReaderRatingObject(readerId, bookId);

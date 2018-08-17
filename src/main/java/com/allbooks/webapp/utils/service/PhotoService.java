@@ -16,13 +16,18 @@ public interface PhotoService {
 
 	List<Book> encodeBookPics(List<Book> books, int width, int height) throws IOException;
 
-	byte[] convertMultipartImage(MultipartFile mf, int width, int height) throws IOException;
+	byte[] convertMultipartImageToBytes(MultipartFile mf) throws IOException;
 
 	File convertMultipartToFile(MultipartFile file) throws IOException;
 
 	byte[] resize(byte[] bookPicBytes, int width, int height);
 
-	Reader createProfilePhotoForReader(MultipartFile multipartFile, Reader reader) throws IOException;
+	void createProfilePhotoForReader(MultipartFile multipartFile, Reader reader) throws IOException;
 
 	void encodeAndResizeBookPhotoInBookChildren(List<? extends BookChild> list,int width,int height);
+	
+	void encodeAndResizeReaderPhotoInReader(Reader reader,int width,int height);
+	
+	void setResizedAndEncodedPhotosInReaders(List<Reader> readers,int width,int height);
+	
 }

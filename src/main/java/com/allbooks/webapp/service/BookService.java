@@ -12,7 +12,7 @@ public interface BookService {
 
 	String getBookName(int bookId);
 
-	Book getBook(int bookId);
+	Book getBookById(int bookId);
 
 	Book getBookByName(String bookname);
 

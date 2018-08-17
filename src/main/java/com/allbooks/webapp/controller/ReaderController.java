@@ -28,8 +28,8 @@ import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
-import com.allbooks.webapp.utils.bookactions.ReaderPostsWithPreparedReadersPhotoGetter;
 import com.allbooks.webapp.utils.model.MainPageModelCreator;
+import com.allbooks.webapp.utils.photos.ReaderPostsWithPreparedReadersPhotoGetter;
 import com.allbooks.webapp.utils.readerbook.ReaderBookAndRatingModelCreator;
 import com.allbooks.webapp.utils.service.PhotoServiceImpl;
 import com.allbooks.webapp.utils.service.SaveService;
@@ -101,7 +101,7 @@ public class ReaderController {
 	public String showBook(@RequestParam(value = "bookId", required = false) int bookId, Model theModel,
 			HttpSession session, Principal principal) throws Exception {
 
-		Book book = bookService.getBook(bookId); // define proper name of method
+		Book book = bookService.getBookById(bookId); 
 
 		theModel.addAllAttributes(readerBookAndRatingModelCreator.createModel(bookId));
 		theModel.addAttribute("quotesSplit", Arrays.asList(book.getBookQuotes().split("/")));
@@ -123,6 +123,7 @@ public class ReaderController {
 			return "join";
 
 		if (!readerService.isThisLoginTaken(reader.getUsername())) {
+			photoService.createDefaultPhotoForReader(reader);
 			saveService.saveReader(reader);
 			theModel.addAttribute("success", true);
 		} else

@@ -42,7 +42,7 @@ public class RatingSaver {
 
 		Reader reader = readerService.getReaderById(readerId);
 
-		Book book = bookService.getBook(ratingData.getBookId());
+		Book book = bookService.getBookById(ratingData.getBookId());
 
 		rating.setReader(reader);
 		rating.setBook(book);

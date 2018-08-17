@@ -18,16 +18,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.allbooks.webapp.entity.FavoriteGenres;
 import com.allbooks.webapp.entity.Notification;
+import com.allbooks.webapp.entity.Pending;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.ReaderPost;
 import com.allbooks.webapp.entity.ReadingChallange;
 import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.FavoriteGenresService;
+import com.allbooks.webapp.service.FriendsService;
 import com.allbooks.webapp.service.NotificationService;
+import com.allbooks.webapp.service.PendingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReadingChallangeService;
-import com.allbooks.webapp.utils.bookactions.ReaderPostsWithPreparedReadersPhotoGetter;
+import com.allbooks.webapp.utils.model.FriendsRequestsOptionsModelCreator;
+import com.allbooks.webapp.utils.photos.ReaderPostsWithPreparedReadersPhotoGetter;
 import com.allbooks.webapp.utils.readerbook.CurrentYearReadBooksGetter;
 import com.allbooks.webapp.utils.service.PhotoService;
 import com.google.gson.Gson;
@@ -42,7 +46,7 @@ public class LoggedReaderController {
 	@Autowired
 	private ReadingChallangeService readingChallangeService;
 
-	@Autowired
+	@Autowired	
 	private ReaderService readerService;
 
 	@Autowired
@@ -59,6 +63,15 @@ public class LoggedReaderController {
 
 	@Autowired
 	private FavoriteGenresService favoriteGenresService;
+
+	@Autowired
+	private FriendsService friendsService;
+
+	@Autowired
+	private PendingService pendingService;
+
+	@Autowired
+	private FriendsRequestsOptionsModelCreator friendsRequestsOptionsModelCreator;
 
 	@GetMapping("/showNotifications")
 	public String showNotificationsPage(Model theModel, Principal principal, HttpSession session,
@@ -145,8 +158,8 @@ public class LoggedReaderController {
 
 			theModel.addAttribute("favoriteGenres", jsonArray);
 		}
-		
-		theModel.addAttribute("savedAlert",savedAlert);
+
+		theModel.addAttribute("savedAlert", savedAlert);
 
 		return "favoriteGenres";
 	}
@@ -156,18 +169,18 @@ public class LoggedReaderController {
 			@RequestParam("categoryChecked") List<String> categoriesChecked) {
 
 		FavoriteGenres fGenres;
-		
+
 		int readerId = contextService.getLoggedReaderId();
 
 		Reader reader = readerService.getReaderById(readerId);
 
 		fGenres = favoriteGenresService.getFavoriteGenresByReaderId(readerId);
-		
-		if(fGenres == null) {
+
+		if (fGenres == null) {
 			fGenres = new FavoriteGenres();
 			fGenres.setReader(reader);
 		}
-		
+
 		fGenres.setFavoriteGenres(String.join(",", categoriesChecked));
 
 		favoriteGenresService.saveFavoriteGenres(fGenres);
@@ -176,6 +189,59 @@ public class LoggedReaderController {
 
 		return "redirect:/loggedReader/showFavoriteGenres";
 
+	}
+
+	@GetMapping("/showFriends")
+	public String showFriends(Model theModel) {
+
+		int readerId = contextService.getLoggedReaderId();
+
+		List<Reader> friends = friendsService.getReaderFriends(readerId);
+
+		photoService.setResizedAndEncodedPhotosInReaders(friends, 80, 80);
+
+		theModel.addAttribute("friends", friends);
+
+		return "friends";
+	}
+
+	@GetMapping("/showFriendsRequests")
+	public String showFriendsRequests(Model theModel) {
+
+		int readerId = contextService.getLoggedReaderId();
+
+		List<Pending> friendsRequests = pendingService.getFriendsInvitesByReaderId(readerId);
+
+		theModel.addAttribute("friendsRequests", friendsRequests);
+
+		return "friendsRequests";
+	}
+
+	@GetMapping("/showAddFriends")
+	public String showAddFriends(Model theModel, @RequestParam(value = "username", required = false) String username) {
+
+		int readerId = contextService.getLoggedReaderId();
+
+		Reader searchedReader = null;
+
+		theModel.addAttribute("isAlreadySent", false);
+
+		if (username != null)
+			searchedReader = readerService.getReaderByUsername(username);
+
+		if (searchedReader != null) {
+
+			photoService.encodeAndResizeReaderPhotoInReader(searchedReader, 80, 80);
+
+			theModel.addAttribute("searchedReader", searchedReader);
+
+			theModel.addAllAttributes(friendsRequestsOptionsModelCreator.createModelMap(readerId, searchedReader.getId()));
+		}
+
+		if(username != null && searchedReader == null)
+			theModel.addAttribute("notFound",true);
+		
+		return "addFriends";
 	}
 
 }

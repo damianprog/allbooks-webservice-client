@@ -2,7 +2,6 @@ package com.allbooks.webapp.controller;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,12 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.allbooks.webapp.entity.BookChild;
 import com.allbooks.webapp.entity.Details;
 import com.allbooks.webapp.entity.Pending;
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.Review;
+import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.FriendsService;
 import com.allbooks.webapp.service.PendingService;
 import com.allbooks.webapp.service.ReaderService;
@@ -63,13 +61,17 @@ public class ProfileController {
 	@Autowired
 	private PendingService pendingService;
 
+	@Autowired
+	private SecurityContextService contextService;
+
 	@GetMapping("/showProfile")
 	public String showProfile(@RequestParam(value = "readerId", required = false) Integer readerId, HttpSession session,
 			Model theModel, Principal principal) {
 
 		Reader reader = readerService.getReaderById(readerId);
 
-		Map<String, Integer> readerBooksQuantitiesMap = readerBooksUtilsService.getReaderBooksQuantities(reader.getId());
+		Map<String, Integer> readerBooksQuantitiesMap = readerBooksUtilsService
+				.getReaderBooksQuantities(reader.getId());
 
 		if (reader.getProfilePhoto() != null)
 			theModel.addAttribute("profilePic", photoService.getEncodedImage(reader.getProfilePhoto()));
@@ -77,10 +79,10 @@ public class ProfileController {
 		List<Reader> friends = friendsService.getReaderFriends(reader.getId());
 
 		List<Review> reviewsList = reviewService.getLatestReaderReviews(readerId);
-		
-		photoService.encodeAndResizeBookPhotoInBookChildren(reviewsList, 80,87);
-		
-		theModel.addAttribute("readerReviews",reviewsList);
+
+		photoService.encodeAndResizeBookPhotoInBookChildren(reviewsList, 80, 87);
+
+		theModel.addAttribute("readerReviews", reviewsList);
 		theModel.addAttribute("details", reader.getDetails());
 		theModel.addAttribute("read", readerBooksQuantitiesMap.get("read"));
 		theModel.addAttribute("currentlyReading", readerBooksQuantitiesMap.get("currentlyReading"));
@@ -104,7 +106,9 @@ public class ProfileController {
 		if (multipartFile.isEmpty())
 			return "redirect:/profile/showProfile";
 
-		readerService.updateReader(photoService.createProfilePhotoForReader(multipartFile, reader));
+		photoService.createProfilePhotoForReader(multipartFile, reader);
+		
+		readerService.updateReader(reader);
 
 		return "redirect:/profile/showProfile";
 	}
@@ -119,34 +123,50 @@ public class ProfileController {
 	}
 
 	@GetMapping("/inviteFriend")
-	public String inviteFriend(@RequestParam Map<String, String> params, HttpSession session, RedirectAttributes ra) {
+	public String inviteFriend(@RequestParam("pageName") String pageName, @RequestParam Map<String, String> params,
+			HttpSession session, RedirectAttributes ra) {
 
 		Pending pending = friendsUtilsService.createPending(params);
 
 		pendingService.savePending(pending);
 
-		ra.addAttribute("readerId", pending.getRecipent().getId());
-		return "redirect:/profile/showProfile";
+		if(pageName.equals("profile")) {
+			ra.addAttribute("readerId", pending.getRecipent().getId());
+			return "redirect:/profile/showProfile";
+		}
+		else
+			return "redirect:/loggedReader/showAddFriends";
 	}
 
 	@PostMapping("/acceptOrAbort") // need to change property friendsId
-	public String acceptOrAbort(@RequestParam Map<String, String> params, Model theModel, HttpSession session,
-			RedirectAttributes ra) {
+	public String acceptOrAbort(@RequestParam("pageName") String pageName, @RequestParam Map<String, String> params,
+			Model theModel, HttpSession session, RedirectAttributes ra) {
 
 		friendsUtilsService.acceptOrAbort(params);
 
-		ra.addAttribute("readerId", params.get("recipentId"));
-		return "redirect:/profile/showProfile";
+		if (pageName.equals("profile")) {
+			ra.addAttribute("readerId", params.get("recipentId"));
+			return "redirect:/profile/showProfile";
+		} else
+			return "redirect:/loggedReader/showFriendsRequests";
 	}
 
 	@DeleteMapping("/deleteFriends")
-	public String deleteFriends(@RequestParam("readerId") int readerId, @RequestParam("friendId") int friendId,
+	public String deleteFriends(@RequestParam("pageName") String pageName, @RequestParam("friendId") int friendId,
 			Model theModel, HttpSession session, Principal principal, RedirectAttributes ra) {
+
+		int readerId = contextService.getLoggedReaderId();
 
 		friendsUtilsService.deleteFriends(readerId, friendId);
 
 		ra.addAttribute("readerId", readerId);
-		return "redirect:/profile/showProfile";
+
+		if (pageName.equals("profile"))
+			return "redirect:/profile/showProfile";
+		else if (pageName.equals("friends"))
+			return "redirect:/loggedReader/showFriends";
+		else
+			return "redirect:/loggedReader/showFriends";
 	}
 
 	@GetMapping("/showEdit")
