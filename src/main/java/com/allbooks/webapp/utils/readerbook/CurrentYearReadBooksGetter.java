@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.allbooks.webapp.entity.ReaderBook;
-import com.allbooks.webapp.enumeration.ShelvesStates;
+import com.allbooks.webapp.enumeration.ShelvesState;
 import com.allbooks.webapp.service.ReaderBookService;
 
 @Component
@@ -20,7 +20,7 @@ public class CurrentYearReadBooksGetter {
 	
 	public List<ReaderBook> getBooks(int readerId){
 		
-		List<ReaderBook> readBooks = readerBookService.getReaderBooksByShelves(readerId, ShelvesStates.READ);
+		List<ReaderBook> readBooks = readerBookService.getReaderBooksByShelves(readerId, ShelvesState.READ);
 		
 		List<ReaderBook> currentYearBooks = new ArrayList<>();
 		

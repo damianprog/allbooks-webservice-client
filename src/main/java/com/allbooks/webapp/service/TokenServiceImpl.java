@@ -3,9 +3,9 @@ package com.allbooks.webapp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.allbooks.webapp.entity.PasswordToken;
-import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.VerificationToken;
+import com.allbooks.webapp.entity.Token;
+import com.allbooks.webapp.enumeration.TokenType;
+import com.allbooks.webapp.utils.entity.TokenData;
 import com.allbooks.webapp.webservice.TokenWebservice;
 
 @Service
@@ -15,56 +15,37 @@ public class TokenServiceImpl implements TokenService {
 	private TokenWebservice tokenWebservice;
 
 	@Override
-	public PasswordToken createPasswordToken(Reader reader, String token) {
+	public Token getTokenByReaderId(int readerId, TokenType tokenType) {
 
-		PasswordToken passwordToken = new PasswordToken(token, reader);
-		return tokenWebservice.savePasswordToken(passwordToken);
-
+		return tokenWebservice.getTokenByReaderId(readerId, tokenType);
 	}
 
 	@Override
-	public PasswordToken getPasswordTokenByReaderId(int readerId) {
+	public void deleteTokenByReaderId(int readerId, TokenType tokenType) {
 
-		return tokenWebservice.getPasswordTokenByReaderId(readerId);
+		tokenWebservice.deleteTokenByReaderId(readerId, tokenType);
 	}
 
 	@Override
-	public PasswordToken getPasswordTokenByCredentials(int readerId, String token) {
+	public void deleteTokenById(int tokenId) {
 
-		return tokenWebservice.getPasswordTokenByCredentials(readerId, token);
+		tokenWebservice.deleteTokenById(tokenId);
 	}
 
 	@Override
-	public void deletePasswordTokenByReaderId(int readerId) {
+	public void updateToken(Token verificationToken) {
 
-		tokenWebservice.deletePasswordTokenByReaderId(readerId);
+		tokenWebservice.updateToken(verificationToken);
 	}
 
 	@Override
-	public VerificationToken createVerificationToken(Reader reader, String token) {
-
-		VerificationToken tokenObj = new VerificationToken(token, reader);
-
-		return tokenWebservice.saveVerificationToken(tokenObj);
-
+	public Token saveToken(Token token) {
+		return tokenWebservice.saveToken(token);
 	}
 
 	@Override
-	public VerificationToken getVerificationTokenByReaderId(int readerId) {
-
-		return tokenWebservice.getVerificationTokenByReaderId(readerId);
-	}
-
-	@Override
-	public void deleteVerificationTokenById(int tokenId) {
-
-		tokenWebservice.deleteVerificationTokenTokenById(tokenId);
-	}
-
-	@Override
-	public void updateVerificationToken(VerificationToken verificationToken) {
-
-		tokenWebservice.updateVerificationToken(verificationToken);
+	public Token getTokenByCredentials(TokenData tokenData) {
+		return tokenWebservice.getTokenByCredentials(tokenData);
 	}
 
 }

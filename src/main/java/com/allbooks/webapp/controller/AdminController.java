@@ -18,21 +18,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.allbooks.webapp.entity.Ban;
 import com.allbooks.webapp.entity.Book;
-import com.allbooks.webapp.entity.Comment;
 import com.allbooks.webapp.entity.Notification;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderPost;
-import com.allbooks.webapp.entity.ReadingChallangeComment;
 import com.allbooks.webapp.entity.Review;
+import com.allbooks.webapp.enumeration.CommentType;
 import com.allbooks.webapp.service.BanService;
 import com.allbooks.webapp.service.BookService;
-import com.allbooks.webapp.service.CommentService;
 import com.allbooks.webapp.service.NotificationService;
 import com.allbooks.webapp.service.ReaderService;
-import com.allbooks.webapp.service.ReadingChallangeCommentService;
 import com.allbooks.webapp.service.ReviewService;
 import com.allbooks.webapp.utils.admin.BanningExecutor;
+import com.allbooks.webapp.utils.admin.CommentByTypeGetter;
 import com.allbooks.webapp.utils.admin.PostsRemover;
+import com.allbooks.webapp.utils.entity.CommentRemovalData;
 import com.allbooks.webapp.utils.service.PhotoServiceImpl;
 
 @Controller
@@ -52,9 +51,6 @@ public class AdminController {
 	private ReviewService reviewService;
 
 	@Autowired
-	private CommentService commentService;
-
-	@Autowired
 	private NotificationService notificationService;
 
 	@Autowired
@@ -67,8 +63,8 @@ public class AdminController {
 	private PostsRemover postsRemover;
 
 	@Autowired
-	private ReadingChallangeCommentService challangeCommentService;
-
+	private CommentByTypeGetter commentByTypeGetter;
+	
 	@GetMapping("/showAddBook")
 	public String addBook(Model theModel) {
 
@@ -161,13 +157,10 @@ public class AdminController {
 	public String showDeleteComment(@RequestParam("commentId") int commentId,
 			@RequestParam("commentType") String commentType, Model theModel) {
 
-		ReaderPost comment;
-
-		if (commentType.equals("REVIEW_COMMENT"))
-			comment = commentService.getCommentById(commentId);
-		else
-			comment = challangeCommentService.getCommentById(commentId);
-
+		CommentType commentTypeEnum = CommentType.enumValueOf(commentType);
+		
+		ReaderPost comment = commentByTypeGetter.getCommentByTypeAndId(commentTypeEnum, commentId);
+		
 		byte[] readerPhoto = comment.getPostingReader().getProfilePhoto();
 
 		String encodedReaderPhoto = photoService.getEncodedImage(photoService.resize(readerPhoto, 80, 80));
@@ -184,43 +177,14 @@ public class AdminController {
 	public String deleteComment(@RequestParam("commentId") int commentId, @RequestParam("reasonText") String reasonText,
 			@RequestParam("commentType") String commentType, Model theModel, RedirectAttributes ra) {
 
-		ra.addAttribute("commentId",commentId);
-		ra.addAttribute("reasonText",reasonText);
+		CommentType commentTypeEnum = CommentType.enumValueOf(commentType);
 		
-		switch (commentType) {
-		case "REVIEW_COMMENT":
-			return "redirect:/admin/deleteReviewComment";
-			
-		case "CHALLANGE_COMMENT":
-			return "redirect:/admin/deleteReadingChallangeComment";
-		}
+		CommentRemovalData commentRemovalData = new CommentRemovalData(commentTypeEnum,commentId,reasonText);
+		
+		postsRemover.deleteCommentByTypeAndId(commentRemovalData);
 
 		return "redirect:/reader/main";
 
-	}
-
-	@GetMapping("/deleteReviewComment")
-	public String deleteReviewComment(@RequestParam("commentId") int commentId,
-			@RequestParam("reasonText") String reasonText, RedirectAttributes ra) {
-		Comment comment = commentService.getCommentById(commentId);
-
-		postsRemover.deleteComment(commentId, reasonText);
-
-		ra.addAttribute("reviewId", comment.getReview().getId());
-
-		return "redirect:/bookActions/reviewPage";
-	}
-
-	@GetMapping("/deleteReadingChallangeComment")
-	public String deleteReadingChallangeComment(@RequestParam("commentId") int commentId,
-			@RequestParam("reasonText") String reasonText, Model theModel, RedirectAttributes ra) {
-		ReadingChallangeComment challangeComment = challangeCommentService.getCommentById(commentId);
-
-		postsRemover.deleteReadingChallangeComment(commentId, reasonText);
-
-		ra.addAttribute("readerId", challangeComment.getChallangeReader().getId());
-
-		return "redirect:/loggedReader/showReadingChallange";
 	}
 
 	@GetMapping("/sendNotice")

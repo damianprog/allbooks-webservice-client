@@ -7,7 +7,7 @@
 
 <head>
 <title>Sign In</title>
-<link type="text/css" rel="stylesheet" href="/css/saved.css" />
+<link type="text/css" rel="stylesheet" href="/css/forgot.css" />
 <link href="https://fonts.googleapis.com/css?family=Roboto|Spectral+SC"
 	rel="stylesheet">
 
@@ -22,30 +22,22 @@
 		</table>
 
 		<div class="whiteContainer2">
-			<c:choose>
-				<c:when test="${empty changing}">
 					<h3>You forgot your Allbooks password</h3>
 			Enter your email so we can send you link to page where you can change
 			your password
-			</c:when>
-				<c:otherwise>
-					<h3>Change your Allbooks password</h3>
-			Now you can change your Allbooks Account password
-			</c:otherwise>
-			</c:choose>
 			<c:choose>
-				<c:when test="${info == 'EMAIL_ERROR'}">
+				<c:when test="${information == 'EMAIL_ERROR'}">
 					<br>
 					<span style="color: red">There is no reader with email like
 						this</span>
 				</c:when>
 
-				<c:when test="${info == 'TOKEN_SENT'}">
+				<c:when test="${information == 'TOKEN_SENT'}">
 					<br>
 				The email has been sent to the given email address.
 			</c:when>
 
-				<c:when test="${info == 'ALREADY_SENT'}">
+				<c:when test="${information == 'ALREADY_SENT'}">
 					<br>
 					<span style="color: red">The token has been already sent to
 						this email!</span>
@@ -53,31 +45,6 @@
 				
 			</c:choose>
 			<div id="loginTable">
-
-				<c:choose>
-					<c:when test="${!empty changing}">
-						<form:form method="POST" action="/readerAccount/changePassword">
-
-							<table>
-								<tr>
-									<td>Allbooks Password</td>
-								</tr>
-								<tr>
-									<td><input name="password" type="password"
-										placeholder="Password" class="joinInputBox" required="required" />
-										<input name="readerId" type="hidden" value="${readerId}" /></td>
-
-								</tr>
-
-								<tr>
-									<td id="joinSubmitTd"><input class="signIn" type="submit"
-										value="Change" /></td>
-								</tr>
-							</table>
-							<input type="hidden" name="readerId" value="${reader.id}">
-						</form:form>
-					</c:when>
-					<c:otherwise>
 
 						<form:form method="POST" action="/readerAccount/forgotPassword">
 
@@ -97,8 +64,6 @@
 								</tr>
 							</table>
 						</form:form>
-					</c:otherwise>
-				</c:choose>
 			</div>
 		</div>
 

@@ -27,8 +27,7 @@
 			<div id="image">
 				<table id="picTable">
 					<tr>
-						<td>
-									<img src="data:image/jpeg;base64,${profilePic}"></td>
+						<td><img src="data:image/jpeg;base64,${profilePic}"></td>
 					</tr>
 					<c:choose>
 						<c:when test="${reader.username == principalName}">
@@ -40,8 +39,8 @@
 									<form method="POST" action="/profile/profileUpload"
 										enctype="multipart/form-data" id="uploadForm">
 										<input type="file" name="file" required="required"
-											accept=".jpg" id="photoInput" /> <br /> <input type="submit"
-											value="Submit" id="photoSubmit" />
+											accept=".jpg" id="photoInput" /> <br /> <input
+											type="submit" value="Submit" id="photoSubmit" />
 									</form>
 								</td>
 							</tr>
@@ -143,7 +142,7 @@
 
 			</div>
 			<div class="underFirstTable">
-				<h4 id="topDesc">${reader.username}&nbsp;iscurrently reading</h4>
+				<h4 id="topDesc">${reader.username}&nbsp;iscurrentlyreading</h4>
 				<hr>
 
 				<c:forEach var="tempBook" items="${currentlyReadingList}">
@@ -292,50 +291,84 @@
 				</c:choose>
 			</div>
 
-			<c:if test="${reader.username == principalName}">
+			<c:choose>
+				<c:when test="${reader.username == principalName}">
+					<div id="readingChallange">
 
-				<div id="readingChallange">
+						<h3>2018 Reading Challange</h3>
+						<div id="readingChallangeDesc">Challenge yourself to read
+							more this year!</div>
 
-					<h3>2018 Reading Challange</h3>
-					<div id="readingChallangeDesc">Challenge yourself to read
-						more this year!</div>
+						<div id="readingChallangeImage">
+							<img src="/css/images/books.png">
+						</div>
 
-					<div id="readingChallangeImage">
-						<img src="/css/images/books.png">
+						<div id="readingChallangeActions">
+
+							<c:choose>
+								<c:when test="${empty readingChallange}">
+									<form action="/loggedReader/submitReadingChallange">
+										<span>I want to read</span><br> <input
+											name="numberOfBooks" id="numberOfBooks" type="number" min="0"><br>
+										<span>books in 2018</span><br> <input id="startChallange"
+											type="submit" value="Start Challange">
+									</form>
+								</c:when>
+								<c:otherwise>
+
+									<c:url var="readingChallangeRef"
+										value="/loggedReader/showReadingChallange">
+										<c:param name="readerId" value="${reader.id}" />
+									</c:url>
+									<div style="font-size: 28px;">${currentNumberOfBooks}</div>
+							books completed<br>
+									<div style="margin-top: 10px; font-size: 14px; color: #767676;">You're
+										on track!</div>
+									<div style="margin-top: 5px;">${currentNumberOfBooks}/${readingChallange.numberOfBooks}
+										(${readingProgressPercentage} &#37;)</div>
+									<div>
+										<a class="blueLink" href="${readingChallangeRef}">view
+											challange</a>
+									</div>
+								</c:otherwise>
+							</c:choose>
+						</div>
 					</div>
+				</c:when>
+				<c:otherwise>
 
-					<div id="readingChallangeActions">
+					<c:if test="${not empty readingChallange}">
 
-						<c:choose>
-							<c:when test="${empty readingChallange}">
-								<form action="/loggedReader/readingChallange">
-									<span>I want to read</span><br> <input
-										name="numberOfBooks" id="numberOfBooks" type="number" min="0"><br>
-									<span>books in 2018</span><br> <input id="startChallange"
-										type="submit" value="Start Challange">
-								</form>
-							</c:when>
-							<c:otherwise>
+						<div id="readingChallange">
+
+							<h3>2018 Reading Challange</h3>
+							<div id="readingChallangeDesc">${reader.username}&nbsp;reading
+								challange progress</div>
+
+							<div id="readingChallangeImage">
+								<img src="/css/images/books.png">
+							</div>
+
+							<div id="readingChallangeActions">
 
 								<c:url var="readingChallangeRef"
 									value="/loggedReader/showReadingChallange">
-									<c:param name="readerId" value="${loggedReaderId}" />
+									<c:param name="readerId" value="${reader.id}" />
 								</c:url>
 								<div style="font-size: 28px;">${currentNumberOfBooks}</div>
-							books completed<br>
-								<div style="margin-top: 10px; font-size: 14px; color: #767676;">You're
-									on track!</div>
+								books completed<br>
 								<div style="margin-top: 5px;">${currentNumberOfBooks}/${readingChallange.numberOfBooks}
 									(${readingProgressPercentage} &#37;)</div>
 								<div>
 									<a class="blueLink" href="${readingChallangeRef}">view
 										challange</a>
 								</div>
-							</c:otherwise>
-						</c:choose>
-					</div>
-				</div>
-			</c:if>
+							</div>
+						</div>
+					</c:if>
+				</c:otherwise>
+			</c:choose>
+
 		</div>
 	</div>
 	<script src="/js/profileShowMore.js"></script>

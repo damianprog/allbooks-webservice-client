@@ -67,7 +67,7 @@
 					${readingChallange.numberOfBooks} books in 2018
 				</c:when>
 						<c:otherwise>
-					${reader.username} have read ${readBooks.size()} of
+					<a class="blackRef" href="${readerProfileRef}">${reader.username}</a> have read ${readBooks.size()} of
 					${readingChallange.numberOfBooks} books in 2018
 				</c:otherwise>
 					</c:choose>

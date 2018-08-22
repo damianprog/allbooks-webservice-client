@@ -58,7 +58,7 @@
 
 					<c:choose>
 						<c:when test="${empty readingChallange}">
-							<form action="/loggedReader/readingChallange">
+							<form action="/loggedReader/submitReadingChallange">
 								<span>I want to read</span><br> <input name="numberOfBooks"
 									id="numberOfBooks" type="number" min="0"><br> <span>books
 									in 2018</span><br> <input id="startChallange" type="submit"

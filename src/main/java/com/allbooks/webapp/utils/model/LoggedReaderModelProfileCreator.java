@@ -40,18 +40,14 @@ public class LoggedReaderModelProfileCreator {
 
 			int readerOfProfileId = readerOfProfile.getId();
 
-			if (!(loggedReaderId == readerOfProfileId)) {
-
-				
+			if (loggedReaderId != readerOfProfileId)
 
 				modelMap.addAllAttributes(
 						friendsRequestsOptionsModelCreator.createModelMap(loggedReaderId, readerOfProfileId));
-			}
-
-			else {
+			else 
 				modelMap.addAttribute("friendsRequests", pendingService.getFriendsInvitesByReaderId(readerOfProfileId));
-				modelMap.addAllAttributes(readingChallangeBoxCreator.create());
-			}
+			
+			modelMap.addAllAttributes(readingChallangeBoxCreator.create(readerOfProfile.getId()));
 			modelMap.addAttribute("principalName", loggedReaderName);
 		}
 

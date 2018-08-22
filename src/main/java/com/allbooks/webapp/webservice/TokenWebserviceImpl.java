@@ -11,8 +11,9 @@ import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.allbooks.webapp.entity.PasswordToken;
-import com.allbooks.webapp.entity.VerificationToken;
+import com.allbooks.webapp.entity.Token;
+import com.allbooks.webapp.enumeration.TokenType;
+import com.allbooks.webapp.utils.entity.TokenData;
 
 @Service
 public class TokenWebserviceImpl implements TokenWebservice {
@@ -34,71 +35,57 @@ public class TokenWebserviceImpl implements TokenWebservice {
 	}
 
 	@Override
-	public PasswordToken savePasswordToken(PasswordToken passwordToken) {
-		return restTemplate.postForObject(serviceUrlName + "/readers/passwordTokens" + accessTokenParameter,
-				passwordToken, PasswordToken.class);
+	public Token saveToken(Token token) {
+		return restTemplate.postForObject(serviceUrlName + "/tokens" + accessTokenParameter,
+				token, Token.class);
 
 	}
 
 	@Override
-	public PasswordToken getPasswordTokenByReaderId(int readerId) {
-		Map<String, Integer> params = new HashMap<>();
-		params.put("readerId", readerId);
-
-		return restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/passwordTokens" + accessTokenParameter,
-				PasswordToken.class, params);
-	}
-
-	@Override
-	public PasswordToken getPasswordTokenByCredentials(int readerId, String token) {
+	public Token getTokenByReaderId(int readerId,TokenType tokenType) {
 		Map<String, String> params = new HashMap<>();
 		params.put("readerId", String.valueOf(readerId));
-		params.put("passwordToken", token);
+		params.put("tokenType", tokenType.toString());
+
+		return restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/tokens/types/{tokenType}" + accessTokenParameter,
+				Token.class, params);
+	}
+
+	@Override
+	public Token getTokenByCredentials(TokenData tokenData) {
+		Map<String, String> params = new HashMap<>();
+		params.put("readerId", String.valueOf(tokenData.getReaderId()));
+		params.put("token", tokenData.getToken());
+		params.put("tokenType", tokenData.getTokenType().toString());
 
 		return restTemplate.getForObject(
-				serviceUrlName + "/readers/{readerId}/passwordTokens/{passwordToken}" + accessTokenParameter,
-				PasswordToken.class, params);
+				serviceUrlName + "/readers/{readerId}/tokens/{token}/types/{tokenType}" + accessTokenParameter,
+				Token.class, params);
 	}
-
+	
 	@Override
-	public void deletePasswordTokenByReaderId(int readerId) {
-		Map<String, Integer> params = new HashMap<>();
-		params.put("readerId", readerId);
+	public void deleteTokenByReaderId(int readerId,TokenType tokenType) {
+		Map<String, String> params = new HashMap<>();
+		params.put("readerId", String.valueOf(readerId));
+		params.put("tokenType", tokenType.toString());
 
-		restTemplate.delete(serviceUrlName + "/readers/{readerId}/passwordTokens" + accessTokenParameter, params);
-
-	}
-
-	@Override
-	public VerificationToken saveVerificationToken(VerificationToken verificationToken) {
-		return restTemplate.postForObject(serviceUrlName + "/readers/verificationTokens" + accessTokenParameter,
-				verificationToken, VerificationToken.class);
+		restTemplate.delete(serviceUrlName + "/readers/{readerId}/tokens/types/{tokenType}" + accessTokenParameter, params);
 
 	}
 
 	@Override
-	public VerificationToken getVerificationTokenByReaderId(int readerId) {
-		Map<String, Integer> params = new HashMap<>();
-		params.put("readerId", readerId);
-
-		return restTemplate.getForObject(
-				serviceUrlName + "/readers/{readerId}/verificationTokens" + accessTokenParameter,
-				VerificationToken.class, params);
-	}
-
-	@Override
-	public void deleteVerificationTokenTokenById(int tokenId) {
+	public void deleteTokenById(int tokenId) {
 		Map<String, Integer> params = new HashMap<>();
 		params.put("tokenId", tokenId);
 
-		restTemplate.delete(serviceUrlName + "/verificationTokens/{tokenId}" + accessTokenParameter, params);
+		restTemplate.delete(serviceUrlName + "/tokens/{tokenId}" + accessTokenParameter, params);
 
 	}
 
 	@Override
-	public void updateVerificationToken(VerificationToken verificationToken) {
+	public void updateToken(Token token) {
 
-		restTemplate.put(serviceUrlName + "/verificationTokens" + accessTokenParameter, verificationToken);
+		restTemplate.put(serviceUrlName + "/tokens" + accessTokenParameter, token);
 	}
 
 }

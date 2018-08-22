@@ -1,8 +1,6 @@
 package com.allbooks.webapp.webservice;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.allbooks.webapp.entity.Book;
-import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.utils.entity.HelperPage;
 
 @Service

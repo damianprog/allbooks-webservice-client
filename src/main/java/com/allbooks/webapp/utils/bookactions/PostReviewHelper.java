@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.ReaderBook;
-import com.allbooks.webapp.enumeration.ShelvesStates;
+import com.allbooks.webapp.enumeration.ShelvesState;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderBookService;
 
@@ -18,7 +18,7 @@ public class PostReviewHelper {
 	@Autowired
 	private RatingService ratingService;
 	
-	public ReaderBook getReaderBook(int readerBookId, ShelvesStates shelvesStates) {
+	public ReaderBook getReaderBook(int readerBookId, ShelvesState shelvesStates) {
 
 		ReaderBook readerBook;
 

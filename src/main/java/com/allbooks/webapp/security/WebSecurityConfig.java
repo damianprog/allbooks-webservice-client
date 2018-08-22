@@ -29,6 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers("/admin/**").hasAuthority("ADMIN")
 		.antMatchers("/bookPageActions/**").hasAuthority("READER")
 		.antMatchers("/loggedReader/**").hasAuthority("READER")
+		.antMatchers("/friends/**").hasAuthority("READER")
 		.and()
         .formLogin()
         .loginPage("/login")

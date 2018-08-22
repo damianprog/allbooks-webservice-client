@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.ReaderBookData;
-import com.allbooks.webapp.enumeration.ShelvesStates;
+import com.allbooks.webapp.enumeration.ShelvesState;
 import com.allbooks.webapp.factories.BookActionDataObjectFactory;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.ReaderBookService;
@@ -67,7 +67,7 @@ public class MyBooksController {
 
 		Map<String, Integer> readerBooksQuantitiesMap = readerBooksUtilsService.getReaderBooksQuantities(readerId);
 
-		ShelvesStates shelvesStates = ShelvesStates.enumValueOf(shelves);
+		ShelvesState shelvesStates = ShelvesState.enumValueOf(shelves);
 
 		Page<ReaderBook> readerBooksPage = readerBooksForMyBooksGetter.getPreparedReaderBooks(readerId, shelvesStates,
 				page);
@@ -96,7 +96,7 @@ public class MyBooksController {
 
 		ReaderBook readerBook = readerBookService.getReaderBookById(readerBookId);
 
-		readerBook.setShelvesStates(ShelvesStates.enumValueOf(newShelves));
+		readerBook.setShelvesStates(ShelvesState.enumValueOf(newShelves));
 
 		ReaderBookData readerBookData = bookActionDataObjectFactory.createReaderBookData(readerBook, bookId,
 				isItUpdateReaderBook);
@@ -148,7 +148,7 @@ public class MyBooksController {
 		else
 			readerBook = new ReaderBook();
 
-		readerBook.setShelvesStates(ShelvesStates.enumValueOf(shelves));
+		readerBook.setShelvesStates(ShelvesState.enumValueOf(shelves));
 
 		saveService.saveReaderBook(
 				bookActionDataObjectFactory.createReaderBookData(readerBook, bookId, isItUpdateReaderBook));

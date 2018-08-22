@@ -25,7 +25,7 @@
 
 			<div id="findFriendDiv">
 				Find friend by name<br>
-				<form action="/loggedReader/showAddFriends">
+				<form action="/friends/showAddFriends">
 					<input id="searchBox" name="username" required="required">
 					<input id="searchButton" type="submit" value="Search Members">
 				</form>
@@ -103,13 +103,13 @@
 
 		<div id="rightContainer">
 			<div class="smallHeaders">
-				<a class="nonDecRef" href="/loggedReader/showFriends">Friends</a>
+				<a class="nonDecRef" href="/friends/showFriends">Friends</a>
 			</div>
 			<div class="smallHeaders">
-				<a class="nonDecRef" href="/loggedReader/showFriendsRequests">Friends
+				<a class="nonDecRef" href="/friends/showFriendsRequests">Friends
 					Requests</a>
 			</div>
-			<div class="smallHeaders"><a class="nonDecRef" href="/loggedReader/showAddFriends">Add Friends</a></div>
+			<div class="smallHeaders"><a class="nonDecRef" href="/friends/showAddFriends">Add Friends</a></div>
 			<div style="clear: both"></div>
 			<hr>
 
@@ -119,7 +119,7 @@
 				<div>Send this link to your friends to connect with them.</div>
 				<br>
 				<div id="getLinkButton">
-					<a class="nonDecRef" href="/loggedReader/getInvitationLink">Get
+					<a class="nonDecRef" href="/friends/getInvitationLink">Get
 						Link</a>
 				</div>
 			</div>

@@ -53,7 +53,7 @@ public class ProfileController {
 	private PhotoServiceImpl photoService;
 
 	@Autowired
-	private LoggedReaderModelProfileCreator loggedUserModelProfileCreator;
+	private LoggedReaderModelProfileCreator loggedReaderModelProfileCreator;
 
 	@Autowired
 	private FriendsService friendsService;
@@ -91,7 +91,7 @@ public class ProfileController {
 		theModel.addAttribute("reader", reader);
 		theModel.addAttribute("friendsNum", friends.size());
 		theModel.addAttribute("friends", friends);
-		theModel.addAllAttributes(loggedUserModelProfileCreator.createModel(reader));
+		theModel.addAllAttributes(loggedReaderModelProfileCreator.createModel(reader));
 
 		return "profile";
 	}

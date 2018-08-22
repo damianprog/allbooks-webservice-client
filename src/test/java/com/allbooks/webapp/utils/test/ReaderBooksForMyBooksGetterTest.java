@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.allbooks.webapp.Application;
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.ReaderBook;
-import com.allbooks.webapp.enumeration.ShelvesStates;
+import com.allbooks.webapp.enumeration.ShelvesState;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderBookService;
 import com.allbooks.webapp.utils.readerbook.ReaderBooksForMyBooksGetter;
@@ -56,7 +56,7 @@ public class ReaderBooksForMyBooksGetterTest {
 	
 	private double bookRating = 5;
 	
-	private ShelvesStates shelvesStates = ShelvesStates.READ;
+	private ShelvesState shelvesStates = ShelvesState.READ;
 	
 	private int page = 1;
 	

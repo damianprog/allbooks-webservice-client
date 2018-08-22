@@ -2,6 +2,7 @@ package com.allbooks.webapp.controller;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,7 @@ import com.allbooks.webapp.entity.ReaderPost;
 import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.factories.BookActionDataObjectFactory;
 import com.allbooks.webapp.service.BookService;
+import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReviewService;
 import com.allbooks.webapp.utils.bookactions.LikesDropper;
 import com.allbooks.webapp.utils.model.LoggedReviewPageModelCreator;

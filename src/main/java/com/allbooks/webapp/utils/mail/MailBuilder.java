@@ -12,6 +12,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import com.allbooks.webapp.entity.Reader;
+import com.allbooks.webapp.utils.TokenUrlCreator;
 import com.allbooks.webapp.utils.entity.MailData;
 
 @Component
@@ -23,6 +24,9 @@ public class MailBuilder {
 	@Autowired
 	private TemplateEngine templateEngine;
 
+	@Autowired
+	private TokenUrlCreator tokenUrlCreatorService;
+	
 	@Value("${app.url.name}")
 	private String urlName;
 	
@@ -31,15 +35,13 @@ public class MailBuilder {
 	
 	private String recipentAddress;
 	
-	public MimeMessage createTokenMail(MailData mailData,String methodMapping) throws MessagingException {
+	public MimeMessage createTokenMail(MailData mailData) throws MessagingException {
 		
 		Reader reader = mailData.getReader();
 		
-		String token = mailData.getToken();
-		
 		this.recipentAddress = reader.getEmail();
-		String confirmationUrl = urlName + methodMapping + "?token=" + token + "&readerId="
-				+ reader.getId();
+		
+		String confirmationUrl = tokenUrlCreatorService.getTokenUrl(mailData.getToken());
 
 		return createMimeMessage(mailData,confirmationUrl);
 		

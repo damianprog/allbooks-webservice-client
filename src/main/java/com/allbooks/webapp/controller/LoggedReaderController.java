@@ -18,22 +18,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.allbooks.webapp.entity.FavoriteGenres;
 import com.allbooks.webapp.entity.Notification;
-import com.allbooks.webapp.entity.Pending;
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.ReaderBook;
-import com.allbooks.webapp.entity.ReaderPost;
 import com.allbooks.webapp.entity.ReadingChallange;
 import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.FavoriteGenresService;
-import com.allbooks.webapp.service.FriendsService;
 import com.allbooks.webapp.service.NotificationService;
-import com.allbooks.webapp.service.PendingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReadingChallangeService;
-import com.allbooks.webapp.utils.model.FriendsRequestsOptionsModelCreator;
-import com.allbooks.webapp.utils.photos.ReaderPostsWithPreparedReadersPhotoGetter;
-import com.allbooks.webapp.utils.readerbook.CurrentYearReadBooksGetter;
-import com.allbooks.webapp.utils.service.PhotoService;
+import com.allbooks.webapp.utils.model.ReadingChallangeModelCreator;
 import com.google.gson.Gson;
 
 @Controller
@@ -46,32 +38,17 @@ public class LoggedReaderController {
 	@Autowired
 	private ReadingChallangeService readingChallangeService;
 
-	@Autowired	
-	private ReaderService readerService;
-
 	@Autowired
-	private PhotoService photoService;
+	private ReaderService readerService;
 
 	@Autowired
 	private SecurityContextService contextService;
 
 	@Autowired
-	private CurrentYearReadBooksGetter currentYearReadBooksGetter;
-
-	@Autowired
-	private ReaderPostsWithPreparedReadersPhotoGetter readerPostsGetter;
-
-	@Autowired
 	private FavoriteGenresService favoriteGenresService;
 
 	@Autowired
-	private FriendsService friendsService;
-
-	@Autowired
-	private PendingService pendingService;
-
-	@Autowired
-	private FriendsRequestsOptionsModelCreator friendsRequestsOptionsModelCreator;
+	private ReadingChallangeModelCreator readingChallangeModelCreator;
 
 	@GetMapping("/showNotifications")
 	public String showNotificationsPage(Model theModel, Principal principal, HttpSession session,
@@ -100,8 +77,8 @@ public class LoggedReaderController {
 		return "redirect:/loggedReader/showNotifications";
 	}
 
-	@GetMapping("/readingChallange")
-	public String readingChallange(Model theModel, @RequestParam("numberOfBooks") int numberOfBooks,
+	@GetMapping("/submitReadingChallange")
+	public String submitReadingChallange(Model theModel,RedirectAttributes ra, @RequestParam("numberOfBooks") int numberOfBooks,
 			HttpSession session) {
 
 		int readerId = contextService.getLoggedReaderId();
@@ -112,32 +89,14 @@ public class LoggedReaderController {
 
 		readingChallangeService.saveReadingChallange(readingChallange);
 
-		return "redirect:/reader/main";
+		ra.addAttribute("readerId",readerId);
+		return "redirect:/loggedReader/showReadingChallange";
 	}
 
 	@GetMapping("/showReadingChallange")
 	public String showReadingChallange(Model theModel, @RequestParam("readerId") int readerId) {
 
-		Reader reader = readerService.getReaderById(readerId);
-
-		ReadingChallange readingChallange = readingChallangeService.getReadingChallangeByReaderId(readerId);
-
-		if (reader.getProfilePhoto() != null) {
-			String resizedProfilePhoto = photoService
-					.getEncodedImage(photoService.resize(reader.getProfilePhoto(), 80, 80));
-			reader.setEncodedProfilePhoto(resizedProfilePhoto);
-		}
-
-		List<ReaderBook> currentYearBooks = currentYearReadBooksGetter.getBooks(readerId);
-
-		List<ReaderPost> readingChallangeComments = readerPostsGetter.getPreparedReadingChallangeComments(readerId);
-
-		photoService.encodeAndResizeBookPhotoInBookChildren(currentYearBooks, 100, 150);
-
-		theModel.addAttribute("reader", reader);
-		theModel.addAttribute("readBooks", currentYearBooks);
-		theModel.addAttribute("readingChallange", readingChallange);
-		theModel.addAttribute("readingChallangeComments", readingChallangeComments);
+		theModel.addAllAttributes(readingChallangeModelCreator.createModel(readerId));
 
 		return "readingChallange";
 	}
@@ -191,57 +150,6 @@ public class LoggedReaderController {
 
 	}
 
-	@GetMapping("/showFriends")
-	public String showFriends(Model theModel) {
-
-		int readerId = contextService.getLoggedReaderId();
-
-		List<Reader> friends = friendsService.getReaderFriends(readerId);
-
-		photoService.setResizedAndEncodedPhotosInReaders(friends, 80, 80);
-
-		theModel.addAttribute("friends", friends);
-
-		return "friends";
-	}
-
-	@GetMapping("/showFriendsRequests")
-	public String showFriendsRequests(Model theModel) {
-
-		int readerId = contextService.getLoggedReaderId();
-
-		List<Pending> friendsRequests = pendingService.getFriendsInvitesByReaderId(readerId);
-
-		theModel.addAttribute("friendsRequests", friendsRequests);
-
-		return "friendsRequests";
-	}
-
-	@GetMapping("/showAddFriends")
-	public String showAddFriends(Model theModel, @RequestParam(value = "username", required = false) String username) {
-
-		int readerId = contextService.getLoggedReaderId();
-
-		Reader searchedReader = null;
-
-		theModel.addAttribute("isAlreadySent", false);
-
-		if (username != null)
-			searchedReader = readerService.getReaderByUsername(username);
-
-		if (searchedReader != null) {
-
-			photoService.encodeAndResizeReaderPhotoInReader(searchedReader, 80, 80);
-
-			theModel.addAttribute("searchedReader", searchedReader);
-
-			theModel.addAllAttributes(friendsRequestsOptionsModelCreator.createModelMap(readerId, searchedReader.getId()));
-		}
-
-		if(username != null && searchedReader == null)
-			theModel.addAttribute("notFound",true);
-		
-		return "addFriends";
-	}
-
+	
+	
 }

@@ -7,7 +7,7 @@
 
 <head>
 <title>Register Results</title>
-<link type="text/css" rel="stylesheet" href="/css/saved.css" />
+<link type="text/css" rel="stylesheet" href="/css/information.css" />
 <link href="https://fonts.googleapis.com/css?family=Roboto|Spectral+SC"
 	rel="stylesheet">
 <script src="/js/jquery-3.3.1.min.js"></script>
@@ -24,7 +24,7 @@
 
 		<div class="whiteContainer">
 			<c:choose>
-				<c:when test="${info == 'ALREADY_AUTHENTICATED'}">
+				<c:when test="${information == 'ALREADY_AUTHENTICATED'}">
 					<h3>You are already authenticated!</h3>
 					<p>
 						<a href="/reader/main">Allbooks Home</a>
@@ -33,7 +33,7 @@
 
 				<c:otherwise>
 					<c:choose>
-						<c:when test="${info == 'VALID_TOKEN'}">
+						<c:when test="${information == 'VALID_TOKEN'}">
 							<h3>You've been successfully Authenticated!</h3>
 							<p>
 								<a href="/reader/main">Allbooks Home</a>
@@ -43,13 +43,13 @@
 								<a href="/login">Login Page</a>
 							</p>
 						</c:when>
-						<c:when test="${info == 'INVALID_TOKEN'}">
+						<c:when test="${information == 'INVALID_TOKEN'}">
 							<h3>The token is invalid</h3>
 							<p>
 								<a href="/reader/main">Go back to Home page</a>
 							</p>
 						</c:when>
-						<c:when test="${info == 'TOKEN_EXPIRED'}">
+						<c:when test="${information == 'EXPIRED_TOKEN'}">
 
 							<form id="resendForm" action="/readerAccount/resendVerificationToken" method="POST">
 					
@@ -65,7 +65,7 @@
 							
 						</c:when>
 						
-						<c:when test="${info == 'VERIFICATION_TOKEN_RESEND'}">
+						<c:when test="${information == 'VERIFICATION_TOKEN_RESEND'}">
 
 							<h3>New verification token has been resent to your email address</h3>
 							<p>

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.enumeration.VerificationTokenResponses;
+import com.allbooks.webapp.enumeration.TokenResponse;
 import com.allbooks.webapp.service.ReaderService;
 
 @Component
@@ -19,23 +19,23 @@ public class RegistrationConfirmation {
 	@Autowired
 	private TokenVerification tokenVerification;
 	
-	public Map<String,VerificationTokenResponses> verifyConfirmation(int readerId,String token) {
+	public Map<String,TokenResponse> verifyConfirmation(int readerId,String token) {
 		
-		Map<String,VerificationTokenResponses> map = new HashMap<>();
+		Map<String,TokenResponse> map = new HashMap<>();
 		
 		Reader reader = readerService.getReaderById(readerId);
 
 		if (reader == null) {
-			map.put("info", VerificationTokenResponses.INVALID_TOKEN);
+			map.put("information", TokenResponse.INVALID_TOKEN);
 			return map;
 		}
 
 		if (reader.isEnabled()) {
-			map.put("info", VerificationTokenResponses.ALREADY_AUTHENTICATED);
+			map.put("information", TokenResponse.ALREADY_AUTHENTICATED);
 			return map;
 		}
 
-		map.put("info",tokenVerification.verifyToken(reader, token));
+		map.put("information",tokenVerification.verifyToken(reader, token));
 		
 		return map;
 		

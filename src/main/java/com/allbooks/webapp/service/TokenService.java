@@ -1,25 +1,21 @@
 package com.allbooks.webapp.service;
 
-import com.allbooks.webapp.entity.PasswordToken;
-import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.VerificationToken;
+import com.allbooks.webapp.entity.Token;
+import com.allbooks.webapp.enumeration.TokenType;
+import com.allbooks.webapp.utils.entity.TokenData;
 
 public interface TokenService {
 
-	public PasswordToken createPasswordToken(Reader reader, String token);
-
-	public PasswordToken getPasswordTokenByReaderId(int readerId);
-
-	public PasswordToken getPasswordTokenByCredentials(int readerId, String token);
-
-	public void deletePasswordTokenByReaderId(int readerId);
-
-	public VerificationToken createVerificationToken(Reader reader, String verificationToken);
-
-	public VerificationToken getVerificationTokenByReaderId(int readerId);
-
-	public void deleteVerificationTokenById(int tokenId);
-
-	public void updateVerificationToken(VerificationToken verificationToken);
+	Token saveToken(Token token);
 	
+	Token getTokenByReaderId(int readerId,TokenType tokenType);
+
+	void deleteTokenByReaderId(int readerId,TokenType tokenType);
+
+	void deleteTokenById(int tokenId);
+
+	void updateToken(Token token);
+
+	Token getTokenByCredentials(TokenData tokenData);
+
 }

@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.allbooks.webapp.Application;
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.ReaderBook;
-import com.allbooks.webapp.enumeration.ShelvesStates;
+import com.allbooks.webapp.enumeration.ShelvesState;
 import com.allbooks.webapp.factories.ListFactory;
 import com.allbooks.webapp.service.ReaderBookService;
 import com.allbooks.webapp.utils.readerbook.CurrentlyReadingBooksGetter;
@@ -66,7 +66,7 @@ public class CurrentlyReadingBooksGetterTest {
 		
 		when(readerBookServiceMock.getReaderBooks(readerId)).thenReturn(readerBooks);
 		when(listFactory.createArrayList()).thenReturn(currentlyReadingBooksMock);
-		when(readerBookMock.getShelvesStates()).thenReturn(ShelvesStates.CURRENTLY_READING);
+		when(readerBookMock.getShelvesStates()).thenReturn(ShelvesState.CURRENTLY_READING);
 		when(readerBookMock.getBook()).thenReturn(bookMock);
 		when(bookMock.getBookPhoto()).thenReturn(bookPhoto);
 		when(photoServiceMock.resize(bookPhoto,120,200)).thenReturn(resizedBookPhoto);

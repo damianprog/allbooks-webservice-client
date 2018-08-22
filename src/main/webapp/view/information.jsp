@@ -7,11 +7,11 @@
 
 <head>
 	<title>
-		Register Results
+		Information
 	</title>
 	<link type="text/css"
 		  rel="stylesheet"
-		  href="/css/saved.css"/>
+		  href="/css/information.css"/>
 	<link href="https://fonts.googleapis.com/css?family=Roboto|Spectral+SC" rel="stylesheet">
 	
 </head>
@@ -27,25 +27,30 @@
 	
 	<div class="whiteContainer">
 		<c:choose>
-			<c:when test="${success == true }">
+			<c:when test="${information == 'SUCCESSFULLY_REGISTERED'}">
 				<h3>You've been successfully Registered</h3>
 				<p>The authentication link has been sent to given email</p>
-				<p><a href="/reader/main">Allbooks home</a></p>
+				<p><a class="blackRef" href="/reader/main">Allbooks home</a></p>
 			</c:when>
-			<c:when test="${success == false }">
+			<c:when test="${information == 'LOGIN_TAKEN'}">
 				<h3>This login is taken</h3>
-				<p><a href="/reader/join">Go back to Register page</a></p>
+				<p><a class="blackRef" href="/reader/join">Go back to Register page</a></p>
 				
 			</c:when>
-			<c:when test="${loggingError == true }">
-				<h3>Login or password is not correct</h3>
-				<p><a href="/login">Go back to Login page</a></p>
-			</c:when>
-			<c:when test="${passwordChanged == true}">
+			<c:when test="${information == 'PASSWORD_CHANGED'}">
 					<br>
 					<span style="color: blue">Your Allbooks account password has been changed successfully!</span>
 					<p><a href="/login">Go to Login page</a></p>
 				</c:when>
+			<c:when test="${information == 'ACCESS_DENIED'}">
+				<br>
+				<span style="color: blue">You don't have access to this page.</span>
+				<p><a class="blackRef" href="/reader/main">Allbooks home</a></p>
+			</c:when>
+			<c:when test="${information == 'NOT_FOUND'}">
+				<h3>Error 404 Not Found.</h3>
+				<p><a href="/reader/main">Allbooks Home</a></p>
+			</c:when>
 		</c:choose>
 		
 		<div id="sponsored">

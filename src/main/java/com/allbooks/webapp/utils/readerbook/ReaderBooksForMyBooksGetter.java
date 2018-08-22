@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.allbooks.webapp.entity.ReaderBook;
-import com.allbooks.webapp.enumeration.ShelvesStates;
+import com.allbooks.webapp.enumeration.ShelvesState;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderBookService;
 import com.allbooks.webapp.utils.service.PhotoService;
@@ -22,7 +22,7 @@ public class ReaderBooksForMyBooksGetter {
 	@Autowired
 	private ReaderBookService readerBookService;
 
-	public Page<ReaderBook> getPreparedReaderBooks(int readerId, ShelvesStates shelvesStates, int page) {
+	public Page<ReaderBook> getPreparedReaderBooks(int readerId, ShelvesState shelvesStates, int page) {
 
 		Page<ReaderBook> readerBooks;
 

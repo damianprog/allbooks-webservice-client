@@ -18,5 +18,5 @@ public interface CommentService {
 	void deleteCommentById(int commentId);
 
 	void deleteCommentByIdAndReaderId(int commentId, int readerId);
-
+	
 }

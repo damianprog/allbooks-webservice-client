@@ -3,7 +3,7 @@ package com.allbooks.webapp.webservice;
 import org.springframework.data.domain.Page;
 
 import com.allbooks.webapp.entity.ReaderBook;
-import com.allbooks.webapp.enumeration.ShelvesStates;
+import com.allbooks.webapp.enumeration.ShelvesState;
 
 public interface ReaderBookWebservice {
 
@@ -19,11 +19,11 @@ public interface ReaderBookWebservice {
 
 	void deleteReaderBookByReaderIdAndBookId(int readerId, int bookId);
 
-	ReaderBook[] getReaderBooksByShelves(int readerId, ShelvesStates shelvesStates);
+	ReaderBook[] getReaderBooksByShelves(int readerId, ShelvesState shelvesStates);
 
 	Page<ReaderBook> getReaderBooksPages(int readerId, int page);
 
-	Page<ReaderBook> getReaderBooksByShelvesPages(int readerId, ShelvesStates shelvesStates, int page);
+	Page<ReaderBook> getReaderBooksByShelvesPages(int readerId, ShelvesState shelvesStates, int page);
 
 	ReaderBook[] get10LatestReaderBooks();
 

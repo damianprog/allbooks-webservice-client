@@ -13,6 +13,7 @@ import com.allbooks.webapp.service.CommentService;
 import com.allbooks.webapp.service.NotificationService;
 import com.allbooks.webapp.service.ReadingChallangeCommentService;
 import com.allbooks.webapp.service.ReviewService;
+import com.allbooks.webapp.utils.entity.CommentRemovalData;
 
 @Service
 public class PostsRemover {
@@ -45,35 +46,35 @@ public class PostsRemover {
 		reviewService.deleteReviewById(reviewId);
 	}
 
-	public void deleteComment(int commentId, String reasonText) {
-		Comment comment = commentService.getCommentById(commentId);
+	private void deleteComment(CommentRemovalData commentRemovalData) {
+		Comment comment = commentService.getCommentById(commentRemovalData.getCommentId());
 
 		Reader reader = comment.getPostingReader();
 
 		Book book = comment.getBook();
 
 		String commentDeleteInfo = "Your comment to review: '" + comment.getReview().getTitle() + "' of book: '"
-				+ book.getMiniTitle() + "' has been removed.Reason: " + reasonText;
+				+ book.getMiniTitle() + "' has been removed.Reason: " + commentRemovalData.getReasonOfRemoval();
 
 		saveNotification(reader, commentDeleteInfo);
 
-		commentService.deleteCommentById(commentId);
+		commentService.deleteCommentById(comment.getId());
 	}
 
-	public void deleteReadingChallangeComment(int commentId, String reasonText) {
+	private void deleteReadingChallangeComment(CommentRemovalData commentRemovalData) {
 
-		ReadingChallangeComment challangeComment = challangeCommentService.getCommentById(commentId);
+		ReadingChallangeComment challangeComment = challangeCommentService.getCommentById(commentRemovalData.getCommentId());
 
 		Reader postingReader = challangeComment.getPostingReader();
 
 		Reader challangeReader = challangeComment.getChallangeReader();
 
 		String commentDeleteInfo = "Your comment to Reading challange of reader: " + challangeReader.getUsername()
-				+ " has been removed.Reason: " + reasonText;
-		
-		saveNotification(postingReader,commentDeleteInfo);
-		
-		challangeCommentService.deleteCommentById(commentId);
+				+ " has been removed.Reason: " + commentRemovalData.getReasonOfRemoval();
+
+		saveNotification(postingReader, commentDeleteInfo);
+
+		challangeCommentService.deleteCommentById(challangeComment.getId());
 
 	}
 
@@ -82,6 +83,19 @@ public class PostsRemover {
 		Notification notification = new Notification(reader, deleteInfo);
 
 		notificationService.saveNotification(notification);
+	}
+
+	public void deleteCommentByTypeAndId(CommentRemovalData commentRemovalData) {
+
+		switch (commentRemovalData.getCommentType()) {
+			case REVIEW_COMMENT:
+					deleteComment(commentRemovalData);
+					break;
+			case CHALLANGE_COMMENT:
+					deleteReadingChallangeComment(commentRemovalData);
+					break;
+		}
+
 	}
 
 }

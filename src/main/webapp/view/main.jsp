@@ -300,7 +300,7 @@
 					<h3>New Releases in Fantasy</h3> <c:url var="magnusChase"
 						value="showBook">
 						<c:param name="bookId" value="5" />
-					</c:url> <c:url var="rulesOfMagic" value="showBook">
+					</c:url> <c:url var="rulesOfMagic" value="/showBook">
 						<c:param name="bookId" value="6" />
 					</c:url> <c:url var="bookOfDust" value="showBook">
 						<c:param name="bookId" value="7" />

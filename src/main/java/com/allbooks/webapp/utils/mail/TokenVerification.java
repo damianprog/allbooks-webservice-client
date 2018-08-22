@@ -1,15 +1,16 @@
 package com.allbooks.webapp.utils.mail;
 
-import java.util.Calendar;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.VerificationToken;
-import com.allbooks.webapp.enumeration.VerificationTokenResponses;
+import com.allbooks.webapp.entity.Token;
+import com.allbooks.webapp.enumeration.TokenType;
+import com.allbooks.webapp.enumeration.TokenResponse;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.TokenService;
+import com.allbooks.webapp.utils.entity.TokenData;
+import com.allbooks.webapp.utils.service.TokenUtilsService;
 
 @Component
 public class TokenVerification {
@@ -20,30 +21,36 @@ public class TokenVerification {
 	@Autowired
 	private ReaderService readerService;
 
-	public VerificationTokenResponses verifyToken(Reader reader, String token) {
+	@Autowired
+	private TokenUtilsService tokenUtilsService;
 
-		VerificationToken tokenObj = tokenService.getVerificationTokenByReaderId(reader.getId());
+	private TokenResponse verificationTokenResponse;
 
-		if(tokenObj == null) {
-			return VerificationTokenResponses.INVALID_TOKEN;
-		}
-		
-		if (token.equals(tokenObj.getToken())) {
+	public TokenResponse verifyToken(Reader reader, String token) {
 
-			Calendar cal = Calendar.getInstance();
+		TokenData tokenData = new TokenData(reader.getId(), token, TokenType.VERIFICATION_TOKEN);
 
-			if ((tokenObj.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-				tokenService.deleteVerificationTokenById(tokenObj.getId());
-				return VerificationTokenResponses.TOKEN_EXPIRED;
-			}
+		Token tokenObj = tokenService.getTokenByCredentials(tokenData);
 
+		if (tokenObj == null)
+			verificationTokenResponse = TokenResponse.INVALID_TOKEN;
+		else 
+			determineTokenExpiration(tokenObj, reader);
+	
+		return verificationTokenResponse;
+	}
+
+	private void determineTokenExpiration(Token token, Reader reader) {
+
+		if (tokenUtilsService.isTokenExpiredAndRemoved(token)) {
+			verificationTokenResponse = TokenResponse.EXPIRED_TOKEN;
+		} else {
 			reader.setEnabled(true);
 			readerService.updateReader(reader);
-			tokenService.deleteVerificationTokenById(tokenObj.getId());
+			tokenService.deleteTokenById(token.getId());
 
-			return VerificationTokenResponses.VALID_TOKEN;
-		} else
-			return VerificationTokenResponses.INVALID_TOKEN;
+			verificationTokenResponse = TokenResponse.VALID_TOKEN;
+		}
 
 	}
 

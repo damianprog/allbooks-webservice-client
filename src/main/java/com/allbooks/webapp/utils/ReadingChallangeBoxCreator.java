@@ -8,7 +8,7 @@ import org.springframework.ui.ModelMap;
 
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.ReadingChallange;
-import com.allbooks.webapp.security.SecurityContextService;
+import com.allbooks.webapp.factories.ModelMapFactory;
 import com.allbooks.webapp.service.ReadingChallangeService;
 import com.allbooks.webapp.utils.readerbook.CurrentYearReadBooksGetter;
 
@@ -16,19 +16,17 @@ import com.allbooks.webapp.utils.readerbook.CurrentYearReadBooksGetter;
 public class ReadingChallangeBoxCreator {
 
 	@Autowired
-	private SecurityContextService securityContextService;
-	
-	@Autowired
 	private CurrentYearReadBooksGetter currentYearReadBooksGetter;
 	
 	@Autowired
 	private ReadingChallangeService readingChallangeService;
 	
-	public ModelMap create() {
+	@Autowired
+	private ModelMapFactory modelMapFactory;
+	
+	public ModelMap create(int readerId) {
 		
-		int readerId = securityContextService.getLoggedReaderId();
-		
-		ModelMap modelMap = new ModelMap();
+		ModelMap modelMap = modelMapFactory.createInstance();
 		
 		ReadingChallange readingChallange = readingChallangeService.getReadingChallangeByReaderId(readerId);
 

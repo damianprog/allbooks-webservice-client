@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.allbooks.webapp.entity.ReaderBook;
-import com.allbooks.webapp.enumeration.ShelvesStates;
+import com.allbooks.webapp.enumeration.ShelvesState;
 import com.allbooks.webapp.utils.entity.ReaderBookHelperPage;
 
 @Service
@@ -100,7 +100,7 @@ public class ReaderBookWebserviceImpl implements ReaderBookWebservice {
 	}
 
 	@Override
-	public ReaderBook[] getReaderBooksByShelves(int readerId, ShelvesStates shelvesStates) {
+	public ReaderBook[] getReaderBooksByShelves(int readerId, ShelvesState shelvesStates) {
 
 		Map<String, String> params = new HashMap<>();
 		params.put("readerId", String.valueOf(readerId));
@@ -128,7 +128,7 @@ public class ReaderBookWebserviceImpl implements ReaderBookWebservice {
 	}
 
 	@Override
-	public Page<ReaderBook> getReaderBooksByShelvesPages(int readerId, ShelvesStates shelvesStates, int page) {
+	public Page<ReaderBook> getReaderBooksByShelvesPages(int readerId, ShelvesState shelvesStates, int page) {
 		Map<String, String> params = new HashMap<>();
 		params.put("readerId", String.valueOf(readerId));
 		params.put("shelves", shelvesStates.shelveState());

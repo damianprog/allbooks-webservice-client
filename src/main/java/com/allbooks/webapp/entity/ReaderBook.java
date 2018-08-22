@@ -2,7 +2,7 @@ package com.allbooks.webapp.entity;
 
 import java.util.Date;
 
-import com.allbooks.webapp.enumeration.ShelvesStates;
+import com.allbooks.webapp.enumeration.ShelvesState;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -18,7 +18,7 @@ public class ReaderBook implements BookChild {
 
 	private Reader reader;
 
-	private ShelvesStates shelvesStates;
+	private ShelvesState shelvesStates;
 
 	private Date dateRead;
 
@@ -52,11 +52,11 @@ public class ReaderBook implements BookChild {
 		this.reader = reader;
 	}
 
-	public ShelvesStates getShelvesStates() {
+	public ShelvesState getShelvesStates() {
 		return shelvesStates;
 	}
 
-	public void setShelvesStates(ShelvesStates shelvesStates) {
+	public void setShelvesStates(ShelvesState shelvesStates) {
 		this.shelvesStates = shelvesStates;
 	}
 

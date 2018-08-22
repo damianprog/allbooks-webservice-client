@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import com.allbooks.webapp.entity.ReaderBook;
-import com.allbooks.webapp.enumeration.ShelvesStates;
+import com.allbooks.webapp.enumeration.ShelvesState;
 
 public interface ReaderBookService {
 
@@ -20,13 +20,13 @@ public interface ReaderBookService {
 
 	void saveReadDate(Date dateRead, int bookId, int id);
 
-	List<ReaderBook> getReaderBooks(int id);
+	List<ReaderBook> getReaderBooks(int readerId);
 
-	List<ReaderBook> getReaderBooksByShelves(int readerId, ShelvesStates shelvesStates);
+	List<ReaderBook> getReaderBooksByShelves(int readerId, ShelvesState shelvesStates);
 
 	Page<ReaderBook> getReaderBooksPages(int readerId, int page);
 
-	Page<ReaderBook> getReaderBooksByShelvesPages(int readerId, ShelvesStates shelvesStates, int page);
+	Page<ReaderBook> getReaderBooksByShelvesPages(int readerId, ShelvesState shelvesStates, int page);
 	
 	List<ReaderBook> get10LatestReaderBooks();
 

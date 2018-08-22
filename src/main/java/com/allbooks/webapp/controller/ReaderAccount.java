@@ -4,7 +4,6 @@ import java.security.Principal;
 import java.util.Map;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +15,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.allbooks.webapp.entity.PasswordToken;
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.VerificationToken;
-import com.allbooks.webapp.enumeration.PasswordTokenResponses;
-import com.allbooks.webapp.enumeration.VerificationTokenResponses;
+import com.allbooks.webapp.entity.Token;
+import com.allbooks.webapp.enumeration.Information;
+import com.allbooks.webapp.enumeration.TokenResponse;
+import com.allbooks.webapp.enumeration.TokenType;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.TokenService;
-import com.allbooks.webapp.utils.entity.MailData;
-import com.allbooks.webapp.utils.mail.MailBuilder;
 import com.allbooks.webapp.utils.mail.RegistrationConfirmation;
 import com.allbooks.webapp.utils.service.EmailService;
+import com.allbooks.webapp.validators.PasswordTokenValidator;
 
 @Controller
 @RequestMapping("/readerAccount")
@@ -47,20 +45,18 @@ public class ReaderAccount {
 	@Autowired
 	private RegistrationConfirmation registrationConfirmation;
 	
+	@Autowired
+	private PasswordTokenValidator passwordTokenValidator;
+	
 	@GetMapping("/changePasswordPage")
 	public String changePasswordPage(@RequestParam("token") String token, @RequestParam("readerId") int readerId,
 			Model theModel) {
 
-		PasswordToken tokenObj = tokenService.getPasswordTokenByCredentials(readerId, token);
+		theModel.addAllAttributes(passwordTokenValidator.validate(token, readerId));
 
-		if (tokenObj == null)
-			theModel.addAttribute("invalidToken", true);
-		else {
-			theModel.addAttribute("changing", true);
-			theModel.addAttribute("readerId", readerId);
-		}
-
-		return "forgot";
+		theModel.addAttribute("readerId", readerId);
+		
+		return "changePassword";
 	}
 
 	@PostMapping("/changePassword")
@@ -71,11 +67,11 @@ public class ReaderAccount {
 		reader.setPassword(bCryptPasswordEncoder.encode(password));
 
 		readerService.updateReader(reader);
-		tokenService.deletePasswordTokenByReaderId(readerId);
+		tokenService.deleteTokenByReaderId(readerId,TokenType.PASSWORD_TOKEN);
 
-		theModel.addAttribute("passwordChanged", true);
+		theModel.addAttribute("information", Information.PASSWORD_CHANGED);
 
-		return "saved";
+		return "information";
 	}
 
 	@PostMapping("/forgotPassword")
@@ -84,20 +80,20 @@ public class ReaderAccount {
 		Reader reader = readerService.getReaderByEmail(email + ".com");
 
 		if (reader == null) {
-			theModel.addAttribute("info", PasswordTokenResponses.EMAIL_ERROR);
+			theModel.addAttribute("information", TokenResponse.EMAIL_ERROR);
 			return "forgot";
 		}
 
-		PasswordToken token = tokenService.getPasswordTokenByReaderId(reader.getId());
+		Token token = tokenService.getTokenByReaderId(reader.getId(),TokenType.PASSWORD_TOKEN);
 
 		if (token != null) {
-			theModel.addAttribute("info", PasswordTokenResponses.ALREADY_SENT);
+			theModel.addAttribute("information", TokenResponse.ALREADY_SENT);
 			return "forgot";
 		}
 
 		emailService.sendPasswordChanging(reader);
 
-		theModel.addAttribute("info", PasswordTokenResponses.TOKEN_SENT);
+		theModel.addAttribute("information", TokenResponse.TOKEN_SENT);
 
 		return "forgot";
 	}
@@ -115,9 +111,9 @@ public class ReaderAccount {
 	public String registrationConfirm(@RequestParam("token") String token, @RequestParam("readerId") Integer readerId,
 			Model theModel, HttpSession session, Principal principal) {
 
-		Map<String, VerificationTokenResponses> map = registrationConfirmation.verifyConfirmation(readerId, token);
+		Map<String, TokenResponse> map = registrationConfirmation.verifyConfirmation(readerId, token);
 
-		theModel.addAttribute("info", map.get("info"));
+		theModel.addAttribute("information", map.get("information"));
 		theModel.addAttribute("readerId",readerId);
 		
 		return "registrationConfirm";
@@ -130,15 +126,18 @@ public class ReaderAccount {
 		
 		emailService.sendVerificationToken(reader);
 		
-		theModel.addAttribute("info",VerificationTokenResponses.VERIFICATION_TOKEN_RESEND);
+		theModel.addAttribute("information",TokenResponse.VERIFICATION_TOKEN_RESEND);
 		
 		return "registrationConfirm";
 		
 	}
 	
 	@GetMapping("/accessDenied")
-	public String accessDenied() {
-		return "accessDenied";
+	public String accessDenied(Model theModel) {
+		
+		theModel.addAttribute("accessDenied",true);
+		
+		return "information";
 	}
 	
 }

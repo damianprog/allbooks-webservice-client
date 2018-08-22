@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.allbooks.webapp.entity.ReaderBook;
-import com.allbooks.webapp.enumeration.ShelvesStates;
+import com.allbooks.webapp.enumeration.ShelvesState;
 import com.allbooks.webapp.factories.ListFactory;
 import com.allbooks.webapp.service.ReaderBookService;
 import com.allbooks.webapp.utils.service.PhotoService;
@@ -33,7 +33,7 @@ public class CurrentlyReadingBooksGetter {
 		List<ReaderBook> currentlyReadingBooks = listFactory.createArrayList();
 
 		iter.forEachRemaining(e -> {
-			if (e.getShelvesStates().equals(ShelvesStates.CURRENTLY_READING)) {
+			if (e.getShelvesStates().equals(ShelvesState.CURRENTLY_READING)) {
 				e.getBook().setEncodedBookPhoto(
 						photoService.getEncodedImage(photoService.resize(e.getBook().getBookPhoto(), 120, 200)));
 				currentlyReadingBooks.add(e);

@@ -1,13 +1,10 @@
 package com.allbooks.webapp.utils.reader;
 
-import java.io.File;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.factories.FileFactory;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.utils.entity.OnRegistrationCompleteEvent;
 
@@ -19,9 +16,6 @@ public class ReaderSaver {
 
 	@Autowired
 	private ReaderService readerService;
-
-	@Autowired
-	private FileFactory fileFactory;
 
 	public Reader save(Reader reader) {
 

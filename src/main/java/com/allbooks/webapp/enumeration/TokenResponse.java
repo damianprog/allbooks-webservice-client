@@ -1,0 +1,7 @@
+package com.allbooks.webapp.enumeration;
+
+public enum TokenResponse {
+
+	EXPIRED_TOKEN, INVALID_TOKEN, VALID_TOKEN, ALREADY_AUTHENTICATED, VERIFICATION_TOKEN_RESEND, EMAIL_ERROR, TOKEN_SENT, ALREADY_SENT;
+
+}
