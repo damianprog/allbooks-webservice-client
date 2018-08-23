@@ -28,8 +28,7 @@
 
 			<c:if test="${error != null}">
 				<br>
-				<span style="color: red">Bad credentials
-					or account may not have been email-authenticated!</span>
+				<span style="color: red">Wrong username or password</span>
 			</c:if>
 
 			<div id="loginTable">
@@ -61,7 +60,7 @@
 				</form:form>
 			</div>
 			<h3>
-				<a href="/reader/join">New here? Create free account!</a>
+				<a class="blackRef" href="/reader/join">New here? Create free account!</a>
 			</h3>
 		</div>
 

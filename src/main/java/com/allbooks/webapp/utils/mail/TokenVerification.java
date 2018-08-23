@@ -45,7 +45,7 @@ public class TokenVerification {
 		if (tokenUtilsService.isTokenExpiredAndRemoved(token)) {
 			verificationTokenResponse = TokenResponse.EXPIRED_TOKEN;
 		} else {
-			reader.setEnabled(true);
+			reader.setEmailAuthenticated(true);
 			readerService.updateReader(reader);
 			tokenService.deleteTokenById(token.getId());
 

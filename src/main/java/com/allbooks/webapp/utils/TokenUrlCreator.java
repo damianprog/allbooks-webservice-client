@@ -48,10 +48,10 @@ public class TokenUrlCreator {
 
 	private String createTokenUrl(Token token) {
 
-		int loggedReaderId = contextService.getLoggedReaderId();
+		int tokenReaderId = token.getReader().getId();
 		
 		return urlName + methodMapping + "?token=" + token.getTokenString() + "&readerId="
-				+ loggedReaderId;
+				+ tokenReaderId;
 		
 	}
 	

@@ -39,7 +39,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		if (isUserInDb == true) {
 			reader = readerService.getReaderByUsername(username);
 			
-			if (reader.isEnabled() == false || banChecker.isReaderBanned(reader.getId()) == true)
+			if (banChecker.isReaderBanned(reader.getId()) == true)
 				throw new UsernameNotFoundException(username);
 			else {
 				Set<GrantedAuthority> grantedAuthorities = new HashSet<>();

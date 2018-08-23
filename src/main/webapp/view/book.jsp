@@ -80,7 +80,7 @@
 									<option value="0" label="Change State" selected="selected"
 										disabled="disabled" hidden="true" />
 								</select>
-
+								<input type="hidden" name="pageName" value="book">
 								<input type="hidden" name="bookId" value="${book.id}">
 							</form>
 						</sec:authorize> <sec:authorize access="!isFullyAuthenticated()">

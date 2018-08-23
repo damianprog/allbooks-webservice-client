@@ -112,8 +112,8 @@
 							<td>${tempReaderBook.readerRating.rate}</td>
 							<td>${tempReaderBook.shelvesStates.shelveState()}<br> <c:choose>
 									<c:when test="${isItMyBooks == true}">
-										<form method="POST" action="/myBooks/updateState">
-											<select class="rounded" name="newShelves"
+										<form method="POST" action="/myBooks/saveReaderBook">
+											<select class="rounded" name="shelves"
 												onchange="this.form.submit()">
 												<option value="" selected disabled hidden>Select
 													Shelves</option>
@@ -125,6 +125,7 @@
 												type="hidden" name="isItUpdateReaderBook" value="true">
 											<input type="hidden" name="readerBookId"
 												value="${tempReaderBook.id}">
+												<input type="hidden" name="pageName" value="myBooks">
 										</form>
 									</c:when>
 								</c:choose>

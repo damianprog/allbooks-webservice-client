@@ -20,7 +20,7 @@ public class Reader {
 	@Size(max = 20, min = 6, message = "Password must be between 6 and 20 chars")
 	private String password;
 
-	private boolean enabled;
+	private boolean emailAuthenticated;
 
 	@Email(message = "Invalid Email")
 	private String email;
@@ -39,12 +39,12 @@ public class Reader {
 
 	}
 
-	public boolean isEnabled() {
-		return enabled;
+	public boolean isEmailAuthenticated() {
+		return emailAuthenticated;
 	}
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+	public void setEmailAuthenticated(boolean emailAuthenticated) {
+		this.emailAuthenticated = emailAuthenticated;
 	}
 
 	public List<Reader> getFriends() {

@@ -29,7 +29,7 @@
 	<div class="whiteContainer">
 				<h3>Share this friend link with others</h3>
 				<p>Invite Link:</p>
-				<p><input type="text" value="${tokenUrl}" id="tokenInput"></p>
+				<p><input type="text" value="${tokenUrl}" id="tokenInput" readonly></p>
 				<p>This link will expire after 30 days.</p>
 				
 				<a href="#" class="copyLink">Copy link to clipboard</a>

@@ -110,4 +110,9 @@ public class ReaderBookServiceImpl implements ReaderBookService {
 		return excludedIds;
 	}
 
+	@Override
+	public List<ReaderBook> get10LatestReaderBooksByReaderId(int readerId) {
+		return new ArrayList<ReaderBook>(Arrays.asList(readerBookWebservice.get10LatestReaderBooksByReaderId(readerId)));
+	}
+
 }

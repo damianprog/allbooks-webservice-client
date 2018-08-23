@@ -46,7 +46,7 @@ public class RegistrationConfirmationTest {
 	public void verifyConfirmationTest() {
 		
 		when(readerServiceMock.getReaderById(readerId)).thenReturn(readerMock);
-		when(readerMock.isEnabled()).thenReturn(false);
+		when(readerMock.isEmailAuthenticated()).thenReturn(false);
 		when(tokenVerificationMock.verifyToken(readerMock,token)).thenReturn(TokenResponse.VALID_TOKEN);
 		
 		Map<String,TokenResponse> map = registrationConfirmation.verifyConfirmation(readerId, token);
@@ -54,7 +54,7 @@ public class RegistrationConfirmationTest {
 		assertEquals(map.get("info"),TokenResponse.VALID_TOKEN);
 		
 		verify(readerServiceMock).getReaderById(readerId);
-		verify(readerMock).isEnabled();
+		verify(readerMock).isEmailAuthenticated();
 		verify(tokenVerificationMock).verifyToken(readerMock,token);
 		
 	} 

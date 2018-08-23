@@ -30,7 +30,7 @@ public class RegistrationConfirmation {
 			return map;
 		}
 
-		if (reader.isEnabled()) {
+		if (reader.isEmailAuthenticated()) {
 			map.put("information", TokenResponse.ALREADY_AUTHENTICATED);
 			return map;
 		}

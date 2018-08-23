@@ -31,4 +31,6 @@ public interface ReaderBookWebservice {
 
 	int[] getReaderBooksBooksIdsByReaderIdAndCategory(int readerId, String category);
 
+	ReaderBook[] get10LatestReaderBooksByReaderId(int readerId);
+
 }

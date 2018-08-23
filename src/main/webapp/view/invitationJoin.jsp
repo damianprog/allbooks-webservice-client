@@ -39,7 +39,7 @@
 		</div>
 			<div id="invitationJoinTable">
 
-				<form:form action="saveReader" modelAttribute="reader" method="POST">
+				<form:form action="saveReaderInvitation" modelAttribute="reader" method="POST">
 
 					<table>
 						<tr>
@@ -77,7 +77,7 @@
 								value="Sign up" /></td>
 						</tr>
 					</table>
-
+					<input type="hidden" name="invitingReaderId" value="${invitingReader.id}">
 				</form:form>
 			</div>
 </div> <div style="clear:both"></div>

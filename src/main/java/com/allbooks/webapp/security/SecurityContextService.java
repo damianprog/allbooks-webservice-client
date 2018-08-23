@@ -1,5 +1,7 @@
 package com.allbooks.webapp.security;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,9 @@ public class SecurityContextService {
 
 	@Autowired
 	private HttpSession session;
+	
+	@Autowired
+	private HttpServletRequest request;
 	
 	public int getLoggedReaderId() {
 		
@@ -36,6 +41,14 @@ public class SecurityContextService {
 		else 
 			return true;
 		
+	}
+	
+	public void autologin(String username,String password) {
+		try {
+			request.login(username, password);
+		} catch (ServletException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

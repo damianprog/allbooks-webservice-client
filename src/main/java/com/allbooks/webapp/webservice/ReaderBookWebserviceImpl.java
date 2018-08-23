@@ -179,4 +179,17 @@ public class ReaderBookWebserviceImpl implements ReaderBookWebservice {
 		return responseEntity.getBody();
 	}
 
+	@Override
+	public ReaderBook[] get10LatestReaderBooksByReaderId(int readerId) {
+
+		Map<String, Integer> params = new HashMap<>();
+		params.put("readerId", readerId);
+		
+		ResponseEntity<ReaderBook[]> responseEntity = restTemplate.getForEntity(
+				serviceUrlName + "/readers/{readerId}/readerbooks/latest" + accessTokenParameter,
+				ReaderBook[].class, params);
+		
+		return responseEntity.getBody();
+	}
+
 }

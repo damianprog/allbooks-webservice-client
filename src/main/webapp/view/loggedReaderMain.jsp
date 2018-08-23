@@ -118,8 +118,9 @@
 					<c:param name="shelves" value="Want To Read" />
 					<c:param name="readerId" value="${loggedReaderId}" />
 				</c:url>
-				<br> <a class="blueLink" href="${myBooksPage}">View all
-					books...</a>
+				<br>
+				 <a class="blueLink" href="${myBooksPage}">View all
+					books...</a> 
 			</div>
 
 			<div style="clear: both"></div>

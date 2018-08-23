@@ -27,6 +27,7 @@ import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.Token;
 import com.allbooks.webapp.enumeration.Information;
 import com.allbooks.webapp.enumeration.TokenType;
+import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderBookService;
@@ -34,6 +35,7 @@ import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
 import com.allbooks.webapp.service.TokenService;
 import com.allbooks.webapp.utils.entity.TokenData;
+import com.allbooks.webapp.utils.model.InvitingReaderBooksPageModelCreator;
 import com.allbooks.webapp.utils.model.MainPageModelCreator;
 import com.allbooks.webapp.utils.photos.ReaderPostsWithPreparedReadersPhotoGetter;
 import com.allbooks.webapp.utils.readerbook.ReaderBookAndRatingModelCreator;
@@ -81,6 +83,12 @@ public class ReaderController {
 	@Autowired
 	private ReaderBookAndRatingModelCreator readerBookAndRatingModelCreator;
 
+	@Autowired
+	private SecurityContextService contextService;
+	
+	@Autowired
+	private InvitingReaderBooksPageModelCreator invitingReaderBooksPageModelCreator;
+	
 	@GetMapping("/main")
 	public String mainPage(Model theModel, HttpServletRequest request) {
 
@@ -148,6 +156,25 @@ public class ReaderController {
 		return "information";
 	}
 
+	@PostMapping("/saveReaderInvitation")
+	public String saveReaderInvitation(HttpServletRequest request, Model theModel,
+			@ModelAttribute("reader") Reader reader, @RequestParam("invitingReaderId") int invitingReaderId) {
+
+		String password = reader.getPassword();
+
+		if (!readerService.isThisLoginTaken(reader.getUsername())) {
+			photoService.createDefaultPhotoForReader(reader);
+			saveService.saveReader(reader);
+
+			contextService.autologin(reader.getUsername(), password);
+
+			theModel.addAttribute(invitingReaderBooksPageModelCreator.createModel(invitingReaderId));
+		} else {
+			theModel.addAttribute("information", Information.LOGIN_TAKEN);
+			return "information";
+		}
+		return "invitingReaderBooksPage";
+	}
 	@GetMapping("/deleteReview")
 	public String deleteReview(@RequestParam("bookName") String bookName, @RequestParam("reviewId") int reviewId,
 			HttpSession session, RedirectAttributes ra) {
@@ -191,12 +218,9 @@ public class ReaderController {
 
 		Token tokenObj = tokenService.getTokenByCredentials(tokenData);
 
-		if (tokenObj == null)
+		if (tokenObj == null || tokenUtilsService.isTokenExpiredAndRemoved(tokenObj))
 			return "redirect:/reader/join";
-
-		boolean isTokenExpired = tokenUtilsService.isTokenExpiredAndRemoved(tokenObj);
-
-		if (!isTokenExpired) {
+		else {
 			Reader invitingReader = readerService.getReaderById(readerId);
 			photoService.encodeAndResizeReaderPhotoInReader(invitingReader, 90, 130);
 			theModel.addAttribute("readerBooksList", readerBookService.getReaderBooks(invitingReader.getId()));
@@ -204,7 +228,16 @@ public class ReaderController {
 
 			theModel.addAttribute("reader", new Reader());
 		}
+			
 		return "invitationJoin";
 	}
 
+	
+	@GetMapping("/successfulRegistrationInformation")
+	public String successfulRegistrationInformation(Model theModel) {
+		
+		theModel.addAttribute("information",Information.SUCCESSFULLY_REGISTERED);
+		
+		return "information";
+	}
 }
