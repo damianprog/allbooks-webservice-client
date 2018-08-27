@@ -8,6 +8,8 @@ import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.RatingData;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.ReaderBookData;
+import com.allbooks.webapp.entity.ReadingChallangeComment;
+import com.allbooks.webapp.entity.ReadingChallangeCommentData;
 import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.entity.ReviewData;
 
@@ -44,5 +46,10 @@ public class BookActionDataFactoryImpl extends BookActionDataObjectFactory {
 		return new CommentData(comment,bookId,reviewId);
 		
 		
+	}
+
+	@Override
+	public ReadingChallangeCommentData createReadingChallangeCommentData(ReadingChallangeComment challangeComment,int challangeReaderId) {
+		return new ReadingChallangeCommentData(challangeComment,challangeReaderId);
 	}
 }

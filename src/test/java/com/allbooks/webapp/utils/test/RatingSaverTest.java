@@ -20,9 +20,9 @@ import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
-import com.allbooks.webapp.utils.bookactions.CommentsRatingUpdater;
+import com.allbooks.webapp.utils.bookactions.CommentsRatingSetter;
 import com.allbooks.webapp.utils.bookactions.RatingSaver;
-import com.allbooks.webapp.utils.readerbook.ReaderBookRatingUpdater;
+import com.allbooks.webapp.utils.readerbook.ReaderBooksRatingSetter;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -57,10 +57,10 @@ public class RatingSaverTest {
 	private Book bookMock;
 	
 	@Mock
-	private ReaderBookRatingUpdater readerBookRatingUpdaterMock;
+	private ReaderBooksRatingSetter readerBookRatingUpdaterMock;
 	
 	@Mock
-	private CommentsRatingUpdater commentsRatingUpdaterMock;
+	private CommentsRatingSetter commentsRatingUpdaterMock;
 	
 	private int readerId = 1;
 	

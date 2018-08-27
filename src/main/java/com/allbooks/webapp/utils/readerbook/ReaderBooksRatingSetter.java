@@ -8,7 +8,7 @@ import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.service.ReaderBookService;
 
 @Component
-public class ReaderBookRatingUpdater {
+public class ReaderBooksRatingSetter {
 
 	@Autowired
 	private ReaderBookService readerBookService;

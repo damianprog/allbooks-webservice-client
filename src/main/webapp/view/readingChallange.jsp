@@ -21,7 +21,7 @@
 	<sec:authorize access="isFullyAuthenticated()">
 		<sec:authentication property="principal.username" var="username" />
 
-		<c:if test="${username == reader.username}">
+		<c:if test="${username == challangeReader.username}">
 
 			<c:set var="isItLoggedReader" value="true"></c:set>
 
@@ -45,17 +45,17 @@
 			<div id="challangeInfoHeader">
 
 				<c:url var="readerProfileRef" value="/profile/showProfile">
-					<c:param name="readerId" value="${reader.id}" />
+					<c:param name="readerId" value="${challangeReader.id}" />
 				</c:url>
 
 				<div id="readerPhoto">
 					<c:choose>
-						<c:when test="${reader.encodedProfilePhoto != null}">
+						<c:when test="${challangeReader.encodedProfilePhoto != null}">
 							<a href="${readerProfileRef}"><img
-								src="data:image/jpeg;base64,${reader.encodedProfilePhoto}" /></a>
+								src="data:image/jpeg;base64,${challangeReader.encodedProfilePhoto}" /></a>
 						</c:when>
 						<c:otherwise>
-							<a href="${readerProfileRef}">${reader.username}</a>
+							<a href="${readerProfileRef}">${challangeReader.username}</a>
 						</c:otherwise>
 					</c:choose>
 				</div>
@@ -67,7 +67,7 @@
 					${readingChallange.numberOfBooks} books in 2018
 				</c:when>
 						<c:otherwise>
-					<a class="blackRef" href="${readerProfileRef}">${reader.username}</a> have read ${readBooks.size()} of
+					<a class="blackRef" href="${readerProfileRef}">${challangeReader.username}</a> have read ${readBooks.size()} of
 					${readingChallange.numberOfBooks} books in 2018
 				</c:otherwise>
 					</c:choose>
@@ -85,14 +85,14 @@
 			YOUR 2018 BOOKS
 			</c:when>
 						<c:otherwise>
-				${reader.username} 2018 BOOKS
+				${challangeReader.username} 2018 BOOKS
 			</c:otherwise>
 					</c:choose>
 				</div>
 
 				<c:forEach var="readerBook" items="${readBooks}" varStatus="loop">
 
-					<c:url var="bookPage" value="/reader/showBook">
+					<c:url var="bookPage" value="/visitor/showBook">
 						<c:param name="bookId" value="${readerBook.book.id}" />
 					</c:url>
 
@@ -136,7 +136,7 @@
 					<sec:authorize access="hasAuthority('ADMIN')">
 						<div class="adminActions">
 
-							<form action="/admin/adminAction">
+							<form action="/adminAction/action">
 
 								<select class="rounded" name="adminAction"
 									onchange="this.form.submit()">
@@ -185,7 +185,7 @@
 						<c:url var="removeCommentRef"
 							value="/readerPost/deleteReadingChallangeComment">
 							<c:param name="commentId" value="${tempComment.id}" />
-							<c:param name="challangeReaderId" value="${reader.id}" />
+							<c:param name="challangeReaderId" value="${challangeReader.id}" />
 						</c:url>
 
 						<div class="deleteComment">
@@ -197,12 +197,12 @@
 					</div>
 					<div style="clear: both;"></div>
 				</c:forEach>
-				<form action="/readerPost/postReadingChallangeComment" method="POST">
-					<input type="hidden" name="challangeReaderId" value="${reader.id}" />
+				<form:form action="/readerPost/postReadingChallangeComment" modelAttribute="readingChallangeComment" method="POST">
+					<input type="hidden" name="challangeReaderId" value="${challangeReader.id}" />
 					Comment<br>
-					<textarea name="text" id="commentBox" required="required"></textarea>
+					<form:textarea name="text" id="commentBox" path="text" required="required"></form:textarea>
 					<br> <input class="submit" type="submit" value="Submit">
-				</form>
+				</form:form>
 			</div>
 		</div>
 	</div>

@@ -150,7 +150,7 @@
 			<hr>
 
 			<sec:authorize access="isFullyAuthenticated()">
-				<c:url var="reviewLink" value="/bookActions/postReviewPage">
+				<c:url var="reviewLink" value="/bookActions/showPostReview">
 					<c:param name="bookId" value="${book.id}" />
 				</c:url>
 				<a class="blackRef" href="${reviewLink}">Post a Review!</a>
@@ -170,7 +170,7 @@
 
 					<table class="reviewTable">
 
-						<c:url var="reviewLink" value="/bookActions/reviewPage">
+						<c:url var="reviewLink" value="/bookActions/showReview">
 							<c:param name="reviewId" value="${tempReview.id}" />
 						</c:url>
 
@@ -187,7 +187,7 @@
 									rated it ${tempReview.rating.rate}
 								</div> <sec:authorize access="hasAuthority('ADMIN')">
 
-									<form action="/admin/adminAction">
+									<form action="/adminAction/action">
 
 										<select class="dropDown" name="adminAction"
 											onchange="this.form.submit()">
@@ -223,6 +223,7 @@
 											id="likeForm">
 											<input type="hidden" name="reviewId" value="${tempReview.id}" />
 											<input type="hidden" name="bookId" value="${book.id}" />
+											<input type="hidden" name="pageName" value="book" />
 											<input class="like" type="submit" value="Like" />
 										</form:form>
 									</sec:authorize>

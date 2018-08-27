@@ -37,7 +37,7 @@
 	<div id="container">
 		<jsp:include page='/view/header.jsp' />
 
-		<c:url var="bookPageRef" value="/reader/showBook">
+		<c:url var="bookPageRef" value="/visitor/showBook">
 			<c:param name="bookId" value="${review.book.id}" />
 		</c:url>
 
@@ -100,7 +100,7 @@
 				<div class="adminActions">
 					<sec:authorize access="hasAuthority('ADMIN')">
 
-						<form action="/admin/adminAction">
+						<form action="/adminAction/action">
 
 							<select class="rounded" name="adminAction"
 								onchange="this.form.submit()">
@@ -137,10 +137,11 @@
 					Likes: ${review.likes.size()}
 
 					<sec:authorize access="isFullyAuthenticated()">
-						<form:form action="/bookActions/dropLikeReview" method="POST"
+						<form:form action="/bookActions/dropLike" method="POST"
 							id="likeForm">
 							<input type="hidden" name="reviewId" value="${review.id}" />
 							<input type="hidden" name="bookId" value="${review.book.id}" />
+							<input type="hidden" name="pageName" value="review" />
 							<input id="like" type="submit" value="Like" />
 						</form:form>
 					</sec:authorize>
@@ -201,7 +202,7 @@
 					<sec:authorize access="hasAuthority('ADMIN')">
 						<div class="adminActions">
 
-							<form action="/admin/adminAction">
+							<form action="/adminAction/action">
 
 								<select class="rounded" name="adminAction"
 									onchange="this.form.submit()">

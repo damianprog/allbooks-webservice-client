@@ -26,7 +26,7 @@ public interface PhotoService {
 
 	void encodeAndResizeBookPhotoInBookChildren(List<? extends BookChild> list,int width,int height);
 	
-	void encodeAndResizeReaderPhotoInReader(Reader reader,int width,int height);
+	Reader setResizedAndEncodedPhotoInReader(Reader reader,int width,int height);
 	
 	void setResizedAndEncodedPhotosInReaders(List<Reader> readers,int width,int height);
 	

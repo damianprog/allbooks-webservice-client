@@ -298,13 +298,13 @@
 			<tr>
 				<td id="browse">
 					<h3>New Releases in Fantasy</h3> <c:url var="magnusChase"
-						value="showBook">
+						value="/visitor/showBook">
 						<c:param name="bookId" value="5" />
-					</c:url> <c:url var="rulesOfMagic" value="/showBook">
+					</c:url> <c:url var="rulesOfMagic" value="/visitor/showBook">
 						<c:param name="bookId" value="6" />
-					</c:url> <c:url var="bookOfDust" value="showBook">
+					</c:url> <c:url var="bookOfDust" value="/visitor/showBook">
 						<c:param name="bookId" value="7" />
-					</c:url> <c:url var="crookedSaints" value="showBook">
+					</c:url> <c:url var="crookedSaints" value="/visitor/showBook">
 						<c:param name="bookId" value="8" />
 					</c:url> <a href="${magnusChase }"><img class="minBrowse"
 						src="/css/images/mmagnusChase.jpg" /></a> <a href="${rulesOfMagic }"><img

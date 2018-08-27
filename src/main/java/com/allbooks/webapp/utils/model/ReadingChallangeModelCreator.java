@@ -10,6 +10,7 @@ import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.ReaderPost;
 import com.allbooks.webapp.entity.ReadingChallange;
+import com.allbooks.webapp.entity.ReadingChallangeComment;
 import com.allbooks.webapp.exceptions.entity.NotFoundException;
 import com.allbooks.webapp.factories.ModelMapFactory;
 import com.allbooks.webapp.service.ReaderService;
@@ -43,11 +44,11 @@ public class ReadingChallangeModelCreator {
 
 		ModelMap modelMap = modelMapFactory.createInstance();
 		
-		Reader reader = readerService.getReaderById(readerId);
+		Reader challangeReader = readerService.getReaderById(readerId);
 
 		ReadingChallange readingChallange = checkAndGetReadingChalllange(readerId);
 		
-		photoService.encodeAndResizeReaderPhotoInReader(reader, 80, 80);
+		photoService.setResizedAndEncodedPhotoInReader(challangeReader, 80, 80);
 
 		List<ReaderBook> currentYearBooks = currentYearReadBooksGetter.getBooks(readerId);
 
@@ -55,7 +56,8 @@ public class ReadingChallangeModelCreator {
 
 		photoService.encodeAndResizeBookPhotoInBookChildren(currentYearBooks, 100, 150);
 		
-		modelMap.addAttribute("reader", reader);
+		modelMap.addAttribute("readingChallangeComment",new ReadingChallangeComment());
+		modelMap.addAttribute("challangeReader", challangeReader);
 		modelMap.addAttribute("readBooks", currentYearBooks);
 		modelMap.addAttribute("readingChallange", readingChallange);
 		modelMap.addAttribute("readingChallangeComments", readingChallangeComments);

@@ -31,7 +31,6 @@ import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.utils.readerbook.ReaderBookSaver;
 import com.allbooks.webapp.utils.readerbook.ReaderBooksForMyBooksGetter;
 import com.allbooks.webapp.utils.service.ReaderBooksUtilsService;
-import com.allbooks.webapp.utils.service.SaveService;
 
 @Controller
 @RequestMapping("/myBooks")
@@ -54,9 +53,6 @@ public class MyBooksController {
 
 	@Autowired
 	private BookActionDataObjectFactory bookActionDataObjectFactory;
-
-	@Autowired
-	private SaveService saveService;
 
 	@Autowired
 	private ReaderBooksUtilsService readerBooksUtilsService;
@@ -117,7 +113,7 @@ public class MyBooksController {
 		switch(pageName) {
 		case "book":
 			ra.addAttribute("bookId",bookId);
-			return "redirect:/reader/showBook";
+			return "redirect:/visitor/showBook";
 		case "myBooks":
 			ra.addAttribute("readerId",contextService.getLoggedReaderId());
 			return "redirect:/myBooks/showMyBooks";

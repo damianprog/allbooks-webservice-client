@@ -19,7 +19,7 @@ import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
 
 @Component
-public class SubmitComment {
+public class CommentSaver {
 
 	@Autowired
 	private ReaderService readerService;
@@ -39,9 +39,17 @@ public class SubmitComment {
 	@Autowired
 	private SecurityContextService contextService;
 	
-	public void submit(CommentData commentData) {
+	public void save(CommentData commentData) {
 
 		int readerId = contextService.getLoggedReaderId();
+		
+		Comment comment = initializeCommentFields(commentData, readerId);
+
+		commentService.submitComment(comment);
+	}
+
+	private Comment initializeCommentFields(CommentData commentData, int readerId) {
+		
 		int bookId = commentData.getBookId();
 		
 		Comment comment = commentData.getComment();
@@ -58,8 +66,7 @@ public class SubmitComment {
 		comment.setRating(rating);
 		comment.setReview(review);
 		comment.setBook(book);
-
-		commentService.submitComment(comment);
+		return comment;
 	}
 
 }

@@ -19,17 +19,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.allbooks.webapp.entity.Comment;
 import com.allbooks.webapp.entity.CommentData;
 import com.allbooks.webapp.entity.Rating;
-import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReadingChallangeComment;
 import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.factories.BookActionDataObjectFactory;
-import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.CommentService;
-import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReadingChallangeCommentService;
 import com.allbooks.webapp.service.ReviewService;
-import com.allbooks.webapp.utils.bookactions.PostReviewHelper;
-import com.allbooks.webapp.utils.bookactions.SubmitComment;
+import com.allbooks.webapp.utils.bookactions.PostReviewRatingGetter;
 import com.allbooks.webapp.utils.service.SaveService;
 
 @Controller
@@ -38,9 +34,6 @@ public class ReaderPostController {
 
 	@Autowired
 	private SaveService saveService;
-
-	@Autowired
-	private SubmitComment submitComment;
 
 	@Autowired
 	private BookActionDataObjectFactory bookActionDataObjectFactory;
@@ -52,16 +45,10 @@ public class ReaderPostController {
 	private ReviewService reviewService;
 
 	@Autowired
-	private PostReviewHelper postReviewHelper;
+	private PostReviewRatingGetter postReviewRatingGetter;
 
 	@Autowired
 	private ReadingChallangeCommentService challangeCommentService;
-
-	@Autowired
-	private ReaderService readerService;
-
-	@Autowired
-	private SecurityContextService contextService;
 
 	@PostMapping("/postReview")
 	public String postReview(@RequestParam("isItUpdateReaderBook") boolean isItUpdateReaderBook,
@@ -70,7 +57,7 @@ public class ReaderPostController {
 			@RequestParam("bookId") int bookId, @ModelAttribute("review") Review review, RedirectAttributes ra)
 			throws IOException {
 
-		Rating rating = postReviewHelper.getRating(ratingId, rate);
+		Rating rating = postReviewRatingGetter.getRatingByIdOrCreateNew(ratingId, rate);
 
 		saveService.saveRating(bookActionDataObjectFactory.createRatingData(rating, bookId));
 
@@ -78,7 +65,7 @@ public class ReaderPostController {
 
 		ra.addAttribute("bookId", bookId);
 
-		return "redirect:/reader/showBook";
+		return "redirect:/visitor/showBook";
 	}
 
 	@PostMapping("/postComment")
@@ -88,11 +75,11 @@ public class ReaderPostController {
 
 		CommentData commentData = bookActionDataObjectFactory.createCommentData(comment, bookId, reviewId);
 
-		submitComment.submit(commentData);
+		saveService.saveComment(commentData);
 
 		ra.addAttribute("reviewId", reviewId);
 
-		return "redirect:/bookActions/reviewPage";
+		return "redirect:/bookActions/showReview";
 	}
 
 	@PostMapping("/editReview")
@@ -107,7 +94,7 @@ public class ReaderPostController {
 
 		ra.addAttribute("reviewId", reviewId);
 
-		return "redirect:/bookActions/reviewPage";
+		return "redirect:/bookActions/showReview";
 
 	}
 
@@ -122,7 +109,7 @@ public class ReaderPostController {
 
 		ra.addAttribute("bookId", review.getBook().getId());
 
-		return "redirect:/reader/showBook";
+		return "redirect:/visitor/showBook";
 
 	}
 
@@ -137,7 +124,7 @@ public class ReaderPostController {
 
 		ra.addAttribute("reviewId", comment.getReview().getId());
 
-		return "redirect:/bookActions/reviewPage";
+		return "redirect:/bookActions/showReview";
 	}
 
 	@PostMapping("/editComment")
@@ -153,7 +140,7 @@ public class ReaderPostController {
 
 		ra.addAttribute("reviewId", reviewId);
 
-		return "redirect:/bookActions/reviewPage";
+		return "redirect:/bookActions/showReview";
 
 	}
 
@@ -173,18 +160,12 @@ public class ReaderPostController {
 	}
 
 	@PostMapping("/postReadingChallangeComment")
-	public String postReadingChallangeComment(Model theModel, @RequestParam("text") String text,
+	public String postReadingChallangeComment(Model theModel,
+			@ModelAttribute("readingChallangeComment") ReadingChallangeComment challangeComment,
 			@RequestParam("challangeReaderId") int challangeReaderId, RedirectAttributes ra) {
 
-		int readerId = contextService.getLoggedReaderId();
-
-		Reader loggedReader = readerService.getReaderById(readerId);
-
-		Reader challangeReader = readerService.getReaderById(challangeReaderId);
-
-		ReadingChallangeComment challangeComment = new ReadingChallangeComment(text, loggedReader, challangeReader);
-
-		challangeCommentService.save(challangeComment);
+		saveService.saveReadingChallangeComment(
+				bookActionDataObjectFactory.createReadingChallangeCommentData(challangeComment, challangeReaderId));
 
 		ra.addAttribute("readerId", challangeReaderId);
 
@@ -192,14 +173,15 @@ public class ReaderPostController {
 	}
 
 	@GetMapping("/deleteReadingChallangeComment")
-	public String deleteReadingChallangeComment(@RequestParam("commentId") int commentId,@RequestParam("challangeReaderId") int challangeReaderId,RedirectAttributes ra) {
-		
+	public String deleteReadingChallangeComment(@RequestParam("commentId") int commentId,
+			@RequestParam("challangeReaderId") int challangeReaderId, RedirectAttributes ra) {
+
 		challangeCommentService.deleteCommentById(commentId);
-		
-		ra.addAttribute("readerId",challangeReaderId);
-		
+
+		ra.addAttribute("readerId", challangeReaderId);
+
 		return "redirect:/loggedReader/showReadingChallange";
-		
+
 	}
 
 }

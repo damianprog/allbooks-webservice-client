@@ -64,7 +64,7 @@ public class AdminController {
 
 	@Autowired
 	private CommentByTypeGetter commentByTypeGetter;
-	
+
 	@GetMapping("/showAddBook")
 	public String addBook(Model theModel) {
 
@@ -81,41 +81,15 @@ public class AdminController {
 		byte[] bookPhotoBytes = photoService.convertMultipartImageToBytes(mfBookPhoto);
 
 		byte[] authorPhotoBytes = photoService.convertMultipartImageToBytes(mfAuthorPhoto);
-		
+
 		book.setBookPhoto(photoService.resize(bookPhotoBytes, 150, 228));
-		book.setAuthorPhoto(photoService.resize(authorPhotoBytes,50,66));
+		book.setAuthorPhoto(photoService.resize(authorPhotoBytes, 50, 66));
 
 		bookService.saveBook(book);
 
 		theModel.addAttribute("book", book);
 
 		return "addbook";
-	}
-
-	@GetMapping("/adminAction")
-	public String adminAction(RedirectAttributes ra,
-			@RequestParam(value = "reviewId", required = false) Integer reviewId,
-			@RequestParam(value = "commentId", required = false) Integer commentId,
-			@RequestParam(value = "readerId", required = false) Integer readerId,
-			@RequestParam(value = "commentType", required = false) String commentType,
-			@RequestParam("adminAction") String adminAction) {
-
-		switch (adminAction) {
-
-		case "deleteReview":
-			ra.addAttribute("reviewId", reviewId);
-			return "redirect:/admin/showDeleteReview";
-		case "deleteComment":
-			ra.addAttribute("commentId", commentId);
-			ra.addAttribute("commentType", commentType);
-			return "redirect:/admin/showDeleteComment";
-		case "sendNotice":
-			ra.addAttribute("readerId", readerId);
-			return "redirect:/admin/showSendNotice";
-
-		}
-
-		return "redirect:/reader/main";
 	}
 
 	@GetMapping("/showSendNotice")
@@ -150,7 +124,7 @@ public class AdminController {
 
 		ra.addAttribute("bookId", review.getBook().getId());
 
-		return "redirect:/reader/showBook";
+		return "redirect:/visitor/showBook";
 	}
 
 	@GetMapping("/showDeleteComment")
@@ -158,14 +132,10 @@ public class AdminController {
 			@RequestParam("commentType") String commentType, Model theModel) {
 
 		CommentType commentTypeEnum = CommentType.enumValueOf(commentType);
-		
+
 		ReaderPost comment = commentByTypeGetter.getCommentByTypeAndId(commentTypeEnum, commentId);
-		
-		byte[] readerPhoto = comment.getPostingReader().getProfilePhoto();
 
-		String encodedReaderPhoto = photoService.getEncodedImage(photoService.resize(readerPhoto, 80, 80));
-
-		comment.getPostingReader().setEncodedProfilePhoto(encodedReaderPhoto);
+		photoService.setResizedAndEncodedPhotoInReader(comment.getPostingReader(), 80, 80);
 
 		theModel.addAttribute("commentType", commentType);
 		theModel.addAttribute("comment", comment);
@@ -178,9 +148,9 @@ public class AdminController {
 			@RequestParam("commentType") String commentType, Model theModel, RedirectAttributes ra) {
 
 		CommentType commentTypeEnum = CommentType.enumValueOf(commentType);
-		
-		CommentRemovalData commentRemovalData = new CommentRemovalData(commentTypeEnum,commentId,reasonText);
-		
+
+		CommentRemovalData commentRemovalData = new CommentRemovalData(commentTypeEnum, commentId, reasonText);
+
 		postsRemover.deleteCommentByTypeAndId(commentRemovalData);
 
 		return "redirect:/reader/main";

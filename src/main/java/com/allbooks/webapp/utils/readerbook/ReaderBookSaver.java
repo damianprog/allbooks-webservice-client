@@ -39,8 +39,17 @@ public class ReaderBookSaver {
 
 		int readerId = contextService.getLoggedReaderId();
 
-		ReaderBook readerBook = readerBookData.getReaderBook();
+		ReaderBook readerBook = initializeReaderBookFields(readerBookData, readerId);
+		
+		initializeReaderBookFields(readerBookData, readerId);
+	
+		readerBookService.saveReaderBook(readerBook);
+	}
 
+	private ReaderBook initializeReaderBookFields(ReaderBookData readerBookData, int readerId) {
+		
+		ReaderBook readerBook = readerBookData.getReaderBook();
+		
 		Reader reader = readerService.getReaderById(readerId);
 
 		Rating rating = ratingService.getReaderRatingObject(readerId, readerBookData.getBookId());
@@ -53,8 +62,8 @@ public class ReaderBookSaver {
 		readerBook.setReaderRating(rating);
 		readerBook.setBook(book);
 		readerBook.setReader(reader);
-		readerBookService.saveReaderBook(readerBook);
-
+	
+		return readerBook;
 	}
 
 }

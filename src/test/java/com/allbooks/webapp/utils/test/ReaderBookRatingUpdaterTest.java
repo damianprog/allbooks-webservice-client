@@ -17,7 +17,7 @@ import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.service.ReaderBookService;
-import com.allbooks.webapp.utils.readerbook.ReaderBookRatingUpdater;
+import com.allbooks.webapp.utils.readerbook.ReaderBooksRatingSetter;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -25,7 +25,7 @@ import com.allbooks.webapp.utils.readerbook.ReaderBookRatingUpdater;
 public class ReaderBookRatingUpdaterTest {
 
 	@InjectMocks
-	private ReaderBookRatingUpdater readerBookRatingUpdater;
+	private ReaderBooksRatingSetter readerBookRatingUpdater;
 	
 	@Mock
 	private ReaderBookService readerBookServiceMock;

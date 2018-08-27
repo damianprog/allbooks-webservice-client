@@ -40,7 +40,7 @@
 
 		<table class="books">
 			<c:forEach var="tempBook" items="${books}">
-				<c:url var="bookSite" value="/reader/showBook">
+				<c:url var="bookSite" value="/visitor/showBook">
 					<c:param name="bookId" value="${tempBook.id}" />
 				</c:url>
 				<tr>

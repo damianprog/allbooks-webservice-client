@@ -113,15 +113,6 @@ public class ProfileController {
 		return "redirect:/profile/showProfile";
 	}
 
-	// temporary method
-	@GetMapping("/deleteReader")
-	public String deleteReader(@RequestParam("readerId") int readerId, HttpSession session) {
-
-		readerService.deleteReader(readerId);
-
-		return "redirect:/reader/start";
-	}
-
 	@GetMapping("/inviteFriend")
 	public String inviteFriend(@RequestParam("pageName") String pageName, @RequestParam Map<String, String> params,
 			HttpSession session, RedirectAttributes ra) {

@@ -105,7 +105,7 @@
 					<c:otherwise>
 						<c:forEach begin="0" end="3" var="readerBook"
 							items="${wantToReadBooks}">
-							<c:url var="bookPageRef" value="/reader/showBook">
+							<c:url var="bookPageRef" value="/visitor/showBook">
 								<c:param name="bookId" value="${readerBook.book.id}" />
 							</c:url>
 							<a href="${bookPageRef}"><img
@@ -170,7 +170,7 @@
 						added new bookshelf
 					</div>
 
-					<c:url var="bookSite" value="/reader/showBook">
+					<c:url var="bookSite" value="/visitor/showBook">
 						<c:param name="bookId" value="${post.book.id}" />
 					</c:url>
 
@@ -211,7 +211,7 @@
 					</div>
 					</c:when>
 					<c:otherwise>
-						<c:url var="recommendedBookPageRef" value="/reader/showBook">
+						<c:url var="recommendedBookPageRef" value="/visitor/showBook">
 							<c:param name="bookId" value="${recommendedBook.id}" />
 						</c:url>
 

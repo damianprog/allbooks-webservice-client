@@ -2,7 +2,6 @@ package com.allbooks.webapp.controller;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,9 +24,9 @@ import com.allbooks.webapp.entity.Comment;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.ReaderPost;
 import com.allbooks.webapp.entity.Review;
+import com.allbooks.webapp.enumeration.Information;
 import com.allbooks.webapp.factories.BookActionDataObjectFactory;
 import com.allbooks.webapp.service.BookService;
-import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReviewService;
 import com.allbooks.webapp.utils.bookactions.LikesDropper;
 import com.allbooks.webapp.utils.model.LoggedReviewPageModelCreator;
@@ -76,33 +75,34 @@ public class BookActionsController {
 
 		ra.addAttribute("bookId", bookId);
 
-		return "redirect:/reader/showBook";
+		return "redirect:/visitor/showBook";
 	}
 
 	@PostMapping("/dropLike")
 	public String dropLike(@RequestParam("reviewId") int reviewId, @RequestParam("bookId") int bookId,
-			HttpSession session, HttpServletRequest request, RedirectAttributes ra) {
+			@RequestParam("pageName") String pageName, HttpSession session, HttpServletRequest request,
+			RedirectAttributes ra,Model theModel) {
 
 		likesDropper.dropLike(reviewId);
-
+		
 		ra.addAttribute("bookId", bookId);
 
-		return "redirect:/reader/showBook";
+		switch(pageName) {
+		case "book":
+			ra.addAttribute("bookId",bookId);
+			return "redirect:/visitor/showBook";
+		case "review":
+			ra.addAttribute("reviewId",reviewId);
+			return "redirect:/bookActions/showReview";
+		default:
+			theModel.addAttribute(Information.NOT_FOUND);
+			return "information";	
+		}
+		
+		
 	}
 
-	@PostMapping("/dropLikeReview")
-	public String dropLikeReview(@RequestParam("reviewId") int reviewId, Model theModel, HttpSession session,
-			RedirectAttributes ra) {
-
-		likesDropper.dropLike(reviewId);
-
-		ra.addAttribute("reviewId", reviewId);
-
-		return "redirect:/bookActions/reviewPage";
-
-	}
-
-	@GetMapping("/postReviewPage")
+	@GetMapping("/showPostReview")
 	public String postReviewPage(@RequestParam("bookId") int bookId, Model theModel, Principal principal)
 			throws IOException {
 
@@ -118,7 +118,7 @@ public class BookActionsController {
 		return "postreview";
 	}
 
-	@GetMapping("/reviewPage")
+	@GetMapping("/showReview")
 	public String reviewPage(@RequestParam("reviewId") int reviewId, Model theModel, HttpSession session,
 			Principal principal) {
 

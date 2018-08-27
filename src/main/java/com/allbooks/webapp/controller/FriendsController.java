@@ -90,7 +90,7 @@ public class FriendsController {
 
 		if (searchedReader != null) {
 
-			photoService.encodeAndResizeReaderPhotoInReader(searchedReader, 80, 80);
+			photoService.setResizedAndEncodedPhotoInReader(searchedReader, 80, 80);
 
 			theModel.addAttribute("searchedReader", searchedReader);
 

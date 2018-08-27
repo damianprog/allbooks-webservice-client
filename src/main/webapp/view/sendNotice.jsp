@@ -22,7 +22,7 @@
 	<div id="container">
 		<jsp:include page='/view/header.jsp' />
 
-		<c:url var="bookPageRef" value="/reader/showBook">
+		<c:url var="bookPageRef" value="/visitor/showBook">
 			<c:param name="bookId" value="${review.book.id}" />
 		</c:url>
 

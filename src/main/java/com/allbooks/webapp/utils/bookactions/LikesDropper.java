@@ -45,18 +45,23 @@ public class LikesDropper {
 		if (like != null)
 			likeService.deleteLikeById(like.getId());
 		else {
-			Review review = reviewService.getReviewById(reviewId);
-
-			List<Like> reviewLikes = review.getLikes();
-
-			Like newLike = likeFactory.createInstance(loggedReader);
-
-			reviewLikes.add(newLike);
+			Review review = addLikeToReview(reviewId, loggedReader);
 
 			reviewService.updateReview(review);
-
 		}
 
+	}
+
+	private Review addLikeToReview(int reviewId, Reader loggedReader) {
+		Review review = reviewService.getReviewById(reviewId);
+
+		List<Like> reviewLikes = review.getLikes();
+
+		Like newLike = likeFactory.createInstance(loggedReader);
+
+		reviewLikes.add(newLike);
+		
+		return review;
 	}
 
 }

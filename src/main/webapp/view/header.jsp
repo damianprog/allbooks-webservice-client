@@ -26,9 +26,9 @@
 
 
 
-				<td id="allbooksName"><a id="allBooks" href="/reader/main">AllBooks</a></td>
+				<td id="allbooksName"><a id="allBooks" href="/visitor/main">AllBooks</a></td>
 
-				<td id="homeRef"><a class="blackRefNon" href="/reader/main">Home</a>
+				<td id="homeRef"><a class="blackRefNon" href="/visitor/main">Home</a>
 
 				</td>
 				<td class="pageRef"><sec:authorize

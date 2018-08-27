@@ -11,7 +11,7 @@ import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
-import com.allbooks.webapp.utils.readerbook.ReaderBookRatingUpdater;
+import com.allbooks.webapp.utils.readerbook.ReaderBooksRatingSetter;
 
 @Component
 public class RatingSaver {
@@ -29,30 +29,39 @@ public class RatingSaver {
 	private BookService bookService;
 	
 	@Autowired
-	private ReaderBookRatingUpdater readerBookRatingUpdater;
+	private ReaderBooksRatingSetter readerBooksRatingSetter;
 	
 	@Autowired
-	private CommentsRatingUpdater commentsRatingUpdater;
+	private CommentsRatingSetter commentsRatingSetter;
 	
 	public void save(RatingData ratingData) {
 
 		int readerId = contextService.getLoggedReaderId();
 
-		Rating rating = ratingData.getRating();
+		Rating rating = initializeRatingFields(ratingData, readerId);
 
+		Rating savedRating = ratingService.submitRating(rating);
+
+		setRatingInRelatedObjects(savedRating);
+	}
+
+	private Rating initializeRatingFields(RatingData ratingData, int readerId) {
+		
+		Rating rating = ratingData.getRating();
+		
 		Reader reader = readerService.getReaderById(readerId);
 
 		Book book = bookService.getBookById(ratingData.getBookId());
 
 		rating.setReader(reader);
 		rating.setBook(book);
-
-		Rating savedRating = ratingService.submitRating(rating);
-
-		commentsRatingUpdater.update(savedRating);
-		readerBookRatingUpdater.update(savedRating);
 		
+		return rating;
+	}
 
+	private void setRatingInRelatedObjects(Rating savedRating) {
+		commentsRatingSetter.update(savedRating);
+		readerBooksRatingSetter.update(savedRating);
 	}
 
 }

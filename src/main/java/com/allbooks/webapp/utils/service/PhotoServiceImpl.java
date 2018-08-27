@@ -101,10 +101,11 @@ public class PhotoServiceImpl implements PhotoService {
 	}
 
 	@Override
-	public void encodeAndResizeReaderPhotoInReader(Reader reader, int width, int height) {
+	public Reader setResizedAndEncodedPhotoInReader(Reader reader, int width, int height) {
 
 		reader.setEncodedProfilePhoto(getEncodedImage(resize(reader.getProfilePhoto(),width,height)));
 		
+		return reader;
 	}
 
 	public void createDefaultPhotoForReader(Reader reader) {

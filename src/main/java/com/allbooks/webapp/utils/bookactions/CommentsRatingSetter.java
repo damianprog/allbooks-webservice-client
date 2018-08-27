@@ -10,7 +10,7 @@ import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.service.CommentService;
 
 @Component
-public class CommentsRatingUpdater {
+public class CommentsRatingSetter {
 
 	@Autowired
 	private CommentService commentService;

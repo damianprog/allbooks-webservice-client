@@ -155,7 +155,7 @@
 
 					<div class="currentBookDetails">
 
-						<c:url var="bookSite" value="/reader/showBook">
+						<c:url var="bookSite" value="/visitor/showBook">
 							<c:param name="bookId" value="${tempBook.book.id}" />
 						</c:url>
 						${reader.username}&nbsp;is currently reading
@@ -179,7 +179,7 @@
 						<c:forEach var="tempReview" items="${readerReviews}" begin="0"
 							end="2">
 
-							<c:url var="bookPage" value="/reader/showBook">
+							<c:url var="bookPage" value="/visitor/showBook">
 								<c:param name="bookId" value="${tempReview.book.id}" />
 							</c:url>
 
@@ -189,7 +189,7 @@
 							</div>
 
 							<table class="reviewTitle">
-								<c:url var="reviewLink" value="/bookActions/reviewPage">
+								<c:url var="reviewLink" value="/bookActions/showReview">
 									<c:param name="reviewId" value="${tempReview.id}" />
 									<c:param name="readerLogin"
 										value="${tempReview.postingReader.username}" />

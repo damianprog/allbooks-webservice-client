@@ -24,7 +24,7 @@ import com.allbooks.webapp.service.CommentService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
-import com.allbooks.webapp.utils.bookactions.SubmitComment;
+import com.allbooks.webapp.utils.bookactions.CommentSaver;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -32,7 +32,7 @@ import com.allbooks.webapp.utils.bookactions.SubmitComment;
 public class SubmitCommentTest {
 
 	@InjectMocks
-	private SubmitComment submitComment;
+	private CommentSaver submitComment;
 
 	@Mock
 	private ReaderService readerServiceMock;
@@ -93,7 +93,7 @@ public class SubmitCommentTest {
 
 		when(reviewServiceMock.getReviewById(reviewId)).thenReturn(reviewMock);
 		
-		submitComment.submit(commentDataMock);
+		submitComment.save(commentDataMock);
 		
 		verify(commentDataMock).getComment();
 		verify(contextServiceMock).getLoggedReaderId();

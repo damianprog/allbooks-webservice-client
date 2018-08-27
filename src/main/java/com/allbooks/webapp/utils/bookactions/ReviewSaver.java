@@ -35,6 +35,13 @@ public class ReviewSaver {
 
 		int readerId = contextService.getLoggedReaderId();
 
+		Review review = initializeReviewFields(reviewData, readerId);
+
+		reviewService.submitReview(review);
+
+	}
+
+	private Review initializeReviewFields(ReviewData reviewData, int readerId) {
 		int bookId = reviewData.getBookId();
 
 		Reader reader = readerService.getReaderById(readerId);
@@ -46,9 +53,7 @@ public class ReviewSaver {
 		review.setBook(book);
 		review.setPostingReader(reader);
 		review.setRating(ratingService.getReaderRatingObject(readerId, bookId));
-
-		reviewService.submitReview(review);
-
+		return review;
 	}
 
 }

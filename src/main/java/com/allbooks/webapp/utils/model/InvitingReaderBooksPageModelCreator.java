@@ -36,23 +36,29 @@ public class InvitingReaderBooksPageModelCreator {
 		
 		ModelMap modelMap = modelMapFactory.createInstance();
 		
+		modelMap.addAttribute("readerBooksList", prepareReaderBooksList(invitingReaderId));
+		modelMap.addAttribute("invitingReader", getPreparedInvitingReader(invitingReaderId));
+		modelMap.addAttribute("invitingReaderReaderBooksQuantity",
+				readerBookService.getReaderBooks(invitingReaderId).size());
+		
+		return modelMap;
+	}
+
+	private Reader getPreparedInvitingReader(int invitingReaderId) {
+		Reader invitingReader = readerService.getReaderById(invitingReaderId);
+
+		photoService.setResizedAndEncodedPhotoInReader(invitingReader, 90, 130);
+		return invitingReader;
+	}
+
+	private List<ReaderBook> prepareReaderBooksList(int invitingReaderId) {
 		List<ReaderBook> readerBooksList = readerBookService.get10LatestReaderBooksByReaderId(invitingReaderId);
 		
 		photoService.encodeAndResizeBookPhotoInBookChildren(readerBooksList, 100, 100);
 		
 		setOverallRatingInReaderBooks(readerBooksList);
 		
-		modelMap.addAttribute("readerBooksList", readerBooksList);
-
-		Reader invitingReader = readerService.getReaderById(invitingReaderId);
-
-		photoService.encodeAndResizeReaderPhotoInReader(invitingReader, 90, 130);
-
-		modelMap.addAttribute("invitingReader", invitingReader);
-		modelMap.addAttribute("invitingReaderReaderBooksQuantity",
-				readerBookService.getReaderBooks(invitingReaderId).size());
-		
-		return modelMap;
+		return readerBooksList;
 	}
 
 	private void setOverallRatingInReaderBooks(List<ReaderBook> readerBooksList) {

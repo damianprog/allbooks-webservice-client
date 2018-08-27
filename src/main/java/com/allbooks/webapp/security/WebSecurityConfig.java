@@ -34,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .formLogin()
         .loginPage("/login")
         .failureUrl("/login?error=true")
-        .defaultSuccessUrl("/reader/main")
+        .defaultSuccessUrl("/visitor/main")
         .permitAll()
         .and()
         .rememberMe()
@@ -42,7 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         	.rememberMeCookieName("allbooks-remember-me")
         	.tokenValiditySeconds(24 * 60 * 60)
         .and()
-        .logout().logoutSuccessUrl("/reader/main")
+        .logout().logoutSuccessUrl("/visitor/main")
         .and()
         .exceptionHandling().accessDeniedPage("/readerAccount/accessDenied");
 	

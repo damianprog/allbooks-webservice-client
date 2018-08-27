@@ -100,7 +100,7 @@
 					</tr>
 
 					<c:forEach var="tempReaderBook" items="${readerBooks}">
-						<c:url var="titleRef" value="/reader/showBook">
+						<c:url var="titleRef" value="/visitor/showBook">
 							<c:param name="bookId" value="${tempReaderBook.book.id}" />
 						</c:url>
 						<tr>
