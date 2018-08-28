@@ -1,22 +1,25 @@
 package com.allbooks.webapp.utils.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.allbooks.webapp.entity.CommentData;
 import com.allbooks.webapp.entity.RatingData;
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.ReaderBookData;
-import com.allbooks.webapp.entity.ReadingChallangeCommentData;
-import com.allbooks.webapp.entity.ReviewData;
-import com.allbooks.webapp.utils.bookactions.RatingSaver;
-import com.allbooks.webapp.utils.bookactions.ReviewSaver;
-import com.allbooks.webapp.utils.ReadingChallangeCommentSaver;
-import com.allbooks.webapp.utils.bookactions.CommentSaver;
-import com.allbooks.webapp.utils.reader.ReaderSaver;
-import com.allbooks.webapp.utils.readerbook.ReaderBookSaver;
+import com.allbooks.webapp.utils.entity.CommentData;
+import com.allbooks.webapp.utils.entity.ReaderBookData;
+import com.allbooks.webapp.utils.entity.ReadingChallangeCommentData;
+import com.allbooks.webapp.utils.entity.ReviewData;
+import com.allbooks.webapp.utils.saver.CommentSaver;
+import com.allbooks.webapp.utils.saver.FavouriteGenresSaver;
+import com.allbooks.webapp.utils.saver.RatingSaver;
+import com.allbooks.webapp.utils.saver.ReaderBookSaver;
+import com.allbooks.webapp.utils.saver.ReaderSaver;
+import com.allbooks.webapp.utils.saver.ReadingChallangeCommentSaver;
+import com.allbooks.webapp.utils.saver.ReadingChallangeSaver;
+import com.allbooks.webapp.utils.saver.ReviewSaver;
 
 @Service
 public class SaveServiceImpl implements SaveService {
@@ -38,6 +41,12 @@ public class SaveServiceImpl implements SaveService {
 	
 	@Autowired
 	private ReadingChallangeCommentSaver readingChallangeCommentSaver;
+	
+	@Autowired
+	private ReadingChallangeSaver readingChallangeSaver;
+	
+	@Autowired
+	private FavouriteGenresSaver favouriteGenresSaver;
 	
 	@Override
 	public void saveRating(RatingData ratingData) {
@@ -64,13 +73,23 @@ public class SaveServiceImpl implements SaveService {
 	}
 
 	@Override
-	public void saveComment(CommentData commentData) {
+	public void saveNewComment(CommentData commentData) {
 		commentSaver.save(commentData);
 	}
 
 	@Override
 	public void saveReadingChallangeComment(ReadingChallangeCommentData readingChallangeCommentData) {
 		readingChallangeCommentSaver.save(readingChallangeCommentData);
+	}
+
+	@Override
+	public void saveFavouriteGenresByCheckedGenresList(List<String> categoriesChecked) {
+		favouriteGenresSaver.save(categoriesChecked);
+	}
+
+	@Override
+	public void saveReadingChallangeByNumberOfBooks(int numberOfBooks) {
+		readingChallangeSaver.save(numberOfBooks);
 	}
 
 	

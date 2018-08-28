@@ -90,17 +90,6 @@ public class ReviewWebserviceImpl implements ReviewWebservice {
 	}
 
 	@Override
-	public void deleteReviewByIdAndReaderId(int reviewId, int readerId) {
-
-		Map<String, Integer> params = new HashMap<>();
-		params.put("reviewId", reviewId);
-		params.put("readerId", readerId);
-		
-		restTemplate.delete(serviceUrlName + "/readers/{readerId}/books/reviews/{reviewId}" + accessTokenParameter,params);
-		
-	}
-
-	@Override
 	public Review[] getLatestReaderReviews(int readerId) {
 
 		Map<String, Integer> params = new HashMap<>();

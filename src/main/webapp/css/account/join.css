@@ -1,0 +1,91 @@
+body{
+	background-image:url("/css/images/dust_scratches.png");
+	font-family: 'Roboto', sans-serif;
+	font-size:17px;
+	color:black;	
+}
+
+#container 
+{
+	width:1000px;
+  	margin: 0 auto;
+}
+
+#title{
+	font-family: 'Spectral SC', sans-serif;
+	font-size:32px;
+	color:black;
+	float:left;
+}
+
+.whiteContainer2 {
+  position: absolute;
+  background-color:white;
+  width:600px;
+  height:515px;
+  border-radius:7px;
+  left: 50%;
+  top: 10%;
+  margin-top:310px;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  border-size:0.5px;
+  border-style:solid;
+  border-width: thin;
+  border-color:#9b9b9b;
+  text-align:center;
+}
+
+#invitationJoinTable{
+	font-size:13px;
+	text-align:left;
+	margin-left:40px;
+}
+
+#joinTable{
+	font-size:13px;	
+	text-align:left;
+	margin-left:140px;
+}
+
+.error {
+	color: red;
+	font-style: italic;
+	font-weight: bold;
+}
+
+.joinInputBox{
+	width: 300px;
+	height: 40px;
+	border-radius:3px;
+}
+
+#joinSubmitTd{
+	padding-top:15px;
+}
+
+#smallText{
+	padding-top:15px;
+	color:#aaa;
+	font-size:12px;
+}
+
+#invitingReaderPhoto{
+	float:left;
+	margin-left:30px;
+	margin-top:20px;
+}
+
+#rightSide{
+	float:left;
+	text-align:center;
+}
+
+#signUpInvitation{
+	float:left;
+	margin-left:60px;
+}
+
+#headerInfo{
+	margin-left:30px;
+}

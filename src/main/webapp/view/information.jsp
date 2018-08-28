@@ -30,7 +30,7 @@
 			<c:when test="${information == 'SUCCESSFULLY_REGISTERED'}">
 				<h3>You've been successfully Registered</h3>
 				<p>The authentication link has been sent to given email</p>
-				<p><a class="blackRef" href="/reader/main">Allbooks home</a></p>
+				<p><a class="blackRef" href="/visitor/main">Allbooks home</a></p>
 			</c:when>
 			<c:when test="${information == 'LOGIN_TAKEN'}">
 				<h3>This login is taken</h3>
@@ -45,11 +45,11 @@
 			<c:when test="${information == 'ACCESS_DENIED'}">
 				<br>
 				<span style="color: blue">You don't have access to this page.</span>
-				<p><a class="blackRef" href="/reader/main">Allbooks home</a></p>
+				<p><a class="blackRef" href="/visitor/main">Allbooks home</a></p>
 			</c:when>
 			<c:when test="${information == 'NOT_FOUND'}">
 				<h3>Error 404 Not Found.</h3>
-				<p><a href="/reader/main">Allbooks Home</a></p>
+				<p><a href="/visitor/main">Allbooks Home</a></p>
 			</c:when>
 		</c:choose>
 		

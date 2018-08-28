@@ -115,7 +115,7 @@ public class BookActionsController {
 		theModel.addAttribute("bookPic", photoService.getEncodedImage(bookPicBytes));
 		theModel.addAllAttributes(readerBookAndRatingModelCreator.createModel(bookId));
 
-		return "postreview";
+		return "book/postreview";
 	}
 
 	@GetMapping("/showReview")
@@ -133,10 +133,9 @@ public class BookActionsController {
 		theModel.addAttribute("review", review);
 		theModel.addAttribute("bookPic", photoService.getEncodedImage(book.getBookPhoto()));
 		theModel.addAttribute("rating", review.getRating());
-		theModel.addAttribute("comment", new Comment());
 		theModel.addAttribute("reviewComments", reviewComments);
 
-		return "review";
+		return "book/review";
 	}
 
 }

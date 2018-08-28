@@ -6,9 +6,10 @@ import org.springframework.stereotype.Service;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.Token;
 import com.allbooks.webapp.enumeration.TokenType;
-import com.allbooks.webapp.utils.TokenCreator;
-import com.allbooks.webapp.utils.TokenUrlCreator;
-import com.allbooks.webapp.validators.ExpiredTokenRemover;
+import com.allbooks.webapp.utils.token.ExpiredTokenRemover;
+import com.allbooks.webapp.utils.token.InvitationTokenGetter;
+import com.allbooks.webapp.utils.token.TokenCreator;
+import com.allbooks.webapp.utils.token.TokenUrlCreator;
 
 @Service
 public class TokenUtilsServiceImpl implements TokenUtilsService{
@@ -21,6 +22,9 @@ public class TokenUtilsServiceImpl implements TokenUtilsService{
 	
 	@Autowired
 	private ExpiredTokenRemover expiredTokenRemover;
+	
+	@Autowired
+	private InvitationTokenGetter invitationTokenGetter;
 	
 	@Override
 	public Token createTokenForReader(Reader reader, TokenType tokenType) {
@@ -35,6 +39,11 @@ public class TokenUtilsServiceImpl implements TokenUtilsService{
 	@Override
 	public boolean isTokenExpiredAndRemoved(Token token) {
 		return expiredTokenRemover.isTokenExpired(token);
+	}
+
+	@Override
+	public Token getOrCreateInvitationToken() {
+		return invitationTokenGetter.get();
 	}
 
 }

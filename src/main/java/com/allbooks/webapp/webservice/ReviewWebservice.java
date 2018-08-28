@@ -16,8 +16,6 @@ public interface ReviewWebservice {
 
 	void updateReview(Review review);
 
-	void deleteReviewByIdAndReaderId(int reviewId, int readerId);
-
 	Review[] getLatestReaderReviews(int readerId);
 
 }

@@ -12,13 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.allbooks.webapp.entity.Pending;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.Token;
-import com.allbooks.webapp.enumeration.TokenType;
 import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.FriendsService;
 import com.allbooks.webapp.service.PendingService;
-import com.allbooks.webapp.service.ReaderService;
-import com.allbooks.webapp.service.TokenService;
-import com.allbooks.webapp.utils.model.FriendsRequestsOptionsModelCreator;
+import com.allbooks.webapp.utils.model.AddFriendsModelCreator;
 import com.allbooks.webapp.utils.service.PhotoService;
 import com.allbooks.webapp.utils.service.TokenUtilsService;
 
@@ -27,13 +24,7 @@ import com.allbooks.webapp.utils.service.TokenUtilsService;
 public class FriendsController {
 
 	@Autowired
-	private ReaderService readerService;
-
-	@Autowired
 	private PhotoService photoService;
-
-	@Autowired
-	private SecurityContextService contextService;
 
 	@Autowired
 	private FriendsService friendsService;
@@ -42,11 +33,11 @@ public class FriendsController {
 	private PendingService pendingService;
 
 	@Autowired
-	private FriendsRequestsOptionsModelCreator friendsRequestsOptionsModelCreator;
+	private AddFriendsModelCreator addFriendsModelCreator;
 
 	@Autowired
-	private TokenService tokenService;
-
+	private SecurityContextService contextService;
+	
 	@Autowired
 	private TokenUtilsService tokenUtilsService;
 
@@ -61,7 +52,7 @@ public class FriendsController {
 
 		theModel.addAttribute("friends", friends);
 
-		return "friends";
+		return "reader/friends";
 	}
 
 	@GetMapping("/showFriendsRequests")
@@ -73,61 +64,27 @@ public class FriendsController {
 
 		theModel.addAttribute("friendsRequests", friendsRequests);
 
-		return "friendsRequests";
+		return "reader/friendsRequests";
 	}
 
 	@GetMapping("/showAddFriends")
 	public String showAddFriends(Model theModel, @RequestParam(value = "username", required = false) String username) {
 
-		int readerId = contextService.getLoggedReaderId();
+		theModel.addAllAttributes(addFriendsModelCreator.createModel(username));
 
-		Reader searchedReader = null;
-
-		theModel.addAttribute("isAlreadySent", false);
-
-		if (username != null)
-			searchedReader = readerService.getReaderByUsername(username);
-
-		if (searchedReader != null) {
-
-			photoService.setResizedAndEncodedPhotoInReader(searchedReader, 80, 80);
-
-			theModel.addAttribute("searchedReader", searchedReader);
-
-			theModel.addAllAttributes(
-					friendsRequestsOptionsModelCreator.createModelMap(readerId, searchedReader.getId()));
-		}
-
-		if (username != null && searchedReader == null)
-			theModel.addAttribute("notFound", true);
-
-		return "addFriends";
+		return "reader/addFriends";
 	}
 
 	@GetMapping("/getInvitationLink")
 	public String getInvitationLink(Model theModel) {
 
-		int readerId = contextService.getLoggedReaderId();
-
-		Reader reader = readerService.getReaderById(readerId);
-
-		Token token = tokenService.getTokenByReaderId(readerId, TokenType.INVITATION_TOKEN);
-
-		boolean isTokenExpired = false;
-		
-		if (token != null)
-			isTokenExpired = tokenUtilsService.isTokenExpiredAndRemoved(token);
-		
-		if(token == null || isTokenExpired)
-			token = tokenUtilsService.createTokenForReader(reader, TokenType.INVITATION_TOKEN);
+		Token token = tokenUtilsService.getOrCreateInvitationToken();
 		
 		String tokenUrl = tokenUtilsService.getTokenUrl(token);
 
 		theModel.addAttribute("tokenUrl", tokenUrl);
 
-		return "invitationLink";
+		return "account/invitationLink";
 	}
-
-	
 
 }

@@ -49,7 +49,7 @@
 
 				<sec:authorize
 						access="isFullyAuthenticated()">
-				<td><form action="/reader/searchBooks">
+				<td><form action="/visitor/searchBooks">
 						<input id="searchBarHeader" name="phrase" placeholder="Search books" required="required">
 						<input id="searchHeader" type="submit" value="Search">
 
@@ -68,7 +68,7 @@
 						    <sec:authorize access="hasAuthority('ADMIN')">
 						    <a href="/admin/showAddBook">Admin</a>
 						    </sec:authorize>
-						    <a href="/loggedReader/showFavoriteGenres">Favorite genres</a>
+						    <a href="/loggedReader/showFavouriteGenres">Favorite genres</a>
 						    <a href="/logout">Logout</a>
 						  </div>
 						</div></td>

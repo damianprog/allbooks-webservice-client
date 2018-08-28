@@ -39,7 +39,7 @@
 					<p>New here? Create a free account!</p>
 				</div>
 
-				<form:form action="saveReader" modelAttribute="reader" method="POST">
+				<form:form action="/reader/saveReader" modelAttribute="reader" method="POST">
 					<table>
 						<tr>
 							<td><form:input path="username" placeholder="Name"
@@ -151,7 +151,7 @@
 					<h3>Search and browse books</h3>
 
 					<div id="searchDiv">
-						<form action="/reader/searchBooks">
+						<form action="/visitor/searchBooks">
 							<input id="searchBar" name="phrase" placeholder="Search books">
 							<input id="searchButton" type="submit" value="Search">
 

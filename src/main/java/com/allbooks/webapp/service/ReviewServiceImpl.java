@@ -88,12 +88,6 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public void deleteReviewByIdAndReaderId(int reviewId, int readerId) {
-		
-		reviewWebservice.deleteReviewByIdAndReaderId(reviewId,readerId);
-	}
-
-	@Override
 	public List<Review> getLatestReaderReviews(int readerId) {
 		return new ArrayList<Review>(Arrays.asList(reviewWebservice.getLatestReaderReviews(readerId)));
 	}

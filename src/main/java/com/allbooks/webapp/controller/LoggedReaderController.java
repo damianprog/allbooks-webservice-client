@@ -1,7 +1,6 @@
 package com.allbooks.webapp.controller;
 
 import java.security.Principal;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -16,17 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.allbooks.webapp.entity.FavoriteGenres;
 import com.allbooks.webapp.entity.Notification;
-import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.ReadingChallange;
 import com.allbooks.webapp.security.SecurityContextService;
-import com.allbooks.webapp.service.FavoriteGenresService;
 import com.allbooks.webapp.service.NotificationService;
-import com.allbooks.webapp.service.ReaderService;
-import com.allbooks.webapp.service.ReadingChallangeService;
+import com.allbooks.webapp.utils.FavouriteGenresJsonArrayGetter;
 import com.allbooks.webapp.utils.model.ReadingChallangeModelCreator;
-import com.google.gson.Gson;
+import com.allbooks.webapp.utils.service.SaveService;
 
 @Controller
 @RequestMapping("/loggedReader")
@@ -34,21 +28,18 @@ public class LoggedReaderController {
 
 	@Autowired
 	private NotificationService notificationService;
-
-	@Autowired
-	private ReadingChallangeService readingChallangeService;
-
-	@Autowired
-	private ReaderService readerService;
-
+	
 	@Autowired
 	private SecurityContextService contextService;
 
 	@Autowired
-	private FavoriteGenresService favoriteGenresService;
+	private ReadingChallangeModelCreator readingChallangeModelCreator;
 
 	@Autowired
-	private ReadingChallangeModelCreator readingChallangeModelCreator;
+	private FavouriteGenresJsonArrayGetter favouriteGenresJsonArrayGetter;
+
+	@Autowired
+	private SaveService saveService;
 
 	@GetMapping("/showNotifications")
 	public String showNotificationsPage(Model theModel, Principal principal, HttpSession session,
@@ -62,7 +53,7 @@ public class LoggedReaderController {
 		theModel.addAttribute("notificationsPage", notifications);
 		theModel.addAttribute("currentPage", page);
 
-		return "notifications";
+		return "reader/notifications";
 
 	}
 
@@ -78,18 +69,12 @@ public class LoggedReaderController {
 	}
 
 	@GetMapping("/submitReadingChallange")
-	public String submitReadingChallange(Model theModel,RedirectAttributes ra, @RequestParam("numberOfBooks") int numberOfBooks,
-			HttpSession session) {
-
-		int readerId = contextService.getLoggedReaderId();
-
-		Reader reader = readerService.getReaderById(readerId);
-
-		ReadingChallange readingChallange = new ReadingChallange(reader, numberOfBooks);
-
-		readingChallangeService.saveReadingChallange(readingChallange);
-
-		ra.addAttribute("readerId",readerId);
+	public String submitReadingChallange(Model theModel, RedirectAttributes ra,
+			@RequestParam("numberOfBooks") int numberOfBooks, HttpSession session) {
+		
+		saveService.saveReadingChallangeByNumberOfBooks(numberOfBooks);
+		
+		ra.addAttribute("readerId", contextService.getLoggedReaderId());
 		return "redirect:/loggedReader/showReadingChallange";
 	}
 
@@ -98,58 +83,30 @@ public class LoggedReaderController {
 
 		theModel.addAllAttributes(readingChallangeModelCreator.createModel(readerId));
 
-		return "readingChallange";
+		return "reader/readingChallange";
 	}
 
-	@GetMapping("/showFavoriteGenres")
+	@GetMapping("/showFavouriteGenres")
 	public String showFavoriteGenres(Model theModel,
 			@RequestParam(value = "savedAlert", defaultValue = "false") boolean savedAlert) {
 
-		int readerId = contextService.getLoggedReaderId();
-
-		FavoriteGenres favoriteGenres = favoriteGenresService.getFavoriteGenresByReaderId(readerId);
-
-		if (favoriteGenres != null) {
-
-			List<String> genres = Arrays.asList(favoriteGenres.getFavoriteGenres().split(","));
-
-			String jsonArray = new Gson().toJson(genres);
-
-			theModel.addAttribute("favoriteGenres", jsonArray);
-		}
+		theModel.addAllAttributes(favouriteGenresJsonArrayGetter.get());
 
 		theModel.addAttribute("savedAlert", savedAlert);
 
-		return "favoriteGenres";
+		return "reader/favouriteGenres";
 	}
 
-	@PostMapping("/saveFavoriteGenres")
+	@PostMapping("/saveFavouriteGenres")
 	public String saveFavoriteGenres(Model theModel, RedirectAttributes ra,
 			@RequestParam("categoryChecked") List<String> categoriesChecked) {
 
-		FavoriteGenres fGenres;
-
-		int readerId = contextService.getLoggedReaderId();
-
-		Reader reader = readerService.getReaderById(readerId);
-
-		fGenres = favoriteGenresService.getFavoriteGenresByReaderId(readerId);
-
-		if (fGenres == null) {
-			fGenres = new FavoriteGenres();
-			fGenres.setReader(reader);
-		}
-
-		fGenres.setFavoriteGenres(String.join(",", categoriesChecked));
-
-		favoriteGenresService.saveFavoriteGenres(fGenres);
+		saveService.saveFavouriteGenresByCheckedGenresList(categoriesChecked);
 
 		ra.addAttribute("savedAlert", true);
 
-		return "redirect:/loggedReader/showFavoriteGenres";
+		return "redirect:/loggedReader/showFavouriteGenres";
 
 	}
 
-	
-	
 }

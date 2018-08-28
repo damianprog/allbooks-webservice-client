@@ -20,8 +20,6 @@ public interface ReviewService {
 
 	void deleteReviewById(int reviewId);
 
-	void deleteReviewByIdAndReaderId(int reviewId, int readerId);
-
 	List<Review> getReviewsByReaderId(int readerId);
 
 	List<Review> getLatestReaderReviews(int readerId);

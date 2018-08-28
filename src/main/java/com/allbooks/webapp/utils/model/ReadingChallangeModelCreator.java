@@ -8,7 +8,6 @@ import org.springframework.ui.ModelMap;
 
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
-import com.allbooks.webapp.entity.ReaderPost;
 import com.allbooks.webapp.entity.ReadingChallange;
 import com.allbooks.webapp.entity.ReadingChallangeComment;
 import com.allbooks.webapp.exceptions.entity.NotFoundException;
@@ -43,26 +42,27 @@ public class ReadingChallangeModelCreator {
 	public ModelMap createModel(int readerId) {
 
 		ModelMap modelMap = modelMapFactory.createInstance();
-		
-		Reader challangeReader = readerService.getReaderById(readerId);
 
-		ReadingChallange readingChallange = checkAndGetReadingChalllange(readerId);
-		
-		photoService.setResizedAndEncodedPhotoInReader(challangeReader, 80, 80);
-
-		List<ReaderBook> currentYearBooks = currentYearReadBooksGetter.getBooks(readerId);
-
-		List<ReaderPost> readingChallangeComments = readerPostsGetter.getPreparedReadingChallangeComments(readerId);
-
-		photoService.encodeAndResizeBookPhotoInBookChildren(currentYearBooks, 100, 150);
-		
-		modelMap.addAttribute("readingChallangeComment",new ReadingChallangeComment());
-		modelMap.addAttribute("challangeReader", challangeReader);
-		modelMap.addAttribute("readBooks", currentYearBooks);
-		modelMap.addAttribute("readingChallange", readingChallange);
-		modelMap.addAttribute("readingChallangeComments", readingChallangeComments);
+		modelMap.addAttribute("challangeReader", getChallangeReaderAndEncodeProfilePhoto(readerId));
+		modelMap.addAttribute("readBooks", getCurrentYearBooksWithEncodedBookPhotos(readerId));
+		modelMap.addAttribute("readingChallange", checkAndGetReadingChalllange(readerId));
+		modelMap.addAttribute("readingChallangeComments", readerPostsGetter.getPreparedReadingChallangeComments(readerId));
 		
 		return modelMap;
+	}
+
+	private List<ReaderBook> getCurrentYearBooksWithEncodedBookPhotos(int readerId) {
+		List<ReaderBook> currentYearBooks = currentYearReadBooksGetter.getBooks(readerId);
+		
+		photoService.encodeAndResizeBookPhotoInBookChildren(currentYearBooks, 100, 150);
+		return currentYearBooks;
+	}
+
+	private Reader getChallangeReaderAndEncodeProfilePhoto(int readerId) {
+		Reader challangeReader = readerService.getReaderById(readerId);
+		
+		photoService.setResizedAndEncodedPhotoInReader(challangeReader, 80, 80);
+		return challangeReader;
 	}
 
 	private ReadingChallange checkAndGetReadingChalllange(int readerId) {

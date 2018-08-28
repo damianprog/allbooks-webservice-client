@@ -1,13 +1,13 @@
 package com.allbooks.webapp.service;
 
-import com.allbooks.webapp.entity.FavoriteGenres;
+import com.allbooks.webapp.entity.FavouriteGenres;
 
 public interface FavoriteGenresService {
 
-	void saveFavoriteGenres(FavoriteGenres favoriteGenres);
+	void saveFavoriteGenres(FavouriteGenres favoriteGenres);
 	
-	FavoriteGenres getFavoriteGenresByReaderId(int readerId);
+	FavouriteGenres getFavoriteGenresByReaderId(int readerId);
 	
-	FavoriteGenres getFavoriteGenresById(int favoriteGenresId);	
+	FavouriteGenres getFavoriteGenresById(int favoriteGenresId);	
 	
 }

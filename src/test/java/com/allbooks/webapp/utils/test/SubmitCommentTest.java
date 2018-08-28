@@ -14,7 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.allbooks.webapp.Application;
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Comment;
-import com.allbooks.webapp.entity.CommentData;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.Review;
@@ -24,7 +23,8 @@ import com.allbooks.webapp.service.CommentService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
-import com.allbooks.webapp.utils.bookactions.CommentSaver;
+import com.allbooks.webapp.utils.entity.CommentData;
+import com.allbooks.webapp.utils.saver.CommentSaver;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)

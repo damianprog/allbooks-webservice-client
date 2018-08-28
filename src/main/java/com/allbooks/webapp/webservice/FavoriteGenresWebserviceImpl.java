@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.allbooks.webapp.entity.FavoriteGenres;
+import com.allbooks.webapp.entity.FavouriteGenres;
 
 @Service
 public class FavoriteGenresWebserviceImpl implements FavoriteGenresWebservice{
@@ -33,28 +33,28 @@ public class FavoriteGenresWebserviceImpl implements FavoriteGenresWebservice{
 	}
 	
 	@Override
-	public void saveFavoriteGenres(FavoriteGenres favoriteGenres) {
+	public void saveFavoriteGenres(FavouriteGenres favoriteGenres) {
 
-		restTemplate.postForObject(serviceUrlName + "/favoriteGenres" + accessTokenParameter, favoriteGenres, FavoriteGenres.class);
+		restTemplate.postForObject(serviceUrlName + "/favoriteGenres" + accessTokenParameter, favoriteGenres, FavouriteGenres.class);
 		
 	}
 
 	@Override
-	public FavoriteGenres getFavoriteGenresByReaderId(int readerId) {
+	public FavouriteGenres getFavoriteGenresByReaderId(int readerId) {
 		
 		Map<String,Integer> params = new HashMap<>();
 		params.put("readerId", readerId);
 		
-		return restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/favoriteGenres" + accessTokenParameter, FavoriteGenres.class,params);
+		return restTemplate.getForObject(serviceUrlName + "/readers/{readerId}/favoriteGenres" + accessTokenParameter, FavouriteGenres.class,params);
 		
 	}
 
 	@Override
-	public FavoriteGenres getFavoriteGenresById(int favoriteGenresId) {
+	public FavouriteGenres getFavoriteGenresById(int favoriteGenresId) {
 		Map<String,Integer> params = new HashMap<>();
 		params.put("favoriteGenresId", favoriteGenresId);
 		
-		return restTemplate.getForObject(serviceUrlName + "/favoriteGenres/{favoriteGenresId}" + accessTokenParameter, FavoriteGenres.class,params);
+		return restTemplate.getForObject(serviceUrlName + "/favoriteGenres/{favoriteGenresId}" + accessTokenParameter, FavouriteGenres.class,params);
 	}
 
 }

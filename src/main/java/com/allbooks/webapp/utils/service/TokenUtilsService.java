@@ -12,4 +12,6 @@ public interface TokenUtilsService {
 	
 	boolean isTokenExpiredAndRemoved(Token token);
 	
+	Token getOrCreateInvitationToken();
+	
 }

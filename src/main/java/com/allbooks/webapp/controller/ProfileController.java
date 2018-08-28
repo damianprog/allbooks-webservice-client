@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.allbooks.webapp.entity.Details;
 import com.allbooks.webapp.entity.Pending;
+import com.allbooks.webapp.entity.PendingRequestResponseData;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.security.SecurityContextService;
@@ -93,7 +94,7 @@ public class ProfileController {
 		theModel.addAttribute("friends", friends);
 		theModel.addAllAttributes(loggedReaderModelProfileCreator.createModel(reader));
 
-		return "profile";
+		return "reader/profile";
 	}
 
 	@PostMapping("/profileUpload")
@@ -114,10 +115,10 @@ public class ProfileController {
 	}
 
 	@GetMapping("/inviteFriend")
-	public String inviteFriend(@RequestParam("pageName") String pageName, @RequestParam Map<String, String> params,
+	public String inviteFriend(@RequestParam("pageName") String pageName, @RequestParam("recipentId") int recipentId,
 			HttpSession session, RedirectAttributes ra) {
 
-		Pending pending = friendsUtilsService.createPending(params);
+		Pending pending = friendsUtilsService.createPending(recipentId);
 
 		pendingService.savePending(pending);
 
@@ -126,20 +127,20 @@ public class ProfileController {
 			return "redirect:/profile/showProfile";
 		}
 		else
-			return "redirect:/loggedReader/showAddFriends";
+			return "redirect:/friends/showAddFriends";
 	}
 
-	@PostMapping("/acceptOrAbort") // need to change property friendsId
-	public String acceptOrAbort(@RequestParam("pageName") String pageName, @RequestParam Map<String, String> params,
+	@PostMapping("/acceptOrAbort") 
+	public String acceptOrAbort(@RequestParam("pageName") String pageName, PendingRequestResponseData responseData,
 			Model theModel, HttpSession session, RedirectAttributes ra) {
 
-		friendsUtilsService.acceptOrAbort(params);
+		friendsUtilsService.acceptOrAbort(responseData);
 
 		if (pageName.equals("profile")) {
-			ra.addAttribute("readerId", params.get("recipentId"));
+			ra.addAttribute("readerId", contextService.getLoggedReaderId());
 			return "redirect:/profile/showProfile";
 		} else
-			return "redirect:/loggedReader/showFriendsRequests";
+			return "redirect:/friends/showFriendsRequests";
 	}
 
 	@DeleteMapping("/deleteFriends")
@@ -155,9 +156,9 @@ public class ProfileController {
 		if (pageName.equals("profile"))
 			return "redirect:/profile/showProfile";
 		else if (pageName.equals("friends"))
-			return "redirect:/loggedReader/showFriends";
+			return "redirect:/friends/showFriends";
 		else
-			return "redirect:/loggedReader/showFriends";
+			return "redirect:/friends/showFriends";
 	}
 
 	@GetMapping("/showEdit")
@@ -173,7 +174,7 @@ public class ProfileController {
 		theModel.addAttribute("reader", reader);
 		theModel.addAttribute("details", details);
 
-		return "details";
+		return "reader/details";
 	}
 
 	@PostMapping("/saveDetails")

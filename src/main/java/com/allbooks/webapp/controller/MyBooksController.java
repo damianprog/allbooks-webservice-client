@@ -21,15 +21,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
-import com.allbooks.webapp.entity.ReaderBookData;
 import com.allbooks.webapp.enumeration.ShelvesState;
 import com.allbooks.webapp.factories.BookActionDataObjectFactory;
 import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.ReaderBookService;
 import com.allbooks.webapp.service.ReaderService;
-import com.allbooks.webapp.utils.readerbook.ReaderBookSaver;
+import com.allbooks.webapp.utils.entity.ReaderBookData;
 import com.allbooks.webapp.utils.readerbook.ReaderBooksForMyBooksGetter;
+import com.allbooks.webapp.utils.saver.ReaderBookSaver;
 import com.allbooks.webapp.utils.service.ReaderBooksUtilsService;
 
 @Controller
@@ -83,7 +83,7 @@ public class MyBooksController {
 		theModel.addAttribute("readerBooksPage", readerBooksPage);
 		theModel.addAttribute("page", page);
 
-		return "mybooks";
+		return "reader/mybooks";
 	}
 
 	@PostMapping("/saveReaderBook")

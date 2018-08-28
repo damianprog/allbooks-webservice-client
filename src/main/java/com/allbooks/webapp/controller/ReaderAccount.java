@@ -56,7 +56,7 @@ public class ReaderAccount {
 
 		theModel.addAttribute("readerId", readerId);
 		
-		return "changePassword";
+		return "account/changePassword";
 	}
 
 	@PostMapping("/changePassword")
@@ -116,7 +116,7 @@ public class ReaderAccount {
 		theModel.addAttribute("information", map.get("information"));
 		theModel.addAttribute("readerId",readerId);
 		
-		return "registrationConfirm";
+		return "account/registrationConfirm";
 	}
 
 	@PostMapping("/resendVerificationToken")
@@ -128,7 +128,7 @@ public class ReaderAccount {
 		
 		theModel.addAttribute("information",TokenResponse.VERIFICATION_TOKEN_RESEND);
 		
-		return "registrationConfirm";
+		return "account/registrationConfirm";
 		
 	}
 	

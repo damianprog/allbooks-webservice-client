@@ -12,8 +12,8 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.utils.TokenUrlCreator;
 import com.allbooks.webapp.utils.entity.MailData;
+import com.allbooks.webapp.utils.token.TokenUrlCreator;
 
 @Component
 public class MailBuilder {

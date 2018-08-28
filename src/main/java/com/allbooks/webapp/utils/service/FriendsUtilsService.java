@@ -1,14 +1,13 @@
 package com.allbooks.webapp.utils.service;
 
-import java.util.Map;
-
 import com.allbooks.webapp.entity.Pending;
+import com.allbooks.webapp.entity.PendingRequestResponseData;
 
 public interface FriendsUtilsService {
 
-	public Pending createPending(Map<String,String> params);
+	public Pending createPending(int recipentId);
 	
-	public void acceptOrAbort(Map<String,String> params);
+	public void acceptOrAbort(PendingRequestResponseData responseData);
 	
 	public void deleteFriends(int readerId,int friendId);
 }

@@ -1,12 +1,11 @@
 package com.allbooks.webapp.utils.service;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.allbooks.webapp.entity.Friends;
 import com.allbooks.webapp.entity.Pending;
+import com.allbooks.webapp.entity.PendingRequestResponseData;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.FriendsService;
@@ -29,11 +28,11 @@ public class FriendsUtilsServiceImpl implements FriendsUtilsService {
 	private SecurityContextService contextService;
 	
 	@Override
-	public Pending createPending(Map<String, String> params) {
+	public Pending createPending(int recipentId) {
 
 		Pending pending = new Pending();
 		
-		Reader recipent = readerService.getReaderById(Integer.parseInt(params.get("recipentId"))); 
+		Reader recipent = readerService.getReaderById(recipentId); 
 
 		Reader sender = readerService.getReaderById(contextService.getLoggedReaderId());
 		
@@ -44,17 +43,18 @@ public class FriendsUtilsServiceImpl implements FriendsUtilsService {
 	}
 
 	@Override
-	public void acceptOrAbort(Map<String, String> params) {
+	public void acceptOrAbort(PendingRequestResponseData responseData) {
 		
-		int senderIdInt = Integer.valueOf(params.get("senderId"));
-		int pendingIdInt = Integer.valueOf(params.get("pendingId"));
-		int recipentIdInt = contextService.getLoggedReaderId();
+		int senderIdInt = responseData.getSenderId();
+		int pendingIdInt = responseData.getPendingId();
+		int recipentIdInt = responseData.getRecipentId();
+		String acceptOrAbort = responseData.getAcceptOrAbort();
 		
 		Reader sender = readerService.getReaderById(senderIdInt);
 
 		Reader recipent = readerService.getReaderById(recipentIdInt);
 		
-		if (params.get("acceptOrAbort").equals("accept")) {
+		if (acceptOrAbort.equals("accept")) {
 			Friends friends = new Friends(sender, recipent);
 			friendsService.saveFriends(friends);
 			pendingService.deletePending(pendingIdInt);

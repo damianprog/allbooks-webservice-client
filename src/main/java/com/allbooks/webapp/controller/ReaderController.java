@@ -62,7 +62,7 @@ public class ReaderController {
 			Model theModel, HttpSession session, WebRequest request) {
 
 		if (bindingResult.hasErrors())
-			return "join";
+			return "account/join";
 
 		if (!readerService.isThisLoginTaken(reader.getUsername())) {
 			photoService.createDefaultPhotoForReader(reader);
@@ -91,7 +91,7 @@ public class ReaderController {
 			theModel.addAttribute("information", Information.LOGIN_TAKEN);
 			return "information";
 		}
-		return "invitingReaderBooksPage";
+		return "account/invitingReaderBooksPage";
 	}
 
 	@GetMapping("/invitationTokenValidation")
@@ -113,7 +113,16 @@ public class ReaderController {
 			theModel.addAttribute("reader", new Reader());
 		}
 
-		return "invitationJoin";
+		return "account/invitationJoin";
+	}
+	
+	@GetMapping("/join")
+	public String joinPage(Model theModel) {
+
+		Reader reader = new Reader();
+		theModel.addAttribute("reader", reader);
+
+		return "account/join";
 	}
 
 	@GetMapping("/successfulRegistrationInformation")

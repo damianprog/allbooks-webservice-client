@@ -54,10 +54,4 @@ public class CommentServiceImpl implements CommentService{
 		
 	}
 
-	@Override
-	public void deleteCommentByIdAndReaderId(int commentId, int readerId) {
-
-		commentWebservice.deleteCommentByIdAndReaderId(commentId,readerId);
-	}
-	
 }

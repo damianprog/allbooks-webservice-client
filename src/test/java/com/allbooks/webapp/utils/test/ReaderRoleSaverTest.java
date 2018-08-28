@@ -15,7 +15,7 @@ import com.allbooks.webapp.Application;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderRole;
 import com.allbooks.webapp.factories.ReaderRoleFactory;
-import com.allbooks.webapp.utils.reader.ReaderRoleSaver;
+import com.allbooks.webapp.utils.saver.ReaderRoleSaver;
 import com.allbooks.webapp.webservice.ReaderWebservice;
 
 @RunWith(SpringRunner.class)

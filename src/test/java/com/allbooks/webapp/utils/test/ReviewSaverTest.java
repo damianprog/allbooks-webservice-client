@@ -16,13 +16,13 @@ import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.Review;
-import com.allbooks.webapp.entity.ReviewData;
 import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
-import com.allbooks.webapp.utils.bookactions.ReviewSaver;
+import com.allbooks.webapp.utils.entity.ReviewData;
+import com.allbooks.webapp.utils.saver.ReviewSaver;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)

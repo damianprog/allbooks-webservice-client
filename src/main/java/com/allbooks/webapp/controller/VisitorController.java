@@ -50,7 +50,7 @@ public class VisitorController {
 
 	@Autowired
 	private ReviewService reviewService;
-	
+
 	@GetMapping("/showBook")
 	public String showBook(@RequestParam(value = "bookId", required = false) int bookId, Model theModel,
 			HttpSession session, Principal principal) throws Exception {
@@ -66,9 +66,9 @@ public class VisitorController {
 		theModel.addAttribute("bookReviews", reviewsReaderPhotoPreparer.getPreparedBookReviews(bookId));
 		theModel.addAttribute("book", book);
 
-		return "book";
+		return "book/book";
 	}
-	
+
 	@GetMapping("/main")
 	public String mainPage(Model theModel, HttpServletRequest request) {
 
@@ -77,19 +77,10 @@ public class VisitorController {
 		theModel.addAllAttributes(modelMap);
 
 		if ((boolean) modelMap.get("isAuthenticated"))
-			return "loggedReaderMain";
+			return "reader/loggedReaderMain";
 		else
 			return "main";
 
-	}
-
-	@GetMapping("/join")
-	public String joinPage(Model theModel) {
-
-		Reader reader = new Reader();
-		theModel.addAttribute("reader", reader);
-
-		return "join";
 	}
 
 	@GetMapping("/login")
@@ -98,7 +89,7 @@ public class VisitorController {
 		Reader reader = new Reader();
 		theModel.addAttribute("reader", reader);
 
-		return "login";
+		return "account/login";
 	}
 
 	@GetMapping("/showCategory")
@@ -112,7 +103,7 @@ public class VisitorController {
 		theModel.addAttribute("currentPage", page);
 		theModel.addAttribute("category", category);
 
-		return "categories";
+		return "book/categories";
 	}
 
 	@GetMapping("/searchBooks")
@@ -122,7 +113,7 @@ public class VisitorController {
 		if (phrase != null)
 			theModel.addAttribute("books", photoService.encodeBookPics(bookService.getBooksByPhrase(phrase), 115, 180));
 
-		return "searchBooks";
+		return "book/searchBooks";
 	}
 
 }

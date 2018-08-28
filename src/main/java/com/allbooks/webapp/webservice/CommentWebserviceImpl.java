@@ -85,14 +85,4 @@ public class CommentWebserviceImpl implements CommentWebservice {
 		
 	}
 
-	@Override
-	public void deleteCommentByIdAndReaderId(int commentId, int readerId) {
-
-		Map<String, Integer> params = new HashMap<>();
-		params.put("commentId", commentId);
-		params.put("readerId", readerId);
-		
-		restTemplate.delete(serviceUrlName + "/readers/{readerId}/comments/{commentId}" + accessTokenParameter,params);
-	}
-
 }

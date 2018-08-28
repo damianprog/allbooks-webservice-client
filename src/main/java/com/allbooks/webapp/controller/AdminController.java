@@ -70,7 +70,7 @@ public class AdminController {
 
 		theModel.addAttribute("book", new Book());
 
-		return "addbook";
+		return "admin/addbook";
 	}
 
 	@PostMapping("/addBook")
@@ -89,7 +89,7 @@ public class AdminController {
 
 		theModel.addAttribute("book", book);
 
-		return "addbook";
+		return "admin/addbook";
 	}
 
 	@GetMapping("/showSendNotice")
@@ -99,7 +99,7 @@ public class AdminController {
 
 		theModel.addAttribute("reader", reader);
 
-		return "sendNotice";
+		return "admin/sendNotice";
 	}
 
 	@GetMapping("/showDeleteReview")
@@ -111,7 +111,7 @@ public class AdminController {
 
 		theModel.addAttribute("review", review);
 
-		return "deleteReview";
+		return "admin/deleteReview";
 	}
 
 	@GetMapping("/deleteReview")
@@ -140,7 +140,7 @@ public class AdminController {
 		theModel.addAttribute("commentType", commentType);
 		theModel.addAttribute("comment", comment);
 
-		return "deleteComment";
+		return "admin/deleteComment";
 	}
 
 	@GetMapping("/deleteComment")
@@ -175,7 +175,7 @@ public class AdminController {
 
 		theModel.addAttribute("ban", new Ban());
 
-		return "ban";
+		return "admin/ban";
 	}
 
 	@PostMapping("/ban")
@@ -204,7 +204,7 @@ public class AdminController {
 		theModel.addAttribute("bansPage", bansPage);
 		theModel.addAttribute("currentPage", page);
 
-		return "banningList";
+		return "admin/banningList";
 	}
 
 }

@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.Token;
 import com.allbooks.webapp.enumeration.TokenType;
-import com.allbooks.webapp.utils.TokenCreator;
 import com.allbooks.webapp.utils.entity.MailData;
+import com.allbooks.webapp.utils.token.TokenCreator;
 
 @Service
 public class SendMail {

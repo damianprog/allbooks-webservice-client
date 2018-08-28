@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.allbooks.webapp.entity.Book;
-import com.allbooks.webapp.entity.FavoriteGenres;
+import com.allbooks.webapp.entity.FavouriteGenres;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.BookService;
@@ -40,7 +40,7 @@ public class RecommendationGetter {
 		
 		int readerId = contextService.getLoggedReaderId();
 		
-		FavoriteGenres fGenres = favoriteGenresService.getFavoriteGenresByReaderId(readerId);
+		FavouriteGenres fGenres = favoriteGenresService.getFavoriteGenresByReaderId(readerId);
 		
 		if(fGenres == null)
 			return null;

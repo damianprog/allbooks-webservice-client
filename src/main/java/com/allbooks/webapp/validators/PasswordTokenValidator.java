@@ -10,6 +10,7 @@ import com.allbooks.webapp.enumeration.TokenResponse;
 import com.allbooks.webapp.factories.ModelMapFactory;
 import com.allbooks.webapp.service.TokenService;
 import com.allbooks.webapp.utils.entity.TokenData;
+import com.allbooks.webapp.utils.token.ExpiredTokenRemover;
 
 @Component
 public class PasswordTokenValidator {
