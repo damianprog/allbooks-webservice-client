@@ -18,7 +18,7 @@ public interface ReaderBookService {
 
 	ReaderBook getReaderBookById(int readerBookId);
 
-	void saveReadDate(Date dateRead, int bookId, int id);
+	void saveReadDate(Date dateRead, int bookId, int readerId);
 
 	List<ReaderBook> getReaderBooks(int readerId);
 

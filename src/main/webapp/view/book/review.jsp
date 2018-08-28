@@ -54,7 +54,7 @@
 			</div>
 			<div id="imgReview">
 				<a class="blackRef" href="${bookPageRef}"><img
-					src="data:image/jpeg;base64,${bookPic}"></a> <br>
+					src="data:image/jpeg;base64,${bookPhoto}"></a> <br>
 				<sec:authorize access="isFullyAuthenticated()">
 					<c:choose>
 						<c:when test="${loggedReaderRating.id == 0}">

@@ -2,7 +2,6 @@ package com.allbooks.webapp.controller;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,11 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.service.BookService;
-import com.allbooks.webapp.service.RatingService;
-import com.allbooks.webapp.service.ReviewService;
+import com.allbooks.webapp.utils.model.BookModelCreator;
 import com.allbooks.webapp.utils.model.MainPageModelCreator;
-import com.allbooks.webapp.utils.photos.ReaderPostsWithPreparedReadersPhotoGetter;
-import com.allbooks.webapp.utils.readerbook.ReaderBookAndRatingModelCreator;
 import com.allbooks.webapp.utils.service.PhotoServiceImpl;
 
 @Controller
@@ -40,31 +36,13 @@ public class VisitorController {
 	private MainPageModelCreator mainPageModelCreator;
 
 	@Autowired
-	private RatingService ratingService;
-
-	@Autowired
-	private ReaderPostsWithPreparedReadersPhotoGetter reviewsReaderPhotoPreparer;
-
-	@Autowired
-	private ReaderBookAndRatingModelCreator readerBookAndRatingModelCreator;
-
-	@Autowired
-	private ReviewService reviewService;
+	private BookModelCreator bookModelCreator;
 
 	@GetMapping("/showBook")
 	public String showBook(@RequestParam(value = "bookId", required = false) int bookId, Model theModel,
 			HttpSession session, Principal principal) throws Exception {
 
-		Book book = bookService.getBookById(bookId);
-
-		theModel.addAllAttributes(readerBookAndRatingModelCreator.createModel(bookId));
-		theModel.addAttribute("quotesSplit", Arrays.asList(book.getBookQuotes().split("/")));
-		theModel.addAttribute("bookPic", photoService.getEncodedImage(book.getBookPhoto()));
-		theModel.addAttribute("authorPic", photoService.getEncodedImage(book.getAuthorPhoto()));
-		theModel.addAttribute("quantity", reviewService.ratingsAndReviewsQuantity(bookId));
-		theModel.addAttribute("overallRating", ratingService.getOverallRating(bookId));
-		theModel.addAttribute("bookReviews", reviewsReaderPhotoPreparer.getPreparedBookReviews(bookId));
-		theModel.addAttribute("book", book);
+		theModel.addAllAttributes(bookModelCreator.create(bookId));
 
 		return "book/book";
 	}

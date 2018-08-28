@@ -81,12 +81,13 @@ public class PhotoServiceImpl implements PhotoService {
 	}
 
 	@Override
-	public void encodeAndResizeBookPhotoInBookChildren(List<? extends BookChild> reviewsList, int width, int height) {
+	public List<? extends BookChild> encodeAndResizeBookPhotoInBookChildren(List<? extends BookChild> reviewsList, int width, int height) {
 		for (BookChild bc : reviewsList) {
 			byte[] resizedPhoto = resizePhoto.resize(bc.getBook().getBookPhoto(), width, height);
 			bc.getBook().setEncodedBookPhoto(getEncodedImage(resizedPhoto));
 		}
 
+		return reviewsList;
 	}
 
 	@Override

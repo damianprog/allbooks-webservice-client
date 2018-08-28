@@ -22,7 +22,7 @@
 	<sec:authorize access="isFullyAuthenticated()">
 		<sec:authentication property="principal.username" var="username" />
 
-		<c:if test="${username == readerLogin}">
+		<c:if test="${username == reader.username}">
 
 			<c:set var="isItMyBooks" value="true"></c:set>
 
@@ -45,7 +45,7 @@
 
 			</c:when>
 			<c:when test="${isItMyBooks == false }">
-				<h2 id="first">${readerLogin}'sBooks</h2>
+				<h2 id="first">${reader.username}'sBooks</h2>
 			</c:when>
 		</c:choose>
 		<hr>
@@ -56,22 +56,22 @@
 			<c:otherwise>
 
 				<c:url var="showAll" value="/myBooks/showMyBooks">
-					<c:param name="readerId" value="${readerId}" />
+					<c:param name="readerId" value="${reader.id}" />
 				</c:url>
 
 				<c:url var="showRead" value="/myBooks/showMyBooks">
 					<c:param name="shelves" value="Read" />
-					<c:param name="readerId" value="${readerId}" />
+					<c:param name="readerId" value="${reader.id}" />
 				</c:url>
 
 				<c:url var="showCurrentlyReading" value="/myBooks/showMyBooks">
 					<c:param name="shelves" value="Currently Reading" />
-					<c:param name="readerId" value="${readerId}" />
+					<c:param name="readerId" value="${reader.id}" />
 				</c:url>
 
 				<c:url var="showWantToRead" value="/myBooks/showMyBooks">
 					<c:param name="shelves" value="Want To Read" />
-					<c:param name="readerId" value="${readerId}" />
+					<c:param name="readerId" value="${reader.id}" />
 				</c:url>
 
 				<div id="filters">
@@ -167,7 +167,7 @@
 			<c:url var="page" value="/myBooks/showMyBooks">
 				<c:param name="page" value="${i}"></c:param>
 				<c:param name="shelves" value="${shelvesState.shelveState()}"></c:param>
-				<c:param name="readerId" value="${readerId}"></c:param>
+				<c:param name="readerId" value="${reader.id}"></c:param>
 			</c:url>
 			<h3 class="pageNum">
 				<a class="blackRef" href="${page}">${i}</a>

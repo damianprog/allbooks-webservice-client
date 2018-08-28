@@ -32,7 +32,7 @@ import com.allbooks.webapp.utils.admin.BanningExecutor;
 import com.allbooks.webapp.utils.admin.CommentByTypeGetter;
 import com.allbooks.webapp.utils.admin.PostsRemover;
 import com.allbooks.webapp.utils.entity.CommentRemovalData;
-import com.allbooks.webapp.utils.service.PhotoServiceImpl;
+import com.allbooks.webapp.utils.service.PhotoService;
 
 @Controller
 @RequestMapping("/admin")
@@ -45,7 +45,7 @@ public class AdminController {
 	private BookService bookService;
 
 	@Autowired
-	private PhotoServiceImpl photoService;
+	private PhotoService photoService;
 
 	@Autowired
 	private ReviewService reviewService;

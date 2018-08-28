@@ -16,39 +16,39 @@ public class ReaderBookAndRatingModelCreator {
 
 	@Autowired
 	private SecurityContextService contextService;
-	
+
 	@Autowired
 	private ModelMapFactory modelMapFactory;
-	
+
 	@Autowired
 	private RatingService ratingService;
-	
+
 	@Autowired
 	private ReaderBookService readerBookService;
-	
+
 	public ModelMap createModel(int bookId) {
-		
+
 		ModelMap modelMap = modelMapFactory.createInstance();
-		
+
 		if (contextService.isReaderAuthenticated()) {
 
 			int readerId = contextService.getLoggedReaderId();
 
 			Rating rating = ratingService.getLoggedReaderRatingObject(bookId);
-			
-			if(rating == null)
+
+			if (rating == null)
 				rating = new Rating();
-			
+
 			ReaderBook readerBook = readerBookService.getReaderBook(bookId, readerId);
-			
-			if(readerBook == null)
+
+			if (readerBook == null)
 				readerBook = new ReaderBook();
-			
-			modelMap.addAttribute("readerBook",readerBook);
+
+			modelMap.addAttribute("readerBook", readerBook);
 			modelMap.addAttribute("rating", rating);
 		}
-		
+
 		return modelMap;
 	}
-	
+
 }

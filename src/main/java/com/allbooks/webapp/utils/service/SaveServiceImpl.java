@@ -55,7 +55,7 @@ public class SaveServiceImpl implements SaveService {
 	}
 
 	@Override
-	public void saveReaderBook(ReaderBookData readerBookData) throws IOException {
+	public void saveReaderBook(ReaderBookData readerBookData){
 		readerBookSaver.save(readerBookData);
 	}
 

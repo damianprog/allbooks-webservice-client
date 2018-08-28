@@ -61,7 +61,7 @@
 						</c:when>
 
 						<c:when test="${isItOtherReaderProfile == true}">
-							<c:url var="friendUrl" value="/profile/inviteFriend">
+							<c:url var="friendUrl" value="/friends/inviteFriend">
 								<c:param name="recipentId" value="${reader.id}" />
 								<c:param name="pageName" value="profile" />
 							</c:url>
@@ -246,7 +246,7 @@
 										</c:url>
 										<a class="blackRef" href="${senderProfile}">${tempPending.sender.username}</a>
 										Has sent you a friends request!
-										<form method="POST" action="/profile/acceptOrAbort">
+										<form method="POST" action="/friends/acceptOrAbort">
 											<select name="acceptOrAbort">
 												<option value="accept" label="Accept"/>
 												<option value="abort" label="Abort"/>
@@ -283,7 +283,7 @@
 											${tempFriends.username} </a></td>
 									<td><c:choose>
 											<c:when test="${reader.username == principalName }">
-												<form:form action="/profile/deleteFriends" method="DELETE"
+												<form:form action="/friends/deleteFriends" method="DELETE"
 													class="deleteForm">
 													<input type="hidden" name="friendId"
 														value="${tempFriends.id}">

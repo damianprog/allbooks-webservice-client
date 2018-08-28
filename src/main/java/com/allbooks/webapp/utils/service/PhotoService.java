@@ -24,10 +24,11 @@ public interface PhotoService {
 
 	void createProfilePhotoForReader(MultipartFile multipartFile, Reader reader) throws IOException;
 
-	void encodeAndResizeBookPhotoInBookChildren(List<? extends BookChild> list,int width,int height);
+	List<? extends BookChild> encodeAndResizeBookPhotoInBookChildren(List<? extends BookChild> list,int width,int height);
 	
 	Reader setResizedAndEncodedPhotoInReader(Reader reader,int width,int height);
 	
 	void setResizedAndEncodedPhotosInReaders(List<Reader> readers,int width,int height);
+	
 	
 }

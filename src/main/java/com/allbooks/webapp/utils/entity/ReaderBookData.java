@@ -1,29 +1,20 @@
 package com.allbooks.webapp.utils.entity;
 
-import com.allbooks.webapp.entity.ReaderBook;
+import com.allbooks.webapp.enumeration.ShelvesState;
 
-public class ReaderBookData{
-
-	private ReaderBook readerBook;
+public class ReaderBookData {
 
 	private int bookId;
 
-	private boolean isItUpdate;
-	
-	public ReaderBookData(ReaderBook readerBook, int bookId, boolean isItUpdate) {
-		this.readerBook = readerBook;
+	private ShelvesState shelvesState;
+
+	public ReaderBookData(ShelvesState shelvesState,int bookId) {
+		this.shelvesState = shelvesState;
 		this.bookId = bookId;
-		this.isItUpdate = isItUpdate;
 	}
 
-	public ReaderBook getReaderBook() {
-		return readerBook;
-	}
-
-	public void setReaderBook(ReaderBook readerBook) {
-		this.readerBook = readerBook;
-	}
-
+	public ReaderBookData() {}
+	
 	public int getBookId() {
 		return bookId;
 	}
@@ -32,12 +23,12 @@ public class ReaderBookData{
 		this.bookId = bookId;
 	}
 
-	public boolean isItUpdate() {
-		return isItUpdate;
+	public ShelvesState getShelvesState() {
+		return shelvesState;
 	}
 
-	public void setIsItUpdate(boolean isItUpdate) {
-		this.isItUpdate = isItUpdate;
+	public void setShelvesState(ShelvesState shelvesState) {
+		this.shelvesState = shelvesState;
 	}
 
 }

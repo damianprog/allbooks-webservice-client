@@ -25,7 +25,7 @@ public class ReaderBook implements BookChild {
 	private Date dateAdded;
 
 	public ReaderBook() {
-
+		this.dateAdded = new Date();
 	}
 
 	public Book getBook() {

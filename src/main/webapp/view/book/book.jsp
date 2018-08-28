@@ -240,7 +240,7 @@
 
 										<c:if test="${username == tempReview.postingReader.username}">
 
-											<c:url var="deleteReview" value="/bookActions/deleteReview">
+											<c:url var="deleteReview" value="/readerPost/deleteReview">
 												<c:param name="reviewId" value="${tempReview.id}" />
 											</c:url>
 

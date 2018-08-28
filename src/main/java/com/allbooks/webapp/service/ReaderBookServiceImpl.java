@@ -63,10 +63,9 @@ public class ReaderBookServiceImpl implements ReaderBookService {
 	@Override
 	public void saveReadDate(Date dateRead, int bookId, int id) {
 
-		Reader reader = readerService.getReaderById(id);
 		ReaderBook readerBook = readerBookWebservice.getReaderBook(bookId, id);
+		
 		readerBook.setDateRead(dateRead);
-		readerBook.setReader(reader);
 
 		readerBookWebservice.updateReaderBook(readerBook);
 	}

@@ -18,7 +18,7 @@ public class LoginController {
 		if((error != null)&&(error == true))
 			theModel.addAttribute("error",true);
 		
-		return "login";
+		return "account/login";
 	}
 	
 }

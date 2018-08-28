@@ -14,7 +14,7 @@ public interface SaveService {
 
 	void saveRating(RatingData ratingData);
 
-	void saveReaderBook(ReaderBookData readerBookData) throws IOException;
+	void saveReaderBook(ReaderBookData readerBookData);
 
 	void saveReview(ReviewData reviewData);
 

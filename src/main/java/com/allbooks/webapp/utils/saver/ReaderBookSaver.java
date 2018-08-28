@@ -1,8 +1,5 @@
 package com.allbooks.webapp.utils.saver;
 
-import java.io.IOException;
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +7,7 @@ import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
+import com.allbooks.webapp.enumeration.ShelvesState;
 import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.RatingService;
@@ -35,35 +33,46 @@ public class ReaderBookSaver {
 	@Autowired
 	private BookService bookService;
 
-	public void save(ReaderBookData readerBookData) throws IOException {
+	private Book book;
 
-		int readerId = contextService.getLoggedReaderId();
+	private Reader reader;
 
-		ReaderBook readerBook = initializeReaderBookFields(readerBookData, readerId);
-		
-		initializeReaderBookFields(readerBookData, readerId);
+	private ShelvesState shelvesState;
 	
+	private ReaderBook readerBook;
+	
+	public void save(ReaderBookData readerBookData) {
+
+		initializeThisFields(readerBookData);
+		
+		initializeReaderBookFields();
+		
 		readerBookService.saveReaderBook(readerBook);
 	}
 
-	private ReaderBook initializeReaderBookFields(ReaderBookData readerBookData, int readerId) {
-		
-		ReaderBook readerBook = readerBookData.getReaderBook();
-		
-		Reader reader = readerService.getReaderById(readerId);
-
-		Rating rating = ratingService.getReaderRatingObject(readerId, readerBookData.getBookId());
-
-		Book book = bookService.getBookById(readerBookData.getBookId());
-
-		if (!readerBookData.isItUpdate())
-			readerBook.setDateAdded(new Date());
-
-		readerBook.setReaderRating(rating);
-		readerBook.setBook(book);
-		readerBook.setReader(reader);
+	private void initializeThisFields(ReaderBookData readerBookData) {
+		this.book = bookService.getBookById(readerBookData.getBookId());
+		this.reader = readerService.getReaderById(contextService.getLoggedReaderId());
+		this.shelvesState = readerBookData.getShelvesState();
+		this.readerBook = readerBookService.getReaderBook(book.getId(), reader.getId());
+	}
 	
-		return readerBook;
+	private void initializeReaderBookFields() {
+		
+		if(readerBook == null)
+			createNewReaderBookAndInitializeReaderBookFields();
+		
+		readerBook.setShelvesStates(shelvesState);
+	}
+
+	private void createNewReaderBookAndInitializeReaderBookFields() {
+		Rating rating = ratingService.getReaderRatingObject(reader.getId(), book.getId());	
+		
+		readerBook = new ReaderBook();
+			
+		readerBook.setBook(book);
+		readerBook.setReaderRating(rating);
+		readerBook.setReader(reader);
 	}
 
 }

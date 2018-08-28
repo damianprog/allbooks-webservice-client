@@ -19,6 +19,7 @@ import com.allbooks.webapp.entity.Comment;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.ReadingChallangeComment;
 import com.allbooks.webapp.entity.Review;
+import com.allbooks.webapp.enumeration.ShelvesState;
 import com.allbooks.webapp.factories.BookActionDataObjectFactory;
 import com.allbooks.webapp.service.CommentService;
 import com.allbooks.webapp.service.ReadingChallangeCommentService;
@@ -58,6 +59,9 @@ public class ReaderPostController {
 			throws IOException {
 
 		Rating rating = postReviewRatingGetter.getRatingByIdOrCreateNew(ratingId, rate);
+
+		saveService.saveReaderBook(
+				bookActionDataObjectFactory.createReaderBookData(ShelvesState.enumValueOf(shelves), bookId));
 
 		saveService.saveRating(bookActionDataObjectFactory.createRatingData(rating, bookId));
 
