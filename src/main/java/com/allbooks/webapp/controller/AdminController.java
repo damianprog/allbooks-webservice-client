@@ -32,7 +32,6 @@ import com.allbooks.webapp.utils.admin.BanningExecutor;
 import com.allbooks.webapp.utils.admin.CommentByTypeGetter;
 import com.allbooks.webapp.utils.admin.PostsRemover;
 import com.allbooks.webapp.utils.entity.CommentRemovalData;
-import com.allbooks.webapp.utils.service.PhotoService;
 
 @Controller
 @RequestMapping("/admin")
@@ -43,9 +42,6 @@ public class AdminController {
 
 	@Autowired
 	private BookService bookService;
-
-	@Autowired
-	private PhotoService photoService;
 
 	@Autowired
 	private ReviewService reviewService;
@@ -78,12 +74,8 @@ public class AdminController {
 			@RequestParam("authorPhotoTemp") MultipartFile mfAuthorPhoto, @ModelAttribute("book") Book book,
 			Model theModel) throws IOException {
 
-		byte[] bookPhotoBytes = photoService.convertMultipartImageToBytes(mfBookPhoto);
-
-		byte[] authorPhotoBytes = photoService.convertMultipartImageToBytes(mfAuthorPhoto);
-
-		book.setBookPhoto(photoService.resize(bookPhotoBytes, 150, 228));
-		book.setAuthorPhoto(photoService.resize(authorPhotoBytes, 50, 66));
+		book.setBookPhoto(mfBookPhoto.getBytes());
+		book.setAuthorPhoto(mfAuthorPhoto.getBytes());
 
 		bookService.saveBook(book);
 
@@ -106,8 +98,6 @@ public class AdminController {
 	public String showDeleteReview(Model theModel, @RequestParam("reviewId") int reviewId) throws IOException {
 
 		Review review = reviewService.getReviewById(reviewId);
-
-		theModel.addAttribute("bookPic", photoService.getEncodedImage(review.getBook().getBookPhoto()));
 
 		theModel.addAttribute("review", review);
 
@@ -134,8 +124,6 @@ public class AdminController {
 		CommentType commentTypeEnum = CommentType.enumValueOf(commentType);
 
 		ReaderPost comment = commentByTypeGetter.getCommentByTypeAndId(commentTypeEnum, commentId);
-
-		photoService.setResizedAndEncodedPhotoInReader(comment.getPostingReader(), 80, 80);
 
 		theModel.addAttribute("commentType", commentType);
 		theModel.addAttribute("comment", comment);

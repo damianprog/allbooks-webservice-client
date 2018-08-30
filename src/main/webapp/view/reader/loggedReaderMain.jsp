@@ -3,6 +3,7 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://www.allbooks.org/tags" prefix="ei"%>
 <!DOCTYPE html>
 
 <html>
@@ -109,7 +110,7 @@
 								<c:param name="bookId" value="${readerBook.book.id}" />
 							</c:url>
 							<a href="${bookPageRef}"><img
-								src="data:image/jpeg;base64,${readerBook.book.encodedBookPhoto}"></a>
+								src="<ei:image image='${readerBook.book.bookPhoto}' width='96' height='120'/>"></a>
 						</c:forEach>
 					</c:otherwise>
 				</c:choose>
@@ -176,7 +177,7 @@
 
 					<div class="postBookPhoto">
 						<a href="${bookSite}"><img
-							src="data:image/jpeg;base64,${post.book.encodedBookPhoto}"></a>
+							src="<ei:image image='${post.book.bookPhoto}' width='135' height='210'/>"></a>
 					</div>
 
 					<div class="currentBookDetails">
@@ -220,7 +221,7 @@
 
 							<div id="recommendedBookPhoto">
 								<a href="${recommendedBookPageRef}"> <img
-									src="data:image/jpeg;base64,${recommendedBook.encodedBookPhoto}">
+									src="<ei:image image='${recommendedBook.bookPhoto}' width='95' height='150'/>">
 								</a>
 							</div>
 

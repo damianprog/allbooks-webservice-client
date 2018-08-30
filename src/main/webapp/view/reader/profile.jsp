@@ -3,6 +3,7 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://www.allbooks.org/tags" prefix="ei"%>
 <!DOCTYPE html>
 
 <html>
@@ -27,7 +28,7 @@
 			<div id="image">
 				<table id="picTable">
 					<tr>
-						<td><img src="data:image/jpeg;base64,${profilePic}"></td>
+						<td><img src="<ei:image image='${reader.profilePhoto}' width="200" height="200"/>"/></td>
 					</tr>
 					<c:choose>
 						<c:when test="${reader.username == principalName}">
@@ -154,7 +155,7 @@
 
 					<div class="currentBookPhoto">
 						<a href="${bookSite}"> <img
-							src="data:image/jpeg;base64,${tempBook.book.encodedBookPhoto}" />
+							src="<ei:image image='${tempBook.book.bookPhoto}' width="180" height="180"/>"/>
 						</a>
 					</div>
 
@@ -193,7 +194,7 @@
 
 							<div class="reviewBookPhoto">
 								<a href="${bookPage}"><img
-									src="data:image/jpeg;base64,${tempReview.book.encodedBookPhoto}"></a>
+									src="<ei:image image='${tempReview.book.bookPhoto}' width="100" height='100'/>"></a>
 							</div>
 
 							<table class="reviewTitle">

@@ -29,9 +29,6 @@ public class MainPageModelCreator {
 	private ReaderBookService readerBookService;
 
 	@Autowired
-	private PhotoService photoService;
-
-	@Autowired
 	private ReadingChallangeBoxCreator readingChallangeBoxCreator;
 
 	@Autowired
@@ -61,12 +58,8 @@ public class MainPageModelCreator {
 
 			List<ReaderBook> latestReaderBooks = readerBookService.get10LatestReaderBooks();
 
-			photoService.encodeAndResizeBookPhotoInBookChildren(latestReaderBooks, 135, 210);
-
 			List<ReaderBook> wantToReadBooks = readerBookService.getReaderBooksByShelves(readerId,
 					ShelvesState.WANT_TO_READ);
-			
-			photoService.encodeAndResizeBookPhotoInBookChildren(wantToReadBooks, 96, 120);
 			
 			Map<String, Integer> readerBooksQuantitiesMap = readerBooksUtilsService.getReaderBooksQuantities(readerId);
 			

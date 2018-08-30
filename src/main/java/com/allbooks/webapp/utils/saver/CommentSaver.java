@@ -8,6 +8,7 @@ import com.allbooks.webapp.entity.Comment;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.Review;
+import com.allbooks.webapp.factories.CommentFactory;
 import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.CommentService;
@@ -37,6 +38,9 @@ public class CommentSaver {
 	@Autowired
 	private SecurityContextService contextService;
 
+	@Autowired
+	private CommentFactory commentFactory;
+	
 	private int bookId;
 
 	private int reviewId;
@@ -64,7 +68,7 @@ public class CommentSaver {
 
 	private Comment createCommentAndInitializeCommentFields(CommentData commentData) {
 
-		Comment comment = new Comment();
+		Comment comment = commentFactory.createReviewCommentInstance();
 
 		Reader reader = readerService.getReaderById(loggedReaderId);
 

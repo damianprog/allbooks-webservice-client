@@ -2,6 +2,7 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.allbooks.org/tags" prefix="ei"%>
 
 <!DOCTYPE html>
 
@@ -54,7 +55,7 @@
 			</div>
 			<div id="imgReview">
 				<a class="blackRef" href="${bookPageRef}"><img
-					src="data:image/jpeg;base64,${bookPhoto}"></a> <br>
+					src="<ei:image image='${review.book.bookPhoto}' width='150' height='225'/>"></a> <br>
 				<sec:authorize access="isFullyAuthenticated()">
 					<c:choose>
 						<c:when test="${loggedReaderRating.id == 0}">
@@ -185,7 +186,7 @@
 
 					<div class="commentAuthorPhoto">
 						<img
-							src="data:image/jpeg;base64,${tempComment.postingReader.encodedProfilePhoto}">
+							src="<ei:image image='${tempComment.postingReader.profilePhoto}' width='80' height='80'/>"/>
 					</div>
 
 

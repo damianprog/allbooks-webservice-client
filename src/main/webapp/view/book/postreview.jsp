@@ -2,6 +2,7 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.allbooks.org/tags" prefix="ei"%>
 
 <!DOCTYPE html>
 
@@ -35,7 +36,7 @@
 
 						<td id="img">
 							<div id="imgRateReview">
-								<img src="data:image/jpeg;base64,${bookPic}">
+								<img src="<ei:image image='${book.bookPhoto}' width='150' height='150'/>"/>
 
 
 							</div>

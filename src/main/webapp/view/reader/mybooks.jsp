@@ -3,6 +3,8 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib uri="http://www.allbooks.org/tags" prefix="ei"%>
+	
 <!DOCTYPE html>
 
 <html>
@@ -105,7 +107,7 @@
 						</c:url>
 						<tr>
 							<td><img
-								src="data:image/jpeg;base64,${tempReaderBook.book.encodedBookPhoto}" /></td>
+								src="<ei:image image='${tempReaderBook.book.bookPhoto}' width='100' height='160'/>" /></td>
 							<td><a class="titleRef" href="${titleRef}">${tempReaderBook.book.fullTitle}</a></td>
 							<td>${tempReaderBook.book.author}</td>
 							<td>${tempReaderBook.overallRating}</td>

@@ -25,9 +25,6 @@ public class AddFriendsModelCreator {
 	@Autowired
 	private FriendsRequestsOptionsModelCreator friendsRequestsOptionsModelCreator;
 
-	@Autowired
-	private PhotoService photoService;
-
 	private Reader searchedReader;
 
 	private ModelMap modelMap;
@@ -58,8 +55,6 @@ public class AddFriendsModelCreator {
 		int readerId = contextService.getLoggedReaderId();
 
 		if (searchedReader != null) {
-
-			photoService.setResizedAndEncodedPhotoInReader(searchedReader, 80, 80);
 
 			modelMap.addAttribute("searchedReader", searchedReader);
 

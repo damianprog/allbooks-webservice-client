@@ -80,7 +80,6 @@ public class ReaderBooksForMyBooksGetterTest {
 		verify(readerBookMock).getBook();
 		verify(ratingServiceMock).getOverallRating(bookId);
 		
-		verify(photoServiceMock).encodeAndResizeBookPhotoInBookChildren(readerBooks,100 , 160);
 		verify(readerBookMock).setOverallRating(bookRating);
 		
 	}

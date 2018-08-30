@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd">
+  <tlib-version>1.0</tlib-version>
+    <short-name>ei</short-name>
+    <uri>http://www.allbooks.org/tags</uri>
+    <tag>
+        <name>image</name>
+        <tag-class>com.allbooks.webapp.tags.EncodedImage</tag-class>
+        <body-content>empty</body-content>
+        <info>This Tag Displayes byte image</info>
+        <attribute>
+            <name>image</name>
+            <required>true</required>
+            <description>Provide a display format</description>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>width</name>
+            <required>true</required>
+            <description>Provide desired width of the picture</description>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>height</name>
+            <required>true</required>
+            <description>Provide desired height of the picture</description>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+</taglib>

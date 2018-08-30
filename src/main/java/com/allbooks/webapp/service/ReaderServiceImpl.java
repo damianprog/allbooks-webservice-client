@@ -4,35 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.utils.saver.ReaderRoleSaver;
 import com.allbooks.webapp.webservice.ReaderWebservice;
 
 @Service
 public class ReaderServiceImpl implements ReaderService {
 
 	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-	@Autowired
 	private ReaderWebservice readerWebservice;
 
-	@Autowired
-	private ReaderRoleSaver readerRoleSaver;
-	
 	@Override
 	public Reader saveReader(Reader reader) {
 
-		reader.setPassword(bCryptPasswordEncoder.encode(reader.getPassword()));
-
-		Reader savedReader = readerWebservice.saveReader(reader);
-		
-		readerRoleSaver.save(savedReader);
-		
-		return savedReader;
+		return readerWebservice.saveReader(reader);
 
 	}
 

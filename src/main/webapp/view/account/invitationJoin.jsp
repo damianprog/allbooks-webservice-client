@@ -1,5 +1,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.allbooks.org/tags" prefix='ei'%>
 
 <!DOCTYPE html>
 
@@ -24,7 +25,7 @@
 		<div class="whiteContainer2">
 
 		<div id="invitingReaderPhoto">
-			<img src="data:image/jpeg;base64,${invitingReader.encodedProfilePhoto}">
+			<img src="<ei:image image='${invitingReader.profilePhoto}' width='100' height='100'/>"/>
 		</div>
 
 		<div id="rightSide">

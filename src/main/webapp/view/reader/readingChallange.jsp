@@ -2,6 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib uri="http://www.allbooks.org/tags" prefix="ei"%>
+	
 <!DOCTYPE html>
 
 <html>
@@ -49,15 +51,8 @@
 				</c:url>
 
 				<div id="readerPhoto">
-					<c:choose>
-						<c:when test="${challangeReader.encodedProfilePhoto != null}">
-							<a href="${readerProfileRef}"><img
-								src="data:image/jpeg;base64,${challangeReader.encodedProfilePhoto}" /></a>
-						</c:when>
-						<c:otherwise>
-							<a href="${readerProfileRef}">${challangeReader.username}</a>
-						</c:otherwise>
-					</c:choose>
+					<a href="${readerProfileRef}"><img
+						src="<ei:image image='${challangeReader.profilePhoto}' width='80' height='80'/>"/></a>
 				</div>
 
 				<div id="challangeInfo">
@@ -98,7 +93,7 @@
 
 					<div class="readBookPhoto">
 						<a href="${bookPage}"> <img
-							src="data:image/jpeg;base64,${readerBook.book.encodedBookPhoto}">
+							src="<ei:image image='${readerBook.book.bookPhoto}' width='100' height='150'/>"/>
 						</a>
 					</div>
 
@@ -124,7 +119,7 @@
 
 					<div class="commentAuthorPhoto">
 						<a href="${profileRef}"><img
-							src="data:image/jpeg;base64,${tempComment.postingReader.encodedProfilePhoto}"></a>
+							src="<ei:image image='${tempComment.postingReader.profilePhoto}' width='80' height='80'/>"/></a>
 					</div>
 
 					<div class="comment">

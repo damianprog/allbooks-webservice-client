@@ -11,9 +11,7 @@ import com.allbooks.webapp.factories.ModelMapFactory;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReviewService;
-import com.allbooks.webapp.utils.photos.ReaderPostsWithPreparedReadersPhotoGetter;
 import com.allbooks.webapp.utils.readerbook.ReaderBookAndRatingModelCreator;
-import com.allbooks.webapp.utils.service.PhotoServiceImpl;
 
 @Component
 public class BookModelCreator {
@@ -25,9 +23,6 @@ public class BookModelCreator {
 	private RatingService ratingService;
 
 	@Autowired
-	private ReaderPostsWithPreparedReadersPhotoGetter reviewsReaderPhotoPreparer;
-
-	@Autowired
 	private ReaderBookAndRatingModelCreator readerBookAndRatingModelCreator;
 
 	@Autowired
@@ -36,9 +31,6 @@ public class BookModelCreator {
 	@Autowired
 	private BookService bookService;
 
-	@Autowired
-	private PhotoServiceImpl photoService;
-	
 	public ModelMap create(int bookId) {
 		
 		ModelMap modelMap = modelMapFactory.createInstance();
@@ -47,11 +39,9 @@ public class BookModelCreator {
 
 		modelMap.addAllAttributes(readerBookAndRatingModelCreator.createModel(bookId));
 		modelMap.addAttribute("quotesSplit", Arrays.asList(book.getBookQuotes().split("/")));
-		modelMap.addAttribute("bookPic", photoService.getEncodedImage(book.getBookPhoto()));
-		modelMap.addAttribute("authorPic", photoService.getEncodedImage(book.getAuthorPhoto()));
 		modelMap.addAttribute("quantity", reviewService.ratingsAndReviewsQuantity(bookId));
 		modelMap.addAttribute("overallRating", ratingService.getOverallRating(bookId));
-		modelMap.addAttribute("bookReviews", reviewsReaderPhotoPreparer.getPreparedBookReviews(bookId));
+		modelMap.addAttribute("bookReviews", reviewService.getBookReviews(bookId));
 		modelMap.addAttribute("book", book);
 		
 		return modelMap;

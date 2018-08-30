@@ -2,7 +2,7 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
+<%@ taglib uri="http://www.allbooks.org/tags" prefix="ei"%>
 <!DOCTYPE html>
 
 <html>
@@ -26,7 +26,7 @@
 
 		<div id="commentAuthorPhoto">
 			<img
-				src="data:image/jpeg;base64,${comment.postingReader.encodedProfilePhoto}">
+				src="<ei:image image='${comment.postingReader.profilePhoto}' width='80' height='80'/>"/>
 		</div>
 
 		<div id="comment">

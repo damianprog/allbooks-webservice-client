@@ -23,7 +23,7 @@
 	<div id="container">
 		<jsp:include page='/view/header.jsp' />
 
-		<jsp:include page="/view/adminActionsHeader.jsp" />
+		<jsp:include page="/view/admin/adminActionsHeader.jsp" />
 		
 		<form:form action="addBook" modelAttribute="book" method="POST"
 			enctype="multipart/form-data">

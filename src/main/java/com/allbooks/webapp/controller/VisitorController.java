@@ -20,7 +20,6 @@ import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.utils.model.BookModelCreator;
 import com.allbooks.webapp.utils.model.MainPageModelCreator;
-import com.allbooks.webapp.utils.service.PhotoServiceImpl;
 
 @Controller
 @RequestMapping("/visitor")
@@ -28,9 +27,6 @@ public class VisitorController {
 
 	@Autowired
 	private BookService bookService;
-
-	@Autowired
-	private PhotoServiceImpl photoService;
 
 	@Autowired
 	private MainPageModelCreator mainPageModelCreator;
@@ -76,7 +72,6 @@ public class VisitorController {
 
 		Page<Book> booksPage = bookService.getBooksByCategory(category, page);
 
-		theModel.addAttribute("books", photoService.encodeBookPics(booksPage.getContent(), 115, 180));
 		theModel.addAttribute("booksPage", booksPage);
 		theModel.addAttribute("currentPage", page);
 		theModel.addAttribute("category", category);
@@ -89,7 +84,7 @@ public class VisitorController {
 			throws IOException {
 
 		if (phrase != null)
-			theModel.addAttribute("books", photoService.encodeBookPics(bookService.getBooksByPhrase(phrase), 115, 180));
+			theModel.addAttribute("books", bookService.getBooksByPhrase(phrase));
 
 		return "book/searchBooks";
 	}

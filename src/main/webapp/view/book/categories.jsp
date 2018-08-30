@@ -1,6 +1,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://www.allbooks.org/tags" prefix="ei"%>
 
 <!DOCTYPE html>
 
@@ -39,13 +40,13 @@
 		<hr>
 
 		<table class="books">
-			<c:forEach var="tempBook" items="${books}">
+			<c:forEach var="tempBook" items="${booksPage.content}">
 				<c:url var="bookSite" value="/visitor/showBook">
 					<c:param name="bookId" value="${tempBook.id}" />
 				</c:url>
 				<tr>
 					<td><a href="${bookSite}"> <img
-							src="data:image/jpeg;base64,${tempBook.encodedBookPhoto}" />
+							src="<ei:image image='${tempBook.bookPhoto}' width='115' height='160'/>" />
 					</a></td>
 					<td id="bookDesc">
 						<h4 id="bookTitle">

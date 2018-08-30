@@ -1,5 +1,10 @@
 package com.allbooks.webapp.entity;
 
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -29,7 +34,8 @@ public class Book {
 
 	private int pages;
 
-	private String publishDate;
+	@DateTimeFormat(iso=ISO.DATE)
+	private Date publishDate;
 
 	private String publishCompany;
 
@@ -127,11 +133,11 @@ public class Book {
 		this.pages = pages;
 	}
 
-	public String getPublishDate() {
+	public Date getPublishDate() {
 		return publishDate;
 	}
 
-	public void setPublishDate(String publishDate) {
+	public void setPublishDate(Date publishDate) {
 		this.publishDate = publishDate;
 	}
 
@@ -176,15 +182,6 @@ public class Book {
 
 	public void setFullTitle(String fullTitle) {
 		this.fullTitle = fullTitle;
-	}
-
-	@Override
-	public String toString() {
-		return "Book [id=" + id + ", miniTitle=" + miniTitle + ", fullTitle=" + fullTitle + ", author=" + author
-				+ ", aboutAuthor=" + aboutAuthor + ", reviewAuthor=" + reviewAuthor + ", description=" + description
-				+ ", bookQuotes=" + bookQuotes + ", coverType=" + coverType + ", pages=" + pages + ", publishDate="
-				+ publishDate + ", publishCompany=" + publishCompany + ", buyBook=" + buyBook + ", category=" + category
-				+ "]";
 	}
 
 }

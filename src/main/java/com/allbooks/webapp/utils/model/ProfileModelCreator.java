@@ -41,9 +41,6 @@ public class ProfileModelCreator {
 	private ReaderBooksUtilsService readerBooksUtilsService;
 
 	@Autowired
-	private PhotoService photoService;
-
-	@Autowired
 	private ReaderBookService readerBookService;
 
 	private Reader reader;
@@ -55,8 +52,6 @@ public class ProfileModelCreator {
 		initializeThisFields(readerId);
 
 		initializeReaderBooksQuantitiesModel();
-
-		initializeProfilePhotoModel();
 
 		initializeFriendsBoxModel();
 
@@ -87,13 +82,6 @@ public class ProfileModelCreator {
 
 	}
 
-	private void initializeProfilePhotoModel() {
-
-		byte[] profilePhotoBytes = reader.getProfilePhoto();
-
-		modelMap.addAttribute("profilePic", photoService.getEncodedImage(profilePhotoBytes));
-	}
-
 	private void initializeFriendsBoxModel() {
 
 		List<Reader> friends = friendsService.getReaderFriends(reader.getId());
@@ -106,8 +94,6 @@ public class ProfileModelCreator {
 
 		List<Review> reviewsList = reviewService.getLatestReaderReviews(reader.getId());
 
-		photoService.encodeAndResizeBookPhotoInBookChildren(reviewsList, 80, 87);
-
 		modelMap.addAttribute("readerReviews", reviewsList);
 
 	}
@@ -116,8 +102,6 @@ public class ProfileModelCreator {
 
 		List<ReaderBook> currentlyReadingBooks = readerBookService.getReaderBooksByShelves(reader.getId(),
 				ShelvesState.CURRENTLY_READING);
-
-		photoService.encodeAndResizeBookPhotoInBookChildren(currentlyReadingBooks, 120, 200);
 
 		modelMap.addAttribute("currentlyReadingList", currentlyReadingBooks);
 

@@ -4,6 +4,7 @@ import javax.mail.MessagingException;
 
 import com.allbooks.webapp.entity.Ban;
 import com.allbooks.webapp.entity.Reader;
+import com.allbooks.webapp.enumeration.TokenResponse;
 
 public interface EmailService {
 
@@ -12,5 +13,5 @@ public interface EmailService {
 	void sendPasswordChanging(Reader reader) throws MessagingException;
 
 	void sendBanInformation(Ban ban) throws MessagingException;
-	
+
 }

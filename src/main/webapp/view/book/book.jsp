@@ -3,7 +3,7 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
+<%@ taglib uri="http://www.allbooks.org/tags" prefix="ei"%>
 
 <!DOCTYPE html>
 
@@ -28,7 +28,7 @@
 		<div>
 		
 		<div id="bookActionsAndPhoto">
-					<img src="data:image/jpeg;base64,${bookPic}">
+					<img src="<ei:image image='${book.bookPhoto}' width='150' height='228'/>"/>
 						<br> <sec:authorize access="isFullyAuthenticated()">
 
 							<div id="rating">
@@ -139,7 +139,7 @@
 						</div>
 					</div>
 					<div id="authorPhoto">
-							<img src="data:image/jpeg;base64,${authorPic}">
+							<img src="<ei:image image="${book.authorPhoto}" width='50' height='66'/>"/>
 						</div>
 					
 					
@@ -165,7 +165,7 @@
 
 					<div class="reviewAuthorPhoto">
 						<img
-							src="data:image/jpeg;base64,${tempReview.postingReader.encodedProfilePhoto}">
+							src="<ei:image image='${tempReview.postingReader.profilePhoto}' width='80' height='80'/>"/>
 					</div>
 
 					<table class="reviewTable">

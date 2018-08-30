@@ -18,9 +18,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.allbooks.webapp.entity.Details;
 import com.allbooks.webapp.entity.Reader;
+import com.allbooks.webapp.enumeration.Information;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.utils.model.ProfileModelCreator;
-import com.allbooks.webapp.utils.service.PhotoServiceImpl;
+import com.allbooks.webapp.utils.service.PhotoService;
 
 @Controller
 @RequestMapping("/profile")
@@ -30,7 +31,7 @@ public class ProfileController {
 	private ReaderService readerService;
 
 	@Autowired
-	private PhotoServiceImpl photoService;
+	private PhotoService photoService;
 
 	@Autowired
 	private ProfileModelCreator profileModelCreator;
@@ -58,7 +59,9 @@ public class ProfileController {
 
 		readerService.updateReader(reader);
 
-		return "redirect:/profile/showProfile";
+		theModel.addAttribute("information",Information.SUCCESSFULLY_REGISTERED);
+		
+		return "information";
 	}
 
 	@GetMapping("/showEdit")

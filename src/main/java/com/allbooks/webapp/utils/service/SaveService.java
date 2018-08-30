@@ -1,6 +1,5 @@
 package com.allbooks.webapp.utils.service;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.allbooks.webapp.entity.RatingData;

@@ -8,13 +8,9 @@ import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.enumeration.ShelvesState;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderBookService;
-import com.allbooks.webapp.utils.service.PhotoService;
 
 @Component
 public class ReaderBooksForMyBooksGetter {
-
-	@Autowired
-	private PhotoService photoService;
 
 	@Autowired
 	private RatingService ratingService;
@@ -30,8 +26,6 @@ public class ReaderBooksForMyBooksGetter {
 			readerBooks = readerBookService.getReaderBooksPages(readerId, page);
 		else
 			readerBooks = readerBookService.getReaderBooksByShelvesPages(readerId, shelvesStates, page);
-
-		photoService.encodeAndResizeBookPhotoInBookChildren(readerBooks.getContent(), 100, 160);
 
 		for (ReaderBook tempReaderBook : readerBooks.getContent()) 
 			tempReaderBook.setOverallRating(ratingService.getOverallRating(tempReaderBook.getBook().getId()));

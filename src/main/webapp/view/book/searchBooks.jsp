@@ -3,6 +3,8 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://www.allbooks.org/tags" prefix="ei"%>
+	
 <!DOCTYPE html>
 
 <html>
@@ -41,7 +43,7 @@
 				</c:url>
 				<tr>
 					<td><a href="${bookSite}"> <img
-							src="data:image/jpeg;base64,${tempBook.encodedBookPhoto}" />
+							src="<ei:image image='${tempBook.bookPhoto}' width='115' height='180'/>"/>
 					</a></td>
 					<td class="bookDesc">
 						<h4 class="bookTitle">

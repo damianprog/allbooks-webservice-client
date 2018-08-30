@@ -3,6 +3,7 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib uri="http://www.allbooks.org/tags" prefix="ei"%>
 <!DOCTYPE html>
 
 <html>
@@ -43,7 +44,7 @@
 
 							<div class="friendPhoto">
 								<a class="blackRef" href="${friendProfileRef}"><img
-									src="data:image/jpeg;base64,${searchedReader.encodedProfilePhoto}"></a>
+									src="<ei:image image='${searchedReader.profilePhoto}' width='80' height='80'/>"/></a>
 							</div>
 
 							<div class="friendDetails">

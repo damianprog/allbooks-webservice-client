@@ -33,9 +33,6 @@ public class RecommendationGetter {
 	@Autowired
 	private BookService bookService;
 	
-	@Autowired
-	private PhotoService photoService;
-	
 	public Book getRecommendedBook() {
 		
 		int readerId = contextService.getLoggedReaderId();
@@ -63,10 +60,6 @@ public class RecommendationGetter {
 			
 		if(foundBook == null)
 			foundBook = bookService.getBooksByCategory(fGenresList.get(0), 1).getContent().get(0);
-		
-		byte[] resizedPhoto = photoService.resize(foundBook.getBookPhoto(),95 , 150);
-		
-		foundBook.setEncodedBookPhoto(photoService.getEncodedImage(resizedPhoto));
 		
 		return foundBook;
 	}

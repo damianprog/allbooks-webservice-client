@@ -105,8 +105,6 @@ public class FriendsController {
 
 		List<Reader> friends = friendsService.getReaderFriends(readerId);
 
-		photoService.setResizedAndEncodedPhotosInReaders(friends, 80, 80);
-
 		theModel.addAttribute("friends", friends);
 
 		return "reader/friends";

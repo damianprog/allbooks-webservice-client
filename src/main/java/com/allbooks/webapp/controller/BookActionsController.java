@@ -40,9 +40,6 @@ public class BookActionsController {
 	private SaveService saveService;
 
 	@Autowired
-	private PhotoService photoService;
-
-	@Autowired
 	private BookActionDataObjectFactory bookActionDataObjectFactory;
 
 	@Autowired
@@ -91,11 +88,8 @@ public class BookActionsController {
 
 		Book book = bookService.getBookById(bookId);
 
-		byte[] bookPicBytes = photoService.resize(book.getBookPhoto(), 80, 120);
-
 		theModel.addAttribute("book", book);
 		theModel.addAttribute("review", new Review());
-		theModel.addAttribute("bookPic", photoService.getEncodedImage(bookPicBytes));
 		theModel.addAllAttributes(readerBookAndRatingModelCreator.createModel(bookId));
 
 		return "book/postreview";

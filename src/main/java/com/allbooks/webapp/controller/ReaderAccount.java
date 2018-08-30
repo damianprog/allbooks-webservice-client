@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.Token;
 import com.allbooks.webapp.enumeration.Information;
 import com.allbooks.webapp.enumeration.TokenResponse;
 import com.allbooks.webapp.enumeration.TokenType;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.TokenService;
 import com.allbooks.webapp.utils.mail.RegistrationConfirmation;
+import com.allbooks.webapp.utils.mail.PasswordTokenSender;
 import com.allbooks.webapp.utils.service.EmailService;
 import com.allbooks.webapp.validators.PasswordTokenValidator;
 
@@ -47,6 +47,9 @@ public class ReaderAccount {
 	
 	@Autowired
 	private PasswordTokenValidator passwordTokenValidator;
+	
+	@Autowired
+	private PasswordTokenSender passwordTokenSender;
 	
 	@GetMapping("/changePasswordPage")
 	public String changePasswordPage(@RequestParam("token") String token, @RequestParam("readerId") int readerId,
@@ -77,24 +80,8 @@ public class ReaderAccount {
 	@PostMapping("/forgotPassword")
 	public String sendPasswordToken(@RequestParam("email") String email, Model theModel) throws MessagingException {
 
-		Reader reader = readerService.getReaderByEmail(email + ".com");
-
-		if (reader == null) {
-			theModel.addAttribute("information", TokenResponse.EMAIL_ERROR);
-			return "forgot";
-		}
-
-		Token token = tokenService.getTokenByReaderId(reader.getId(),TokenType.PASSWORD_TOKEN);
-
-		if (token != null) {
-			theModel.addAttribute("information", TokenResponse.ALREADY_SENT);
-			return "forgot";
-		}
-
-		emailService.sendPasswordChanging(reader);
-
-		theModel.addAttribute("information", TokenResponse.TOKEN_SENT);
-
+		theModel.addAttribute("information",passwordTokenSender.tryToSendAndGetResponse(email));
+		
 		return "forgot";
 	}
 
