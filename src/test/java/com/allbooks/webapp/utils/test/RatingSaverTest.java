@@ -20,7 +20,7 @@ import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
-import com.allbooks.webapp.utils.bookactions.CommentsRatingSetter;
+import com.allbooks.webapp.utils.bookactions.ReviewCommentsRatingSetter;
 import com.allbooks.webapp.utils.readerbook.ReaderBooksRatingSetter;
 import com.allbooks.webapp.utils.saver.RatingSaver;
 
@@ -60,7 +60,7 @@ public class RatingSaverTest {
 	private ReaderBooksRatingSetter readerBookRatingUpdaterMock;
 	
 	@Mock
-	private CommentsRatingSetter commentsRatingUpdaterMock;
+	private ReviewCommentsRatingSetter commentsRatingUpdaterMock;
 	
 	private int readerId = 1;
 	
@@ -85,8 +85,8 @@ public class RatingSaverTest {
 		verify(bookServiceMock).getBookById(bookId);
 		verify(ratingMock).setReader(readerMock);
 		verify(ratingMock).setBook(bookMock);
-		verify(readerBookRatingUpdaterMock).update(ratingMock);
-		verify(commentsRatingUpdaterMock).update(ratingMock);
+		verify(readerBookRatingUpdaterMock).set(ratingMock);
+		verify(commentsRatingUpdaterMock).updateRatingInReaderReviewComments(ratingMock);
 		
 		
 		

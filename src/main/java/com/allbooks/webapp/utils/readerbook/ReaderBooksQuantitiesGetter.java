@@ -15,14 +15,21 @@ public class ReaderBooksQuantitiesGetter {
 
 	@Autowired
 	private ReaderBookService readerBookService;
-	
-	public Map<String,Integer> getByReaderId(int readerId){
-		
-		int read, wantToRead,currentlyReading;
-		read = wantToRead = currentlyReading = 0;
 
-		List<ReaderBook> readerBooks = readerBookService.getReaderBooks(readerId);
-		
+	private int read, wantToRead, currentlyReading;
+
+	private List<ReaderBook> readerBooks;
+
+	public Map<String, Integer> getByReaderId(int readerId) {
+
+		initializeThisFields(readerId);
+
+		initializeQuantities();
+
+		return getQuantitiesMap();
+	}
+
+	private void initializeQuantities() {
 		for (ReaderBook readerBook : readerBooks) {
 
 			switch (readerBook.getShelvesStates()) {
@@ -42,15 +49,20 @@ public class ReaderBooksQuantitiesGetter {
 			}
 
 		}
+	}
 
+	private void initializeThisFields(int readerId) {
+		read = wantToRead = currentlyReading = 0;
+		readerBooks = readerBookService.getReaderBooks(readerId);
+	}
+
+	private Map<String, Integer> getQuantitiesMap() {
 		Map<String, Integer> readerBooksQuantities = new HashMap<>();
 		readerBooksQuantities.put("read", read);
 		readerBooksQuantities.put("wantToRead", wantToRead);
 		readerBooksQuantities.put("currentlyReading", currentlyReading);
 		readerBooksQuantities.put("all", read + wantToRead + currentlyReading);
-
 		return readerBooksQuantities;
-		
 	}
-	
+
 }

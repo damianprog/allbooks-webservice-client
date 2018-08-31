@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.allbooks.webapp.enumeration.ShelvesState;
-import com.allbooks.webapp.factories.BookActionDataObjectFactory;
+import com.allbooks.webapp.factories.DataObjectFactory;
 import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.ReaderBookService;
@@ -40,7 +40,7 @@ public class MyBooksController {
 	private ReaderService readerService;
 
 	@Autowired
-	private BookActionDataObjectFactory bookActionDataObjectFactory;
+	private DataObjectFactory bookActionDataObjectFactory;
 
 	@Autowired
 	private SecurityContextService contextService;

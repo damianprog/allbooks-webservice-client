@@ -9,7 +9,8 @@
 <html>
 
 <head>
-<link type="text/css" rel="stylesheet" href="/css/reader/loggedReaderMain.css" />
+<link type="text/css" rel="stylesheet"
+	href="/css/reader/loggedReaderMain.css" />
 <link href="https://fonts.googleapis.com/css?family=Roboto|Spectral+SC"
 	rel="stylesheet">
 </head>
@@ -70,7 +71,7 @@
 
 							<c:url var="readingChallangeRef"
 								value="/loggedReader/showReadingChallange">
-								<c:param name="readerId" value="${loggedReaderId}" />
+								<c:param name="readerId" value="${sessionScope.readerId}" />
 							</c:url>
 							<div style="font-size: 28px;">${currentNumberOfBooks}</div>
 							books completed<br>
@@ -117,11 +118,10 @@
 
 				<c:url var="myBooksPage" value="/myBooks/showMyBooks">
 					<c:param name="shelves" value="Want To Read" />
-					<c:param name="readerId" value="${loggedReaderId}" />
+					<c:param name="readerId" value="${sessionScope.readerId}" />
 				</c:url>
-				<br>
-				 <a class="blueLink" href="${myBooksPage}">View all
-					books...</a> 
+				<br> <a class="blueLink" href="${myBooksPage}">View all
+					books...</a>
 			</div>
 
 			<div style="clear: both"></div>
@@ -130,17 +130,17 @@
 
 			<c:url var="showRead" value="/myBooks/showMyBooks">
 				<c:param name="shelves" value="Read" />
-				<c:param name="readerId" value="${loggedReaderId}" />
+				<c:param name="readerId" value="${sessionScope.readerId}" />
 			</c:url>
 
 			<c:url var="showCurrentlyReading" value="/myBooks/showMyBooks">
 				<c:param name="shelves" value="Currently Reading" />
-				<c:param name="readerId" value="${loggedReaderId}" />
+				<c:param name="readerId" value="${sessionScope.readerId}" />
 			</c:url>
 
 			<c:url var="showWantToRead" value="/myBooks/showMyBooks">
 				<c:param name="shelves" value="Want To Read" />
-				<c:param name="readerId" value="${loggedReaderId}" />
+				<c:param name="readerId" value="${sessionScope.readerId}" />
 			</c:url>
 
 			<div id="bookShelves">
@@ -206,10 +206,10 @@
 				<c:choose>
 					<c:when test="${empty recommendedBook}">
 					Help us to tune recommendations for you by choosing yours favorite genres!
-					<div style="margin-top:15px;">
-					<a class="blackRef" href="/loggedReader/showFavoriteGenres">Choose
-							your favorite genres</a>
-					</div>
+					<div style="margin-top: 15px;">
+							<a class="blackRef" href="/loggedReader/showFavoriteGenres">Choose
+								your favorite genres</a>
+						</div>
 					</c:when>
 					<c:otherwise>
 						<c:url var="recommendedBookPageRef" value="/visitor/showBook">

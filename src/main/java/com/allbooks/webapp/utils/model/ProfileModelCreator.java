@@ -16,7 +16,6 @@ import com.allbooks.webapp.service.FriendsService;
 import com.allbooks.webapp.service.ReaderBookService;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReviewService;
-import com.allbooks.webapp.utils.service.PhotoService;
 import com.allbooks.webapp.utils.service.ReaderBooksUtilsService;
 
 @Component

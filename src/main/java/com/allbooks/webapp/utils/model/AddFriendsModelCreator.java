@@ -6,15 +6,10 @@ import org.springframework.ui.ModelMap;
 
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.factories.ModelMapFactory;
-import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.ReaderService;
-import com.allbooks.webapp.utils.service.PhotoService;
 
 @Component
 public class AddFriendsModelCreator {
-
-	@Autowired
-	private SecurityContextService contextService;
 
 	@Autowired
 	private ReaderService readerService;
@@ -33,7 +28,7 @@ public class AddFriendsModelCreator {
 
 		initializeModelMap();
 
-		tryToInitializeSearchedReader(username);
+		initializeSearchedReaderIfUsernameIsPresent(username);
 		
 		initializeSearchedReaderFriendsInfoModel();
 
@@ -46,20 +41,19 @@ public class AddFriendsModelCreator {
 		this.modelMap = modelMapFactory.createInstance();
 	}
 	
-	private void tryToInitializeSearchedReader(String username) {
+	private void initializeSearchedReaderIfUsernameIsPresent(String username) {
 		if (username != null)
 			searchedReader = readerService.getReaderByUsername(username);
 	}
 	
 	private void initializeSearchedReaderFriendsInfoModel() {
-		int readerId = contextService.getLoggedReaderId();
 
 		if (searchedReader != null) {
 
 			modelMap.addAttribute("searchedReader", searchedReader);
 
 			modelMap.addAllAttributes(
-					friendsRequestsOptionsModelCreator.createModelMap(readerId, searchedReader.getId()));
+					friendsRequestsOptionsModelCreator.createModelMap(searchedReader.getId()));
 		}
 	}
 

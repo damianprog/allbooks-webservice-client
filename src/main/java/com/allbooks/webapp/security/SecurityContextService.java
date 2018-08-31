@@ -15,40 +15,43 @@ public class SecurityContextService {
 
 	@Autowired
 	private HttpSession session;
-	
+
 	@Autowired
 	private HttpServletRequest request;
-	
+
 	public int getLoggedReaderId() {
-		
-		return (int) session.getAttribute("readerId");
+
+		if(session.getAttribute("readerId") != null)
+			return (int) session.getAttribute("readerId");
+		else
+			return 0;
 		
 	}
-	
+
 	public String getLoggedReaderUserName() {
-		
+
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 		return auth.getName();
 	}
-	
+
 	public boolean isReaderAuthenticated() {
-		
+
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		
-		if(auth instanceof AnonymousAuthenticationToken)
+
+		if (auth instanceof AnonymousAuthenticationToken)
 			return false;
-		else 
+		else
 			return true;
-		
+
 	}
-	
-	public void autologin(String username,String password) {
+
+	public void autologin(String username, String password) {
 		try {
 			request.login(username, password);
 		} catch (ServletException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

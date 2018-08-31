@@ -6,13 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 
-import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.factories.ModelMapFactory;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderBookService;
 import com.allbooks.webapp.service.ReaderService;
-import com.allbooks.webapp.utils.service.PhotoServiceImpl;
 
 @Component
 public class InvitingReaderBooksPageModelCreator {
@@ -22,9 +20,6 @@ public class InvitingReaderBooksPageModelCreator {
 
 	@Autowired
 	private ReaderBookService readerBookService;
-
-	@Autowired
-	private PhotoServiceImpl photoService;
 
 	@Autowired
 	private RatingService ratingService;

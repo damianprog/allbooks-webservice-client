@@ -1,22 +1,16 @@
 package com.allbooks.webapp.utils.model;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 
-import com.allbooks.webapp.entity.Reader;
-import com.allbooks.webapp.entity.ReaderBook;
 import com.allbooks.webapp.entity.ReadingChallange;
 import com.allbooks.webapp.exceptions.entity.NotFoundException;
 import com.allbooks.webapp.factories.ModelMapFactory;
 import com.allbooks.webapp.service.ReaderService;
 import com.allbooks.webapp.service.ReadingChallangeCommentService;
-import com.allbooks.webapp.service.ReadingChallangeCommentServiceImpl;
 import com.allbooks.webapp.service.ReadingChallangeService;
 import com.allbooks.webapp.utils.readerbook.CurrentYearReadBooksGetter;
-import com.allbooks.webapp.utils.service.PhotoService;
 
 @Component
 public class ReadingChallangeModelCreator {

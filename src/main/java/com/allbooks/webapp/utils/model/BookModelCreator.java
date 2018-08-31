@@ -11,7 +11,6 @@ import com.allbooks.webapp.factories.ModelMapFactory;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReviewService;
-import com.allbooks.webapp.utils.readerbook.ReaderBookAndRatingModelCreator;
 
 @Component
 public class BookModelCreator {

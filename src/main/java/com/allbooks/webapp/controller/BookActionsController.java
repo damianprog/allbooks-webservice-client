@@ -21,11 +21,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.allbooks.webapp.entity.Book;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Review;
-import com.allbooks.webapp.factories.BookActionDataObjectFactory;
+import com.allbooks.webapp.factories.DataObjectFactory;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.utils.bookactions.LikesDropper;
+import com.allbooks.webapp.utils.model.ReaderBookAndRatingModelCreator;
 import com.allbooks.webapp.utils.model.ReviewPageModelCreator;
-import com.allbooks.webapp.utils.readerbook.ReaderBookAndRatingModelCreator;
 import com.allbooks.webapp.utils.service.PhotoService;
 import com.allbooks.webapp.utils.service.SaveService;
 
@@ -40,7 +40,7 @@ public class BookActionsController {
 	private SaveService saveService;
 
 	@Autowired
-	private BookActionDataObjectFactory bookActionDataObjectFactory;
+	private DataObjectFactory bookActionDataObjectFactory;
 
 	@Autowired
 	private ReaderBookAndRatingModelCreator readerBookAndRatingModelCreator;

@@ -13,24 +13,33 @@ public class BanChecker {
 
 	@Autowired
 	private BanService banService;
-	
+
+	boolean isReaderBanned = false;
+
 	public boolean isReaderBanned(int readerId) {
-		
-		Ban ban = banService.getBanByReaderId(readerId);
-		
-		if(ban != null) {
-			
-			if(ban.getExpiryDate().getTime() - new Date().getTime() <= 0) {
-				banService.deleteBanById(ban.getId());
-				return false;
-			}
-			else {
-				return true;
-			}
-			
-		}
-		
-		return false;
+
+		checkIfReaderIsBanned(readerId);
+
+		return isReaderBanned;
 	}
-	
+
+	private void checkIfReaderIsBanned(int readerId) {
+		Ban ban = banService.getBanByReaderId(readerId);
+
+		if (ban != null)
+			checkBanValidity(ban);
+	}
+
+	private void checkBanValidity(Ban ban) {
+		if (isBanExpired(ban)) {
+			banService.deleteBanById(ban.getId());
+		} else {
+			isReaderBanned = true;;
+		}
+	}
+
+	private boolean isBanExpired(Ban ban) {
+		return ban.getExpiryDate().getTime() - new Date().getTime() <= 0;
+	}
+
 }

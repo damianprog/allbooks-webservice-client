@@ -23,35 +23,49 @@ public class LoggedReaderModelProfileCreator {
 	private ModelMapFactory modelMapFactory;
 
 	@Autowired
-	private SecurityContextService securityContextService;
+	private SecurityContextService contextService;
 
 	@Autowired
 	private ReadingChallangeBoxCreator readingChallangeBoxCreator;
 
+	private ModelMap modelMap;
+
+	private int readerOfProfileId, loggedReaderId;
+
 	public ModelMap createModel(Reader readerOfProfile) {
 
-		ModelMap modelMap = modelMapFactory.createInstance();
+		intializeThisFields(readerOfProfile);
 
-		String loggedReaderName = securityContextService.getLoggedReaderUserName();
-
-		if (securityContextService.isReaderAuthenticated()) {
-
-			int loggedReaderId = securityContextService.getLoggedReaderId();
-
-			int readerOfProfileId = readerOfProfile.getId();
-
-			if (loggedReaderId != readerOfProfileId)
-
-				modelMap.addAllAttributes(
-						friendsRequestsOptionsModelCreator.createModelMap(loggedReaderId, readerOfProfileId));
-			else 
-				modelMap.addAttribute("friendsRequests", pendingService.getFriendsInvitesByReaderId(readerOfProfileId));
-			
-			modelMap.addAllAttributes(readingChallangeBoxCreator.create(readerOfProfile.getId()));
-			modelMap.addAttribute("principalName", loggedReaderName);
-		}
+		initializeModelMapIfReaderIsAuthenticated();
 
 		return modelMap;
+	}
+
+	private void intializeThisFields(Reader readerOfProfile) {
+		this.modelMap = modelMapFactory.createInstance();
+		this.readerOfProfileId = readerOfProfile.getId();
+		this.loggedReaderId = contextService.getLoggedReaderId();
+	}
+	
+	private void initializeModelMapIfReaderIsAuthenticated() {
+		if (contextService.isReaderAuthenticated())
+			initializeAuthenticatedReaderModelMap();
+
+	}
+
+	private void initializeAuthenticatedReaderModelMap() {
+		if (isItOtherReaderVisitingThisProfile())
+			modelMap.addAllAttributes(
+					friendsRequestsOptionsModelCreator.createModelMap(readerOfProfileId));
+		else
+			modelMap.addAttribute("friendsRequests", pendingService.getFriendsInvitesByReaderId(readerOfProfileId));
+
+		modelMap.addAllAttributes(readingChallangeBoxCreator.create(readerOfProfileId));
+
+	}
+
+	private boolean isItOtherReaderVisitingThisProfile() {
+		return loggedReaderId != readerOfProfileId;
 	}
 
 }

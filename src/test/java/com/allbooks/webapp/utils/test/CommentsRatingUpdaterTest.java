@@ -20,7 +20,7 @@ import com.allbooks.webapp.entity.Comment;
 import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.Reader;
 import com.allbooks.webapp.service.CommentService;
-import com.allbooks.webapp.utils.bookactions.CommentsRatingSetter;
+import com.allbooks.webapp.utils.bookactions.ReviewCommentsRatingSetter;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -28,7 +28,7 @@ import com.allbooks.webapp.utils.bookactions.CommentsRatingSetter;
 public class CommentsRatingUpdaterTest {
 
 	@InjectMocks
-	private CommentsRatingSetter commentsRatingUpdater;
+	private ReviewCommentsRatingSetter commentsRatingUpdater;
 	
 	@Mock
 	private CommentService commentServiceMock;
@@ -65,7 +65,7 @@ public class CommentsRatingUpdaterTest {
 		
 		when(commentMock.getRating()).thenReturn(null);
 		
-		commentsRatingUpdater.update(ratingMock);
+		commentsRatingUpdater.updateRatingInReaderReviewComments(ratingMock);
 		
 		verify(ratingMock).getReader();
 		verify(readerMock).getId();

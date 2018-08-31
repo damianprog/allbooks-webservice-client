@@ -59,9 +59,9 @@ public class ProfileController {
 
 		readerService.updateReader(reader);
 
-		theModel.addAttribute("information",Information.SUCCESSFULLY_REGISTERED);
+		ra.addAttribute("readerId",reader.getId());
 		
-		return "information";
+		return "redirect:/profile/showProfile";
 	}
 
 	@GetMapping("/showEdit")

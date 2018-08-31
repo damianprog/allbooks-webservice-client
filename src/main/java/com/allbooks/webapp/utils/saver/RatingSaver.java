@@ -11,7 +11,7 @@ import com.allbooks.webapp.security.SecurityContextService;
 import com.allbooks.webapp.service.BookService;
 import com.allbooks.webapp.service.RatingService;
 import com.allbooks.webapp.service.ReaderService;
-import com.allbooks.webapp.utils.bookactions.CommentsRatingSetter;
+import com.allbooks.webapp.utils.bookactions.ReviewCommentsRatingSetter;
 import com.allbooks.webapp.utils.readerbook.ReaderBooksRatingSetter;
 
 @Component
@@ -33,7 +33,7 @@ public class RatingSaver {
 	private ReaderBooksRatingSetter readerBooksRatingSetter;
 	
 	@Autowired
-	private CommentsRatingSetter commentsRatingSetter;
+	private ReviewCommentsRatingSetter commentsRatingSetter;
 	
 	public void save(RatingData ratingData) {
 
@@ -61,8 +61,8 @@ public class RatingSaver {
 	}
 
 	private void setRatingInRelatedObjects(Rating savedRating) {
-		commentsRatingSetter.update(savedRating);
-		readerBooksRatingSetter.update(savedRating);
+		commentsRatingSetter.updateRatingInReaderReviewComments(savedRating);
+		readerBooksRatingSetter.set(savedRating);
 	}
 
 }

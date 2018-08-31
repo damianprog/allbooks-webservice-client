@@ -58,7 +58,7 @@ public class ReaderBookRatingUpdaterTest {
 		
 		when(readerBookMock.getReaderRating()).thenReturn(null);
 		
-		readerBookRatingUpdater.update(ratingMock);
+		readerBookRatingUpdater.set(ratingMock);
 		
 		verify(ratingMock).getBook();
 		verify(ratingMock).getReader();

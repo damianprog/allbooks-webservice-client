@@ -13,14 +13,34 @@ public class ReaderBooksRatingSetter {
 	@Autowired
 	private ReaderBookService readerBookService;
 	
-	public void update(Rating rating) {
+	private int bookId,readerId;
+	
+	private Rating rating;
+	
+	private ReaderBook readerBook;
+	
+	public void set(Rating rating) {
 		
-		ReaderBook readerBook = readerBookService.getReaderBook(rating.getBook().getId(), rating.getReader().getId());
+		initializeThisFields(rating);
 		
-		if((readerBook != null) && (readerBook.getReaderRating() == null)) {
-			readerBook.setReaderRating(rating);
-			readerBookService.saveReaderBook(readerBook);
-		}
+		if(isReaderBookNeedingUpdate())
+			updateReaderBookRating();
+	}
+
+	private boolean isReaderBookNeedingUpdate() {
+		return (readerBook != null) && (readerBook.getReaderRating() == null);
+	}
+
+	private void updateReaderBookRating() {
+		readerBook.setReaderRating(rating);
+		readerBookService.saveReaderBook(readerBook);
+	}
+	
+	private void initializeThisFields(Rating rating) {
+		this.bookId = rating.getBook().getId();
+		this.readerId = rating.getReader().getId();
+		this.rating = rating;
+		this.readerBook = readerBookService.getReaderBook(bookId, readerId);
 	}
 	
 }

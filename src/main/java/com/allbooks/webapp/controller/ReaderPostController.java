@@ -20,7 +20,7 @@ import com.allbooks.webapp.entity.Rating;
 import com.allbooks.webapp.entity.ReadingChallangeComment;
 import com.allbooks.webapp.entity.Review;
 import com.allbooks.webapp.enumeration.ShelvesState;
-import com.allbooks.webapp.factories.BookActionDataObjectFactory;
+import com.allbooks.webapp.factories.DataObjectFactory;
 import com.allbooks.webapp.service.CommentService;
 import com.allbooks.webapp.service.ReadingChallangeCommentService;
 import com.allbooks.webapp.service.ReviewService;
@@ -37,7 +37,7 @@ public class ReaderPostController {
 	private SaveService saveService;
 
 	@Autowired
-	private BookActionDataObjectFactory bookActionDataObjectFactory;
+	private DataObjectFactory bookActionDataObjectFactory;
 
 	@Autowired
 	private CommentService commentService;

@@ -18,19 +18,41 @@ public class ReaderBooksForMyBooksGetter {
 	@Autowired
 	private ReaderBookService readerBookService;
 
-	public Page<ReaderBook> getPreparedReaderBooks(int readerId, ShelvesState shelvesStates, int page) {
+	private Page<ReaderBook> readerBooks;
 
-		Page<ReaderBook> readerBooks;
+	private int readerId;
 
-		if (shelvesStates == null)
-			readerBooks = readerBookService.getReaderBooksPages(readerId, page);
-		else
-			readerBooks = readerBookService.getReaderBooksByShelvesPages(readerId, shelvesStates, page);
+	private ShelvesState shelvesState;
 
-		for (ReaderBook tempReaderBook : readerBooks.getContent()) 
-			tempReaderBook.setOverallRating(ratingService.getOverallRating(tempReaderBook.getBook().getId()));
+	private int page;
+
+	public Page<ReaderBook> getPreparedReaderBooks(int readerId, ShelvesState shelvesState, int page) {
+
+		initializeThisFields(readerId, shelvesState, page);
+
+		initializeReaderBooksPage();
+
+		setOverallRatingInReaderBooks();
 
 		return readerBooks;
+	}
+
+	private void initializeReaderBooksPage() {
+		if (shelvesState == null)
+			readerBooks = readerBookService.getReaderBooksPages(readerId, page);
+		else
+			readerBooks = readerBookService.getReaderBooksByShelvesPages(readerId, shelvesState, page);
+	}
+
+	private void initializeThisFields(int readerId, ShelvesState shelvesState, int page) {
+		this.readerId = readerId;
+		this.shelvesState = shelvesState;
+		this.page = page;
+	}
+
+	private void setOverallRatingInReaderBooks() {
+		for (ReaderBook tempReaderBook : readerBooks.getContent())
+			tempReaderBook.setOverallRating(ratingService.getOverallRating(tempReaderBook.getBook().getId()));
 	}
 
 }

@@ -17,28 +17,42 @@ public class CurrentYearReadBooksGetter {
 
 	@Autowired
 	private ReaderBookService readerBookService;
-	
-	public List<ReaderBook> getBooks(int readerId){
-		
-		List<ReaderBook> readBooks = readerBookService.getReaderBooksByShelves(readerId, ShelvesState.READ);
-		
-		List<ReaderBook> currentYearBooks = new ArrayList<>();
-		
-		for(ReaderBook rb : readBooks) {
-			
-			if(rb.getDateRead() == null) {
+
+	private List<ReaderBook> readBooks;
+
+	List<ReaderBook> currentYearBooks;
+
+	public List<ReaderBook> getBooks(int readerId) {
+
+		initializeThisFields(readerId);
+
+		initializeCurrentYearBooksList();
+
+		return currentYearBooks;
+
+	}
+
+	private void initializeThisFields(int readerId) {
+		this.readBooks = readerBookService.getReaderBooksByShelves(readerId, ShelvesState.READ);
+		this.currentYearBooks = new ArrayList<>();
+	}
+
+	private void initializeCurrentYearBooksList() {
+		for (ReaderBook rb : readBooks) {
+
+			if (rb.getDateRead() == null) {
 				continue;
 			}
 
-			LocalDate localDate = rb.getDateRead().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			
-			if(localDate.getYear() == 2018) {
-				currentYearBooks.add(rb);
-			}
+			addCurrentYearBookToList(rb);
 		}
-		
-		return currentYearBooks;
-		
 	}
-	
+
+	private void addCurrentYearBookToList(ReaderBook rb) {
+		LocalDate localDate = rb.getDateRead().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+		if (localDate.getYear() == 2018) {
+			currentYearBooks.add(rb);
+		}
+	}
 }

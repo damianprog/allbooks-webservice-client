@@ -31,7 +31,7 @@
 						<td><img src="<ei:image image='${reader.profilePhoto}' width="200" height="200"/>"/></td>
 					</tr>
 					<c:choose>
-						<c:when test="${reader.username == principalName}">
+						<c:when test="${reader.id == sessionScope.readerId}">
 							<tr>
 								<td>
 									<div id="uploadPhotoLabel">Upload profile photo</div>
@@ -56,7 +56,7 @@
 					<sec:authentication var="principal" property="principal" />
 
 					<c:choose>
-						<c:when test="${reader.username == principalName}">
+						<c:when test="${reader.id == sessionScope.readerId}">
 							<a class="blackRefNon" href="/profile/showEdit">(edit
 								profile)</a>
 						</c:when>
@@ -231,7 +231,7 @@
 		</div>
 		<div id="rightSide">
 			<c:choose>
-				<c:when test="${reader.username == principalName}">
+				<c:when test="${reader.id == sessionScope.readerId}">
 					<div id="friendsRequests">
 						<div class="topDesc">Friends Requests</div>
 						<hr>
@@ -283,7 +283,7 @@
 									<td><a class="blackRef" href="${friendProfile}">
 											${tempFriends.username} </a></td>
 									<td><c:choose>
-											<c:when test="${reader.username == principalName }">
+											<c:when test="${reader.id == sessionScope.readerId}">
 												<form:form action="/friends/deleteFriends" method="DELETE"
 													class="deleteForm">
 													<input type="hidden" name="friendId"
@@ -302,7 +302,7 @@
 			</div>
 
 			<c:choose>
-				<c:when test="${reader.username == principalName}">
+				<c:when test="${reader.id == sessionScope.readerId}">
 					<div id="readingChallange">
 
 						<h3>2018 Reading Challange</h3>

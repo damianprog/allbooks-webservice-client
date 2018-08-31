@@ -17,31 +17,51 @@ public class ReadingChallangeBoxCreator {
 
 	@Autowired
 	private CurrentYearReadBooksGetter currentYearReadBooksGetter;
-	
+
 	@Autowired
 	private ReadingChallangeService readingChallangeService;
-	
+
 	@Autowired
 	private ModelMapFactory modelMapFactory;
-	
+
+	private ModelMap modelMap;
+
+	private int readerId;
+
+	private ReadingChallange readingChallange;
+
 	public ModelMap create(int readerId) {
-		
-		ModelMap modelMap = modelMapFactory.createInstance();
-		
-		ReadingChallange readingChallange = readingChallangeService.getReadingChallangeByReaderId(readerId);
 
-		if (readingChallange != null) {
+		initializeThisFields(readerId);
 
-			List<ReaderBook> readBooks = currentYearReadBooksGetter.getBooks(readerId);
+		intializeModelMapIfReadingChallangeIsPresent();
 
-			int readingProgressPercentage = (readBooks.size() * 100) / readingChallange.getNumberOfBooks();
-
-			modelMap.addAttribute("readingProgressPercentage", readingProgressPercentage);
-			modelMap.addAttribute("currentNumberOfBooks", readBooks.size());
-			modelMap.addAttribute("readingChallange", readingChallange);
-		}
-		
 		return modelMap;
 	}
-	
+
+	private void initializeThisFields(int readerId) {
+		this.modelMap = modelMapFactory.createInstance();
+		this.readerId = readerId;
+		this.readingChallange = readingChallangeService.getReadingChallangeByReaderId(readerId);
+	}
+
+	private void intializeModelMapIfReadingChallangeIsPresent() {
+		if (readingChallange != null)
+			initializeReadingChallangeModel();
+	}
+
+	private void initializeReadingChallangeModel() {
+		List<ReaderBook> readBooks = currentYearReadBooksGetter.getBooks(readerId);
+
+		int readingProgressPercentage = calculateReadingProgressPercentage(readBooks);
+
+		modelMap.addAttribute("readingProgressPercentage", readingProgressPercentage);
+		modelMap.addAttribute("currentNumberOfBooks", readBooks.size());
+		modelMap.addAttribute("readingChallange", readingChallange);
+	}
+
+	private int calculateReadingProgressPercentage(List<ReaderBook> readBooks) {
+		return (readBooks.size() * 100) / readingChallange.getNumberOfBooks();
+	}
+
 }
